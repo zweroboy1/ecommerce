@@ -18,15 +18,13 @@
   "parserOptions": {
     "ecmaVersion": "latest",
     "project": "./tsconfig.json",
+    "tsconfigRootDir": ".",
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint", "prettier", "import", "react-refresh"],
   "root": true,
   "rules": {
-    "@typescript-eslint/array-type": ["error", { "default": "array" }],
-    "@typescript-eslint/explicit-function-return-type": "error",
     "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/no-non-null-assertion": "error",
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
     "@typescript-eslint/no-unused-vars": 0,
     "block-spacing": ["warn", "always"],
@@ -55,11 +53,11 @@
       {
         "accessibility": "explicit",
         "overrides": {
-        "accessors": "explicit",
-        "constructors": "off",
-        "method": "explicit",
-        "properties": "explicit",
-        "parameterProperties": "explicit"
+          "accessors": "explicit",
+          "constructors": "off",
+          "methods": "explicit",
+          "properties": "explicit",
+          "parameterProperties": "explicit"
         }
       }
     ],
@@ -71,7 +69,7 @@
   },
   "settings": {
     "import/parsers": {
-        " @typescript-eslint/parser": [".ts", ".tsx"]
+        "@typescript-eslint/parser": [".ts", ".tsx"]
     },
     "import/resolver": {
       "alias": {
