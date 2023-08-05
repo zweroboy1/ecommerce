@@ -18,8 +18,9 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "rootDir": "./"
   },
-  "include": ["**/*.ts", "**/module.d.ts"],
+  "include": ["**/*.ts", "**/*.tsx", "**/module.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
