@@ -24,48 +24,12 @@
   "plugins": ["@typescript-eslint", "prettier", "import", "react-refresh"],
   "root": true,
   "rules": {
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/no-unnecessary-type-assertion": "error",
-    "@typescript-eslint/no-unused-vars": 0,
-    "block-spacing": ["warn", "always"],
-    "curly": ["warn", "all"],
-    "eol-last": "error",
-    "import/extensions": "off",
-    "import/prefer-default-export": 0,
-    "import/no-extraneous-dependencies": "off",
-    "import/no-unresolved": "error",
-    "max-lines-per-function": ["error", 40],
-    "max-len": ["error", { "code": 120, "ignoreComments": true, "tabWidth": 2 }],
-    "no-console": "error",
-    "no-debugger": "error",
-    "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 0, "maxEOF": 1 }],
-    "no-param-reassign": 1,
-    "no-plusplus": 0,
-    "no-return-assign": 1,
-    "no-template-curly-in-string": "warn",
-    "no-unused-vars": 0,
-    "object-curly-spacing": ["warn", "always"],
-
-    "prettier/prettier": "error",
-    "@typescript-eslint/no-inferrable-types": "off",
-    "@typescript-eslint/explicit-member-accessibility": [
-      "error",
-      {
-        "accessibility": "explicit",
-        "overrides": {
-          "accessors": "explicit",
-          "constructors": "off",
-          "methods": "explicit",
-          "properties": "explicit",
-          "parameterProperties": "explicit"
-        }
-      }
-    ],
     "class-methods-use-this": "off",
-    "react-refresh/only-export-components": [
-      "warn",
-      { "allowConstantExport": true }
-    ]
+    "import/extensions": "off",
+    "prettier/prettier": "error",
+    "import/prefer-default-export":"off",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-inferrable-types": "off"
   },
   "settings": {
     "import/parsers": {
@@ -76,6 +40,10 @@
         "map": [["@", "./src"], ["@@", "./scripts"]],
         "extensions": [".ts", ".tsx", ".json"]
       },
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json", ".svg"],
+        "moduleDirectory": ["node_modules", "public"]
+      },
       "typescript": {
         "alwaysTryTypes": true,
         "project": "./"
@@ -83,3 +51,5 @@
     }
   }
 }
+
+  
