@@ -13,7 +13,7 @@
     "plugin:prettier/recommended",
     "prettier"
   ],
-  "ignorePatterns": ["dist", ".eslintrc.json"],
+  "ignorePatterns": ["dist", ".eslintrc.json", "jest.config.js"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -21,23 +21,31 @@
     "tsconfigRootDir": ".",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "prettier", "import", "react-refresh"],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier",
+    "import",
+    "react-refresh"
+  ],
   "root": true,
   "rules": {
     "class-methods-use-this": "off",
     "import/extensions": "off",
     "prettier/prettier": "error",
-    "import/prefer-default-export":"off",
+    "import/prefer-default-export": "off",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-inferrable-types": "off"
   },
   "settings": {
     "import/parsers": {
-        "@typescript-eslint/parser": [".ts", ".tsx"]
+      "@typescript-eslint/parser": [".ts", ".tsx"]
     },
     "import/resolver": {
       "alias": {
-        "map": [["@", "./src"], ["@@", "./scripts"]],
+        "map": [
+          ["@", "./src"],
+          ["@@", "./scripts"]
+        ],
         "extensions": [".ts", ".tsx", ".json"]
       },
       "node": {
@@ -51,5 +59,3 @@
     }
   }
 }
-
-  
