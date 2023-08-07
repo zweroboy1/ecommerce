@@ -1,3 +1,10 @@
 vite.config.ts
-node_modules
-dist
+jest.config.js
+commitlint.config.js
+node_modules/
+dist/
+package.json
+package-lock.json
+tsconfig.json
+tsconfig.node.json
+.prettierrc
