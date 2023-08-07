@@ -12,7 +12,7 @@
     "precommit": "npm run lint",
     "pret": "prettier . --write",
     "prepare": "husky install",
-    "commit": "git cz",
+    "commit": "git add . && git cz",
     "test": "jest",
     "test-cover": "jest --coverage"
   },
