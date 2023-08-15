@@ -1,11 +1,15 @@
 import { PropsWithoutRef } from 'react';
+import { useField } from 'formik';
 import { InputProps } from '../types';
 
-const Input = ({ placeholder, value, onChange, title, ...props }: PropsWithoutRef<InputProps>) => {
+const Input = ({ label, className, ...props }: PropsWithoutRef<InputProps>) => {
+  const [field, meta] = useField(props);
+
   return (
-    <label className={props.className}>
-      <span>{title}</span>
-      <input type={props.type || 'text'} placeholder={placeholder} value={value} maxLength={props.maxLength || 30} />
+    <label className={`label ${className}`}>
+      <span>{label}</span>
+      <input {...field} {...props} id={field.name} />
+      {meta.touched && meta.error ? <div className="error-message">{meta.error}</div> : null}
     </label>
   );
 };

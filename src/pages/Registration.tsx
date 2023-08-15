@@ -2,11 +2,10 @@ import { RegistrationForm } from '../components/RegistrationForm';
 
 const Registration = () => {
   const initialValues = {
-    name: '',
-    surname: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: 'Mila',
+    surname: 'Mila  ',
+    email: 'mi@mi',
+    password: 'sssssssss',
     dateOfBirth: '',
     address: {
       street: '',

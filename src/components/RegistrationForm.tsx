@@ -1,54 +1,83 @@
 import { PropsWithoutRef } from 'react';
-import { Field, Form, Formik, useFormik } from 'formik';
-import { Input } from './Input';
+import { Form, Formik } from 'formik';
+import { registrationValidationSchema } from '../constants/registrationValidation';
 import { RegistrationFormProps } from '../types';
+import { Button } from './Button';
+import { Input } from './Input';
 
 const RegistrationForm = ({ ...initialValues }: PropsWithoutRef<RegistrationFormProps>) => {
-  const onSubmit = (
+  const onSubmit = async (
     values: RegistrationFormProps,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+    { setSubmitting, resetForm }: { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
   ) => {
-    setSubmitting(false);
     // eslint-disable-next-line no-console
     console.log(values);
+    try {
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          setSubmitting(false);
+          // eslint-disable-next-line no-console
+          console.log('Registration success');
+          resolve(true);
+        }, 1000);
+      });
+      resetForm();
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.log('Something wrong');
+    }
   };
 
-  const { values } = useFormik({ initialValues, onSubmit });
   return (
     <div className="form-wrapper">
-      <Formik initialValues={values} onSubmit={onSubmit}>
-        {({ errors, touched }) => (
+      <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={registrationValidationSchema}>
+        {({ errors, touched, isValid, isSubmitting }) => (
           <Form>
-            <label className={errors.name && touched.name ? 'error' : ''}>
-              <span>Your Name</span>
-              <Field name="name" placeholder="Enter your name" component={Input} />
-              {errors.name && touched.name && <div className="error">{errors.name}</div>}
-            </label>
-            <label className={errors.surname && touched.surname ? 'error' : ''}>
-              <span>Your Surname</span>
-              <Field name="surname" placeholder="Enter your surname" component={Input} />
-              {errors.surname && touched.surname && <div className="error">{errors.surname}</div>}
-            </label>
-            <label className={errors.email && touched.email ? 'error' : ''}>
-              <span>Your Email</span>
-              <Field name="email" placeholder="Enter your email" component={Input} />
-              {errors.email && touched.email && <div className="error">{errors.email}</div>}
-            </label>
-            <label className={errors.password && touched.password ? 'error' : ''}>
-              <span>Your Password</span>
-              <Field name="password" placeholder="Enter your password" component={Input} />
-              {errors.password && touched.password && <div className="error">{errors.password}</div>}
-            </label>
-            <label className={errors.dateOfBirth && touched.dateOfBirth ? 'error' : ''}>
-              <span>Your Date Of Birth</span>
-              <Field name="dateOfBirth" placeholder="Enter your date of birth" component={Input} />
-              {errors.dateOfBirth && touched.dateOfBirth && <div className="error">{errors.dateOfBirth}</div>}
-            </label>
-            <label className={errors.address && touched.address ? 'error' : ''}>
-              <span>Your Address</span>
-              <Field name="address" placeholder="Enter your address" component={Input} />
-            </label>
-            <button type="submit">Submit</button>
+            <Input
+              label="Your Name"
+              name="name"
+              placeholder="Enter your name"
+              type="text"
+              className={errors.name && touched.name ? 'error' : ''}
+            />
+            <Input
+              label="Your Surname"
+              name="surname"
+              placeholder="Enter your surname"
+              type="text"
+              className={errors.surname && touched.surname ? 'error' : ''}
+            />
+            <Input
+              label="Your Email"
+              name="email"
+              placeholder="Enter your email"
+              type="email"
+              className={errors.email && touched.email ? 'error' : ''}
+            />
+            <Input
+              label="Your Password"
+              name="password"
+              placeholder="Enter your password"
+              type="password"
+              className={errors.password && touched.password ? 'error' : ''}
+            />
+            <Input
+              label="Your Date Of Birth"
+              name="dateOfBirth"
+              placeholder="Enter your date of birth"
+              type="date"
+              className={errors.dateOfBirth && touched.dateOfBirth ? 'error' : ''}
+            />
+            <Input
+              label="Your Address"
+              name="address"
+              placeholder="Enter your address"
+              type="text"
+              className={errors.address && touched.address ? 'error' : ''}
+            />
+            <Button type="submit" disabled={!isValid}>
+              {isSubmitting ? 'Submitting...' : 'Submit'}
+            </Button>
           </Form>
         )}
       </Formik>
