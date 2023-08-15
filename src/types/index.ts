@@ -1,30 +1,13 @@
 type InputProps = {
   placeholder: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  type?: string;
-  name?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type: string;
+  name: string;
   className?: string;
-  id?: string;
-  required?: boolean;
-  minLength?: number;
   maxLength?: number;
-  pattern?: string;
-  title?: string;
-  disabled?: boolean;
-  readOnly?: boolean;
-  autoFocus?: boolean;
-  autoComplete?: string;
-  list?: string;
-  step?: string;
-  min?: string;
-  max?: string;
-  defaultValue?: string;
-  multiple?: boolean;
-  accept?: string;
-  capture?: string;
-  spellCheck?: boolean;
-  wrap?: string;
+  label: string;
 };
 
 type RegistrationFormProps = {
@@ -32,7 +15,6 @@ type RegistrationFormProps = {
   surname: string;
   email: string;
   password: string;
-  confirmPassword: string;
   dateOfBirth: string;
   address: {
     street: string;
@@ -42,4 +24,14 @@ type RegistrationFormProps = {
   };
 };
 
-export type { InputProps, RegistrationFormProps };
+type ButtonProps = {
+  children: string;
+  className?: string;
+  onClick?: () => void;
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  id?: string;
+  tabIndex?: number;
+};
+
+export type { InputProps, RegistrationFormProps, ButtonProps };
