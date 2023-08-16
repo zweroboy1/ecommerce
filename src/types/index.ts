@@ -18,18 +18,40 @@ type Address = {
   [x: string]: string;
   street: string;
   city: string;
-  code: string;
+  postCode: string;
   country: string;
 };
 
+type RegistrationFormKees =
+  | 'name'
+  | 'surname'
+  | 'email'
+  | 'password'
+  | 'dateOfBirth'
+  | 'shippingAddressStreet'
+  | 'shippingAddressCity'
+  | 'shippingAddressPostCode'
+  | 'shippingAddressCountry'
+  | 'billingAddressStreet'
+  | 'billingAddressCity'
+  | 'billingAddressPostCode'
+  | 'billingAddressCountry';
+
 type RegistrationFormProps = {
-  name: string;
-  surname: string;
-  email: string;
-  password: string;
-  dateOfBirth: string;
-  shippingAddress: Address;
-  billingAddress: Address;
+  // name: string;
+  // surname: string;
+  // email: string;
+  // password: string;
+  // dateOfBirth: string;
+  // shippingAddressStreet: string;
+  // shippingAddressCity: string;
+  // shippingAddressPostCode: string;
+  // shippingAddressCountry: string;
+  // billingAddressStreet: string;
+  // billingAddressCity: string;
+  // billingAddressPostCode: string;
+  // billingAddressCountry: string;
+  [K in RegistrationFormKees]: string;
 };
 
 type ButtonProps = {
@@ -42,4 +64,8 @@ type ButtonProps = {
   tabIndex?: number;
 };
 
-export type { InputProps, RegistrationFormProps, ButtonProps, Address };
+type Country = {
+  [key: string]: string;
+};
+
+export type { InputProps, RegistrationFormProps, ButtonProps, Address, Country };
