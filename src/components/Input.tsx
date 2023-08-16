@@ -12,7 +12,7 @@ const Input = ({ label, className, defaultAddress, ...props }: PropsWithoutRef<I
   };
 
   return (
-    <label className={`label ${className}`}>
+    <label className={`label ${className || ''}${meta.touched && meta.error ? ' error' : ''}`}>
       <span>{label}</span>
       <input {...field} {...props} id={field.name} onChange={handleChange} />
       {meta.touched && meta.error ? <div className="error-message">{meta.error}</div> : null}
