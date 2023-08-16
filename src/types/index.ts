@@ -1,5 +1,5 @@
 type InputProps = {
-  placeholder: string;
+  placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -8,6 +8,18 @@ type InputProps = {
   className?: string;
   maxLength?: number;
   label: string;
+  defaultAddress?: {
+    checkDefaultAddress: boolean;
+    setCheckDefaultAddress: (value: boolean) => void;
+  };
+};
+
+type Address = {
+  [x: string]: string;
+  street: string;
+  city: string;
+  code: string;
+  country: string;
 };
 
 type RegistrationFormProps = {
@@ -16,12 +28,8 @@ type RegistrationFormProps = {
   email: string;
   password: string;
   dateOfBirth: string;
-  address: {
-    street: string;
-    city: string;
-    code: string;
-    country: string;
-  };
+  shippingAddress: Address;
+  billingAddress: Address;
 };
 
 type ButtonProps = {
@@ -34,4 +42,4 @@ type ButtonProps = {
   tabIndex?: number;
 };
 
-export type { InputProps, RegistrationFormProps, ButtonProps };
+export type { InputProps, RegistrationFormProps, ButtonProps, Address };
