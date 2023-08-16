@@ -7,29 +7,15 @@ import { getUser } from '../services/commercetoolsApi';
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const emailValidation = (
-    value: string
-  ): Yup.ValidationError | true => {
+  const emailValidation = (value: string): Yup.ValidationError | true => {
     if (!value.includes('@')) {
-      return new Yup.ValidationError(
-        'Email address must contain an "@" symbol',
-        value,
-        'email'
-      );
+      return new Yup.ValidationError('Email address must contain an "@" symbol', value, 'email');
     }
     if (!value.split('@')[1].includes('.')) {
-      return new Yup.ValidationError(
-        'Email address must contain a domain name after @',
-        value,
-        'email'
-      );
+      return new Yup.ValidationError('Email address must contain a domain name after @', value, 'email');
     }
     if (value.trim() !== value) {
-      return new Yup.ValidationError(
-        'Email address must not contain leading or trailing whitespace',
-        value,
-        'email'
-      );
+      return new Yup.ValidationError('Email address must not contain leading or trailing whitespace', value, 'email');
     }
     return true;
   };
@@ -48,29 +34,13 @@ const Login: React.FC = () => {
         password: Yup.string()
           .required('Required')
           .min(8, 'Password must be at least 8 characters long')
-          .matches(
-            /[a-z]/,
-            'Password must contain at least one lowercase letter (a-z)'
-          )
-          .matches(
-            /[A-Z]/,
-            'Password must contain at least one uppercase letter (A-Z)'
-          )
-          .matches(
-            /[0-9]/,
-            'Password must contain at least one digit (0-9)'
-          )
-          .matches(
-            /\W/,
-            'Password must contain at least one special character (e.g., !@#$%^&*)'
-          )
-          .test(
-            'no-leading-trailing-spaces',
-            'Password must not contain leading or trailing whitespace',
-            (value) => {
-              return !value || value.trim() === value;
-            }
-          ),
+          .matches(/[a-z]/, 'Password must contain at least one lowercase letter (a-z)')
+          .matches(/[A-Z]/, 'Password must contain at least one uppercase letter (A-Z)')
+          .matches(/[0-9]/, 'Password must contain at least one digit (0-9)')
+          .matches(/\W/, 'Password must contain at least one special character (e.g., !@#$%^&*)')
+          .test('no-leading-trailing-spaces', 'Password must not contain leading or trailing whitespace', (value) => {
+            return !value || value.trim() === value;
+          }),
       })}
       onSubmit={(values) => {
         // console.log('Submitting:', values);
@@ -86,9 +56,7 @@ const Login: React.FC = () => {
               type="email"
               placeholder="Enter email"
               name="email"
-              className={
-                touched.email && errors.email ? 'input__error' : ''
-              }
+              className={touched.email && errors.email ? 'input__error' : ''}
               formNoValidate
             />
             <ErrorMessage name="email" component="div" />
@@ -100,25 +68,15 @@ const Login: React.FC = () => {
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               name="password"
-              className={
-                touched.password && errors.password
-                  ? 'input__error'
-                  : ''
-              }
+              className={touched.password && errors.password ? 'input__error' : ''}
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-            >
+            <button type="button" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
             </button>
             <ErrorMessage name="password" component="div" />
           </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting || !isValid || !dirty}
-          >
+          <button type="submit" disabled={isSubmitting || !isValid || !dirty}>
             Log in
           </button>
         </Form>
