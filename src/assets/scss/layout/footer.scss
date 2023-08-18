@@ -1,0 +1,39 @@
+/* footer */
+
+.footer {
+  border-top: 1px solid #e1e1e1;
+  flex-shrink: 0;
+
+  .row {
+    align-items: start;
+    flex-wrap: wrap;
+    gap: 10px 40px;
+
+    div {
+      text-align: left;
+    }
+  }
+
+  &__header {
+    font-size: 18px;
+    font-family: MuseoSansBlack, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: bold;
+    text-transform: none;
+    letter-spacing: normal;
+    padding-top: 40px;
+    color: #000;
+  }
+
+  &__body {
+    margin: 10px 0 20px;
+  }
+
+  &__item {
+    line-height: 1.45;
+    margin-bottom: 6px;
+
+    a {
+      color: $links;
+    }
+  }
+}

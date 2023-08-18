@@ -1,0 +1,202 @@
+/* basic */
+
+@font-face {
+  font-family: MuseoSans;
+  font-display: swap;
+  src: url(./src/assets/fonts/museo-sans/MuseoSans-500.woff);
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: MuseoSansBlack;
+  font-display: swap;
+  src: url(./src/assets/fonts/museo-sans/MuseoSans-900.ttf);
+  font-weight: 900;
+  font-style: normal;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+*,
+:after,
+:before {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+main {
+  flex-grow: 1;
+  border-top: 1px solid #eee;
+}
+
+body,
+p,
+div,
+li {
+  font-size: $font-size-14;
+}
+
+h1 {
+  font-family: MuseoSansBlack, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  font-size: 28px;
+  font-weight: normal;
+  letter-spacing: normal;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+
+  &:hover {
+    border: none;
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  font-size: 0;
+  border: 0;
+}
+
+li {
+  margin: 0;
+  padding: 2px 0;
+  text-indent: 0;
+  list-style: none;
+}
+
+a {
+  font-weight: 500;
+  color: $links;
+  text-decoration: inherit;
+
+  &:hover {
+    color: #535bf2;
+  }
+}
+
+p {
+  margin: 0;
+  padding: 6px 0;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+  min-height: $button-size-40;
+  height: $button-size-40;
+  font-family: MuseoSans, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  outline: none !important;
+  border-color: #d5d5d5;
+  border-radius: 8px;
+  background: #fff;
+  padding: 4px 8px;
+  border: 1px solid #c8c8c8;
+  font-style: normal;
+  font-weight: normal;
+  box-sizing: border-box;
+  margin: 0;
+  line-height: normal;
+  transition: all 150ms;
+  // width: 100%;
+
+  &:focus,
+  &:hover {
+    border-color: $links;
+    box-shadow: 0 0 0 2px rgba(0, 119, 204, 0.1);
+  }
+
+  &:focus {
+    outline: 0;
+    transition: border 0.2s linear 0s;
+  }
+
+}
+
+#root {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.tygh {
+  width: 100vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  width: auto;
+  min-width: inherit;
+  max-width: none;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+
+  a:hover {
+    color: #747bff;
+  }
+
+  button {
+    background-color: #f9f9f9;
+  }
+}

@@ -1,0 +1,49 @@
+/* socialLinks */
+
+.social-links {
+
+  &__body {
+    display: flex;
+  }
+
+  &__item {
+    display: flex;
+
+    i {
+      display: block;
+      position: relative;
+      height: 35px;
+      width: 35px;
+      margin: 0;
+      left: 0;
+      top: 0;
+      right: 0;
+      background-size: cover;
+    }
+  }
+
+}
+
+.icon-facebook {
+  background: url(/src/assets/svg/facebook.svg) no-repeat center center;
+}
+
+.icon-discord {
+  background: url(/src/assets/svg/discord.svg) no-repeat center center;
+}
+
+.icon-gplus {
+  background: url(/src/assets/svg/gplus.svg) no-repeat center center;
+}
+
+.icon-instagram {
+  background: url(/src/assets/svg/instagram.svg) no-repeat center center;
+}
+
+.icon-twitter {
+  background: url(/src/assets/svg/twitter.svg) no-repeat center center;
+}
+
+.icon-youtube {
+  background: url(/src/assets/svg/youtube.svg) no-repeat center center;
+}

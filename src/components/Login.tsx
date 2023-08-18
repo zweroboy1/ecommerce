@@ -22,18 +22,22 @@ const Login: React.FC = observer(() => {
 
   const emailValidation = (value: string): Yup.ValidationError | true => {
     if (!value.includes('@')) {
-      return new Yup.ValidationError('Email address must contain an "@" symbol', value, 'email');
+      return new Yup.ValidationError(
+        'Адрес электронной почты должен содержать символ "@"',
+        value,
+        'email'
+      );
     }
     if (!value.split('@')[1].includes('.')) {
       return new Yup.ValidationError(
-        'Email address must contain a domain name after @',
+        'Адрес электронной почты должен содержать доменное имя после @',
         value,
         'email'
       );
     }
     if (value.trim() !== value) {
       return new Yup.ValidationError(
-        'Email address must not contain leading or trailing whitespace',
+        'Адрес электронной почты не должен содержать начальные или конечные пробелы',
         value,
         'email'
       );
@@ -43,19 +47,19 @@ const Login: React.FC = observer(() => {
 
   const validationSchema = Yup.object({
     email: Yup.string()
-      .required('Required')
+      .required('Необходимо заполнить!')
       .test('email-validation', 'Invalid email', emailValidation)
-      .email('Invalid email address'),
+      .email('Неверный адрес электронной почты'),
     password: Yup.string()
-      .required('Required')
-      .min(8, 'Password must be at least 8 characters long')
-      .matches(/[a-z]/, 'Password must contain at least one lowercase letter (a-z)')
-      .matches(/[A-Z]/, 'Password must contain at least one uppercase letter (A-Z)')
-      .matches(/[0-9]/, 'Password must contain at least one digit (0-9)')
-      .matches(/\W/, 'Password must contain at least one special character (e.g., !@#$%^&*)')
+      .required('Необходимо заполнить!')
+      .min(8, 'Пароль должен быть не менее 8 символов')
+      .matches(/[a-z]/, 'Пароль должен содержать минимум одну строчную букву (a-z)')
+      .matches(/[A-Z]/, 'Пароль должен содержать минимум одну заглавную букву (A-Z)')
+      .matches(/[0-9]/, 'Пароль должен содержать минимум одну цифру (0-9)')
+      .matches(/\W/, 'Пароль должен содержать минимум один специальный символ (например, !@#$%^&*)')
       .test(
         'no-leading-trailing-spaces',
-        'Password must not contain leading or trailing whitespace',
+        'Пароль не должен содержать начальные или конечные пробелы',
         (value) => {
           return !value || value.trim() === value;
         }
@@ -105,11 +109,13 @@ const Login: React.FC = observer(() => {
     >
       {({ isValid, isSubmitting, dirty, touched, errors }) => (
         <Form>
-          <div>
-            <label>Email address</label>
+          <div className="form-fields">
+            <label>
+              E-mail <span>*</span>
+            </label>
             <Field
               type="email"
-              placeholder="Enter email"
+              placeholder="Введите e-mail"
               name="email"
               className={(touched.email && errors.email) || emailError !== '' ? 'input__error' : ''}
               formNoValidate
@@ -125,19 +131,25 @@ const Login: React.FC = observer(() => {
             )}
           </div>
 
-          <div>
-            <label>Password</label>
-            <Field
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
-              name="password"
-              className={
-                (touched.password && errors.password) || passwordError !== '' ? 'input__error' : ''
-              }
-            />
-            <button type="button" onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
-            </button>
+          <div className="form-fields">
+            <label>
+              Пароль <span>*</span>
+            </label>
+            <div className="password-block">
+              <Field
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Введите пароль"
+                name="password"
+                className={
+                  (touched.password && errors.password) || passwordError !== ''
+                    ? 'input__error'
+                    : ''
+                }
+              />
+              <button type="button" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
+              </button>
+            </div>
             {/* <ErrorMessage name="password" component="div" /> */}
             {(touched.password && errors.password) || passwordError !== '' ? (
               <div className="password__error">
@@ -149,8 +161,12 @@ const Login: React.FC = observer(() => {
             )}
           </div>
           {/* кнопка активна только в первый раз когда форма валидна, потом дизейблена :( */}
-          <button type="submit" disabled={isSubmitting || !isValid || !dirty}>
-            Log in
+          <button
+            className="button button-second"
+            type="submit"
+            disabled={isSubmitting || !isValid || !dirty}
+          >
+            Войти
           </button>
         </Form>
       )}
