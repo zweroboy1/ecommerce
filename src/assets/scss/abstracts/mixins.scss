@@ -55,9 +55,7 @@
 }
 
 @mixin media($media) {
-
-  @each $size,
-  $resolution in $sizes {
+  @each $size, $resolution in $sizes {
     @if $media ==$size {
       @media (max-width: $resolution) {
         @content;

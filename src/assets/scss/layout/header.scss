@@ -4,12 +4,12 @@
   .row {
     gap: 20px;
 
-    @include media("s") {
+    @include media('s') {
       flex-wrap: wrap;
       justify-content: end;
     }
 
-    @include media("xs") {
+    @include media('xs') {
       flex-direction: column;
       flex-wrap: nowrap;
       justify-content: center;
@@ -43,7 +43,7 @@
     flex: 1 0 0;
     gap: 10px;
 
-    @include media("xl") {
+    @include media('xl') {
       padding: 0 1vw;
     }
 
@@ -68,7 +68,7 @@
         span {
           padding-right: 15px;
 
-          @include media("xl") {
+          @include media('xl') {
             display: none;
           }
         }
@@ -84,11 +84,11 @@
         margin-right: 0;
 
         &::before {
-          content: "";
+          content: '';
           position: absolute;
           width: 45px;
           height: 45px;
-          background: url("../svg/grid.svg") no-repeat center center;
+          background: url('../svg/grid.svg') no-repeat center center;
           background-size: cover;
         }
       }
@@ -148,7 +148,7 @@
         margin: 0;
         top: 4px;
         right: 10px;
-        background: url("../svg/glass.svg") no-repeat center center;
+        background: url('../svg/glass.svg') no-repeat center center;
         background-size: cover;
       }
     }
@@ -173,7 +173,7 @@
         cursor: pointer;
         line-height: 1.45;
 
-        @include media("l") {
+        @include media('l') {
           padding: 0 10px;
         }
       }
@@ -186,10 +186,10 @@
         left: 0;
         top: -5px;
         right: 0;
-        background: url("../svg/phone.svg") no-repeat center center;
+        background: url('../svg/phone.svg') no-repeat center center;
         background-size: cover;
 
-        @include media("l") {
+        @include media('l') {
           left: -12px;
           top: -15px;
         }
@@ -200,7 +200,7 @@
         flex-direction: column;
         justify-content: center;
 
-        @include media("l") {
+        @include media('l') {
           display: none;
         }
 
@@ -230,7 +230,7 @@
       left: 0;
       top: -5px;
       right: 0;
-      background: url("../svg/stats.svg") no-repeat center center;
+      background: url('../svg/stats.svg') no-repeat center center;
       background-size: cover;
     }
 
@@ -242,7 +242,7 @@
       left: 0;
       top: -5px;
       right: 0;
-      background: url("../svg/heart.svg") no-repeat center center;
+      background: url('../svg/heart.svg') no-repeat center center;
       background-size: cover;
     }
 
@@ -254,7 +254,7 @@
       left: 0;
       top: -5px;
       right: 0;
-      background: url("../svg/profile.svg") no-repeat center center;
+      background: url('../svg/profile.svg') no-repeat center center;
       background-size: cover;
     }
 
@@ -266,7 +266,7 @@
       left: 0;
       top: -5px;
       right: 0;
-      background: url("../svg/cart.svg") no-repeat center center;
+      background: url('../svg/cart.svg') no-repeat center center;
       background-size: cover;
     }
   }
