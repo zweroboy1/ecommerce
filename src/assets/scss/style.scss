@@ -1,31 +1,31 @@
 // abstract
 //Шаблоны - глобальные переменные, функции, микшины и заполнители (код не выводит CSS, но предоставляет функциональность)
-@import "abstracts/variables.scss";
-@import "abstracts/mixins";
+@import 'abstracts/variables.scss';
+@import 'abstracts/mixins';
 
 /* Base */
 //Основные стили сайта (сброс стилей, типография, сеточная система и утилиты)
-@import "base/reset";
-@import "base/basic";
+@import 'base/reset';
+@import 'base/basic';
 
 /* Components */
 //Повторно используемые компоненты пользовательского интерфейса
-@import "components/buttons";
-@import "components/navigation";
-@import "components/banners";
-@import "components/slider";
-@import "components/bestСategories";
-@import "components/promotions";
-@import "components/aboutСompany";
-@import "components/socialLinks";
-@import "components/authorization";
+@import 'components/buttons';
+@import 'components/navigation';
+@import 'components/banners';
+@import 'components/slider';
+@import 'components/bestСategories';
+@import 'components/promotions';
+@import 'components/aboutСompany';
+@import 'components/socialLinks';
+@import 'components/authorization';
 
 /* Layout */
 //Макет сайта (стили для шапки сайта, футера и боковой панели)
-@import "layout/top";
-@import "layout/header";
-@import "layout/footer";
+@import 'layout/top';
+@import 'layout/header';
+@import 'layout/footer';
 
 /* Pages */
 //Стили, специфичные для каждой страницы
-@import "pages/main";
+@import 'pages/main';

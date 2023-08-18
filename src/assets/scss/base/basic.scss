@@ -117,12 +117,12 @@ p {
   padding: 6px 0;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"],
-input[type="number"],
-input[type="date"],
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='tel'],
+input[type='number'],
+input[type='date'],
 textarea,
 select {
   min-height: $button-size-40;
@@ -153,7 +153,6 @@ select {
     outline: 0;
     transition: border 0.2s linear 0s;
   }
-
 }
 
 #root {
