@@ -1,0 +1,31 @@
+.button {
+  background: #07c;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  min-width: 40px;
+  height: 40px;
+  white-space: normal;
+  line-height: 1.2;
+  padding: 5px 15px;
+  color: #000;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  background-clip: border-box;
+  font-size: 15px;
+  letter-spacing: normal;
+  text-transform: none;
+  border-radius: 40px;
+  transition: background 150ms, border-color 150ms, box-shadow 150ms;
+}
+
+.button-second {
+  background: #fdde55;
+  color: #000;
+}
+
+.top-arrow {
+  @include arrow()
+}

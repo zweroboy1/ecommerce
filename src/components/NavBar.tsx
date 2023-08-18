@@ -9,30 +9,35 @@ const NavBar = observer(() => {
   const location = useLocation();
   const isLoginPage = location.pathname === AUTH_ROUTE;
   const isRegistrationPage = location.pathname === REGISTRATION_ROUTE;
+  const isMainPage = location.pathname === MAIN_ROUTE;
 
   return (
-    <nav>
+    <nav className="nav-bar">
       {user?.isAuth && (
-        <div>
-          <NavLink to={MAIN_ROUTE}>
-            <button>Main page</button>
-          </NavLink>
+        <div className="nav-bar__block">
+          {!isMainPage && (
+            <NavLink to={MAIN_ROUTE}>
+              <button>Домой</button>
+            </NavLink>
+          )}
           <button onClick={() => user.setIsAuth(false)}>LogOut</button>
         </div>
       )}
       {!user?.isAuth && (
-        <div>
-          <NavLink to={MAIN_ROUTE}>
-            <button>Main page</button>
-          </NavLink>
+        <div className="nav-bar__block">
+          {!isMainPage && (
+            <NavLink to={MAIN_ROUTE}>
+              <button>Домой</button>
+            </NavLink>
+          )}
           {!isRegistrationPage && (
             <NavLink to={REGISTRATION_ROUTE}>
-              <button>Registration page</button>
+              <button>Регистрация</button>
             </NavLink>
           )}
           {!isLoginPage && (
             <NavLink to={AUTH_ROUTE}>
-              <button>Auth page</button>
+              <button>Вход</button>
             </NavLink>
           )}
         </div>

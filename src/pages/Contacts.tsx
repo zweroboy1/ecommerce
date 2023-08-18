@@ -1,0 +1,18 @@
+import { Top } from './main/Top';
+import { Header } from './main/Header';
+import { Footer } from './main/Footer';
+
+const Contacts = () => {
+  return (
+    <div className="tygh">
+      <Top />
+      <Header />
+      <main className="main">
+        <h1>Контакты</h1>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export { Contacts };

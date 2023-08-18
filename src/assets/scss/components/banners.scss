@@ -1,0 +1,82 @@
+/* banners */
+
+.banner {
+  touch-action: manipulation;
+  user-select: none;
+
+  &__bg {
+    max-width: 100%;
+    height: 550px;
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow: hidden;
+    background: cover;
+  }
+
+  &__video {
+    position: absolute;
+    min-height: 100%;
+    min-width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+  }
+
+  &__content {
+    justify-content: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+    height: 550px;
+    max-width: inherit;
+    padding: 0 calc(100% / 2 - 680px);
+    display: flex;
+
+    @media (max-width: 1023px) {
+      padding: 0 15px;
+    }
+  }
+
+  &__img {
+    width: 2000px;
+    height: 509px;
+    flex: 1 100%;
+    margin: 0 auto;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    display: flex;
+    overflow: hidden;
+  }
+
+  &__box {
+    padding: 50px 0;
+  }
+
+  &__title {
+    font-size: 32px;
+    color: #000000;
+  }
+
+  &__subtitle {
+    color: #000000;
+    background: rgba(255, 255, 255, 70%);
+    border-radius: 10px;
+    padding: 7px 15px;
+  }
+
+  &__span {
+    font-weight: 100;
+    font-family: sans-serif;
+    font-size: 32px;
+  }
+
+  &__txt {
+    font-size: 18px;
+    margin-top: 10px;
+    line-height: 1.4;
+    color: #000;
+  }
+}
