@@ -30,7 +30,7 @@
   color: #000;
   opacity: 1;
   border-radius: 100%;
-  transition: .3s ease;
+  transition: 0.3s ease;
   z-index: 10;
 }
 
@@ -39,7 +39,7 @@
   right: auto;
 
   &::before {
-    content: "<";
+    content: '<';
   }
 }
 
@@ -48,7 +48,7 @@
   left: auto;
 
   &::before {
-    content: ">";
+    content: '>';
   }
 }
 
@@ -65,7 +65,7 @@
     max-width: 100vw;
     transition: transform 0.5s ease-in-out;
 
-    @include media("s") {
+    @include media('s') {
       margin: 0 -10px;
       padding: 0 10px;
     }
