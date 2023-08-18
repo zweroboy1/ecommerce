@@ -78,35 +78,25 @@ const RegistrationForm = observer(
         >
           {({ values, setFieldValue, setFieldTouched, isValid, isSubmitting, errors, touched }) => (
             <Form>
-              <Input label="Your Name" name="name" placeholder="Enter your name" type="text" />
+              <Input label="Имя" name="name" placeholder="Введите имя" type="text" />
+
+              <Input label="Фамилия" name="surname" placeholder="Введите фамилию" type="text" />
+
+              <Input label="E-mail" name="email" placeholder="Введите e-mail" type="email" />
+
+              <Input label="Пароль" name="password" placeholder="Введите пароль" type="password" />
 
               <Input
-                label="Your Surname"
-                name="surname"
-                placeholder="Enter your surname"
-                type="text"
-              />
-
-              <Input label="Your Email" name="email" placeholder="Enter your email" type="email" />
-
-              <Input
-                label="Your Password"
-                name="password"
-                placeholder="Enter your password"
-                type="password"
-              />
-
-              <Input
-                label="Your Date Of Birth"
+                label="Дата рождения"
                 name="dateOfBirth"
-                placeholder="Enter your date of birth"
+                placeholder="Введите дату рождения"
                 type="date"
               />
 
               <div className="address-row">
-                <h2>Shipping Address</h2>
+                <h2>Адрес доставки</h2>
                 <label>
-                  <span>Set as a default address</span>
+                  <span>Сделать адресом по умолчанию</span>
                   <input
                     type="checkbox"
                     onChange={async (e) => {
@@ -117,9 +107,9 @@ const RegistrationForm = observer(
                 </label>
 
                 <Input
-                  label="City"
+                  label="Город"
                   name="shippingAddressCity"
-                  placeholder="Enter your city"
+                  placeholder="Введите город"
                   type="text"
                   defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
                 />
@@ -129,7 +119,7 @@ const RegistrationForm = observer(
                     touched.shippingAddressCountry && errors.shippingAddressCountry ? 'error' : ''
                   }`}
                 >
-                  <span>Country</span>
+                  <span>Страна</span>
                   <Field name="shippingAddressCountry" as="select">
                     {Object.keys(country).map((key, i) => (
                       <option key={key} value={country[key]} disabled={i === 0}>
@@ -143,31 +133,31 @@ const RegistrationForm = observer(
                 </label>
 
                 <Input
-                  label="Street"
+                  label="Уилца"
                   name="shippingAddressStreet"
-                  placeholder="Enter street"
+                  placeholder="Введите улицу"
                   type="text"
                   defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
                 />
 
                 <Input
-                  label="Post Code"
+                  label="Индекс"
                   name="shippingAddressPostCode"
-                  placeholder="Enter post code"
+                  placeholder="Введите индекс"
                   type="text"
                   defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
                 />
               </div>
 
               <div className="address-row">
-                <h2>Billing Address</h2>
+                <h2>Адрес оплаты</h2>
 
                 <label
                   className={`label ${
                     touched.billingAddressCountry && errors.billingAddressCountry ? 'error' : ''
                   }`}
                 >
-                  <span>Country</span>
+                  <span>Страна</span>
                   <Field name="billingAddressCountry" as="select">
                     {Object.keys(country).map((key, i) => (
                       <option key={key} value={country[key]} disabled={i === 0}>
@@ -181,32 +171,32 @@ const RegistrationForm = observer(
                 </label>
 
                 <Input
-                  label="City"
+                  label="Город"
                   name="billingAddressCity"
-                  placeholder="Enter your city"
+                  placeholder="Введите город"
                   type="text"
                   defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
                 />
 
                 <Input
-                  label="Street"
+                  label="Улица"
                   name="billingAddressStreet"
-                  placeholder="Enter street"
+                  placeholder="Введите улицу"
                   type="text"
                   defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
                 />
 
                 <Input
-                  label="Post Code"
+                  label="Индекс"
                   name="billingAddressPostCode"
-                  placeholder="Enter post code"
+                  placeholder="Введите индекс"
                   type="text"
                   defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
                 />
               </div>
 
-              <Button type="submit" disabled={!isValid}>
-                {isSubmitting ? 'Submitting...' : 'Submit'}
+              <Button className="button button-second" type="submit" disabled={!isValid}>
+                {isSubmitting ? 'Submitting...' : 'Регистрация'}
               </Button>
             </Form>
           )}

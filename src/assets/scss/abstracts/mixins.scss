@@ -1,0 +1,67 @@
+@mixin arrow() {
+  position: relative;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 10px solid rgba(0, 0, 0, 0.5);
+}
+
+@mixin flex($content: center, $vcontent: center) {
+  display: flex;
+  align-items: $vcontent;
+  justify-content: $content;
+}
+
+@mixin flexColumn($content: center) {
+  display: flex;
+  align-items: $content;
+  flex-direction: column;
+}
+
+@mixin font() {
+  font-family: MuseoSansBlack, 'Helvetica Neue', Arial, sans-serif;
+  color: #000;
+  line-height: 1;
+  font-size: 24px;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-height: initial;
+}
+
+// @mixin font($family: $font-family-title,
+//   $style: normal,
+//   $weight: $font-weight-400,
+//   $size: $font-size-35,
+//   $lheight: $line-height-130,
+//   $lspacing: $letter-spacing-06,
+//   $color: $color-dark-l) {
+//   font-family: $family;
+//   font-style: $style;
+//   font-weight: $weight;
+//   font-size: $size;
+//   line-height: $lheight;
+//   letter-spacing: $lspacing;
+//   color: $color;
+// }
+
+@mixin buttonHover() {
+  @media (hover: hover) {
+    cursor: pointer;
+    background: $color-primary-light;
+    color: $color-dark-3xl;
+    border-color: $color-primary-light;
+  }
+}
+
+@mixin media($media) {
+
+  @each $size,
+  $resolution in $sizes {
+    @if $media ==$size {
+      @media (max-width: $resolution) {
+        @content;
+      }
+    }
+  }
+}

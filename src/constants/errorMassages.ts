@@ -1,18 +1,18 @@
-const REQUIRED_FILL = 'This field must be filled';
-const MIN_1_LENGTH = 'This field must be at least 1 character long';
-const MIN_8_LENGTH = 'This field must be at least 8 character long';
-const ONLY_LETTERS = 'This field must contain only letters';
-const ONLY_UPPERCASE_LETTER_AND_NUMBER =
-  'This field must contain only uppercase letters and numbers';
-const ONE_LETTER = 'This field must contain at least one letter';
-const ONE_LOWERCASE_LETTER = 'This field must contain at least one lowercase letter';
-const ONE_UPPERCASE_LETTER = 'This field must contain at least one uppercase letter';
-const ONE_NUMBER = 'This field must contain at least one number';
+const REQUIRED_FILL = 'Это поле должно быть заполнено';
+const MIN_1_LENGTH = 'Это поле должно содержать минимум 1 символ';
+const MIN_8_LENGTH = 'Это поле должно содержать минимум 8 символов';
+const ONLY_LETTERS = 'Это поле должно содержать только буквы';
+const ONLY_UPPERCASE_LETTER_AND_NUMBER = 'Это поле должно содержать только прописные буквы и цифры';
+const ONE_LETTER = 'Это поле должно содержать хотя бы одну букву';
+const ONE_LOWERCASE_LETTER = 'Это поле должно содержать хотя бы одну строчную букву';
+const ONE_UPPERCASE_LETTER = 'Это поле должно содержать хотя бы одну заглавную букву';
+const ONE_NUMBER = 'Это поле должно содержать хотя бы одну цифру';
 const ONE_SPECIAL_CHARACTER =
-  'This field must contain at least one special character (e.g., !@#$%^&*)';
-const NOT_LEADING = 'This field must not contain leading or trailing whitespace';
-const MIN_DATE = 'You must be at least 13 years old';
-const COUNTRY_CODE = 'This field must contain Two-digit country code as per ISO 3166-1 alpha-2';
+  'Это поле должно содержать хотя бы один специальный символ (например, !@#$%^&*)';
+const NOT_LEADING = 'Это поле не должно содержать ведущих или завершающих пробелов';
+const MIN_DATE = 'Вам должно быть как минимум 13 лет';
+const COUNTRY_CODE =
+  'Это поле должно содержать двухзначный код страны в соответствии с ISO 3166-1 alpha-2';
 
 export {
   REQUIRED_FILL,
