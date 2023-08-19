@@ -8,7 +8,7 @@ const Contacts = () => {
       <Top />
       <Header />
       <main className="main">
-        <h1>Контакты</h1>
+        <h1>Обратная связь</h1>
       </main>
       <Footer />
     </div>

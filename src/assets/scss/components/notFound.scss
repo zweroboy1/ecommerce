@@ -1,0 +1,61 @@
+/* notFound */
+
+.exception {
+  position: relative;
+  margin: 50px 0px 30px 0px;
+  padding: 40px 0px 70px 0px;
+
+  &__code {
+    top: 92px;
+    left: 63px;
+    display: inline-block;
+    width: 300px;
+    color: #e74c3c;
+    text-align: center;
+    font-weight: bold;
+    font-size: 86px;
+    line-height: 70px;
+  }
+
+  &__code-txt {
+    display: block;
+    text-align: center;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 26px;
+  }
+
+  &__title-info {
+    display: inline-block;
+    padding-left: 30px;
+    text-align: left;
+  }
+
+  &__title {
+    padding: 0px 0px 25px 0px;
+    font-size: 25px;
+    font-weight: normal;
+    color: #34495e;
+  }
+
+  &__info {
+    padding: 0px 0px 30px 0px;
+    color: #bdc3c7;
+    font-size: 110%;
+  }
+
+  &__links {
+    margin: 0px 20px 0px 0px;
+  }
+
+  &__links-item {
+    float: left;
+    list-style-type: none;
+    margin-right: 20px;
+  }
+
+  &__links-a {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

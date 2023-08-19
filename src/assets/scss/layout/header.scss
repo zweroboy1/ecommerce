@@ -88,8 +88,7 @@
           position: absolute;
           width: 45px;
           height: 45px;
-          background: url('../svg/grid.svg') no-repeat center center;
-          background-size: cover;
+          background: url('../svg/grid.svg') no-repeat center center / cover;
         }
       }
 
@@ -108,8 +107,6 @@
           background: #fff;
           overflow-y: overlay;
           overflow-x: hidden;
-          // width: calc(1400px - 40px);
-          // min-height: 550px;
           box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 5px 7px 0 rgba(0, 0, 0, 0.22);
         }
       }
@@ -222,52 +219,21 @@
     position: relative;
     gap: 20px;
 
-    .top-compared-products {
-      position: relative;
-      height: 35px;
-      width: 35px;
-      margin: 0;
-      left: 0;
-      top: -5px;
-      right: 0;
-      background: url('../svg/stats.svg') no-repeat center center;
+    .compared-products__icon {
+      background: url(/src/assets/svg/stats.svg) no-repeat center center / cover;
+    }
+
+    .wishlist__icon {
+      background: url('../svg/heart.svg') no-repeat center center / cover;
+    }
+
+    .my-account__icon  {
+      background: url('../svg/profile.svg') no-repeat center center / cover;
       background-size: cover;
     }
 
-    .top-wishlist {
-      position: relative;
-      height: 35px;
-      width: 35px;
-      margin: 0;
-      left: 0;
-      top: -5px;
-      right: 0;
-      background: url('../svg/heart.svg') no-repeat center center;
-      background-size: cover;
-    }
-
-    .top-my-account {
-      position: relative;
-      height: 35px;
-      width: 35px;
-      margin: 0;
-      left: 0;
-      top: -5px;
-      right: 0;
-      background: url('../svg/profile.svg') no-repeat center center;
-      background-size: cover;
-    }
-
-    .top-cart {
-      position: relative;
-      height: 35px;
-      width: 35px;
-      margin: 0;
-      left: 0;
-      top: -5px;
-      right: 0;
-      background: url('../svg/cart.svg') no-repeat center center;
-      background-size: cover;
+    .cart__icon {
+      background: url('../svg/cart.svg') no-repeat center center / cover;
     }
   }
 }

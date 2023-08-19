@@ -46,6 +46,10 @@
 
             .text-links__a {
               color: #595959;
+
+              &:hover {
+                color: #2e2e2e;
+              }
             }
           }
 

@@ -26,6 +26,18 @@
   color: #000;
 }
 
+.header-icon {
+  display: block;
+  position: relative;
+  height: 35px;
+  width: 35px;
+  margin: 0;
+  left: 0;
+  top: -5px;
+  right: 0;
+  cursor: pointer;
+}
+
 .top-arrow {
   @include arrow();
 }

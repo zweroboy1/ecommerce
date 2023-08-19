@@ -16,6 +16,7 @@ const TELEVISIONS_ROUTE = '/televisions';
 const SPORT_ROUTE = '/sport';
 const CART_ROUTE = '/cart';
 const ALL_ORDERS_ROUTE = '/all-orders';
+const ACCOUNT_ROUTE = '/account';
 const SAVED_ROUTE = '/saved';
 const COMPARE_ROUTE = '/compare';
 const BRANDS_ROUTE = '/brands';
@@ -43,6 +44,7 @@ export {
   SPORT_ROUTE,
   CART_ROUTE,
   ALL_ORDERS_ROUTE,
+  ACCOUNT_ROUTE,
   SAVED_ROUTE,
   COMPARE_ROUTE,
   BRANDS_ROUTE,
