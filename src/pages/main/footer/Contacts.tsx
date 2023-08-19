@@ -12,7 +12,6 @@ const Contacts = () => {
       text: 'oopterator@rs.school',
       link: 'mailto:oopterator@rs.school',
     },
-    { text: 'Посмотреть на карте', link: '' },
   ];
 
   return <FooterMenu className="contacts" title="Контакты" menuItems={menuItems} />;

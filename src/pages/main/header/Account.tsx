@@ -1,11 +1,13 @@
 import { NavLink } from 'react-router-dom';
-import { MAIN_ROUTE } from '../../../constants/route';
+import { ACCOUNT_ROUTE } from '../../../constants/route';
 
 const Account = () => {
   return (
-    <div className="top-my-account">
-      <div className="top-my-account__title">
-        <NavLink to={MAIN_ROUTE} title=""></NavLink>
+    <div className="my-account">
+      <div className="my-account__title">
+        <NavLink to={ACCOUNT_ROUTE} title="">
+          <i className="my-account__icon header-icon"></i>
+        </NavLink>
       </div>
     </div>
   );

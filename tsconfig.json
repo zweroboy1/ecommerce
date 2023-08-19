@@ -21,6 +21,6 @@
     "noFallthroughCasesInSwitch": true,
     "rootDir": "./"
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/module.d.ts"],
+  "include": ["**/*.js", "**/*.ts", "**/*.tsx", "**/module.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

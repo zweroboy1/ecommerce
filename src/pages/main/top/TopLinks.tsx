@@ -8,8 +8,6 @@ import {
 } from '../../../constants/route';
 
 const TopLinks = () => {
-  // const languageLinks = [{ text: 'Русский', link: '' }];
-  // const currencyLinks = [{ text: '($)', link: '' }];
   const quickLinks = [
     { text: 'Доставка и оплата', link: PAYMENT_ROUTE },
     { text: 'Возврат', link: RETURN_ROUTE },
@@ -25,20 +23,6 @@ const TopLinks = () => {
 
   return (
     <div className="top-links">
-      {/* <div className="top-languages">
-        <a className="top-languages__a">
-          <span className="top-languages__item">{languageLinks[0].text}</span>
-          <span className="top-arrow"></span>
-        </a>
-      </div>
-
-      <div className="top-currencies">
-        <a className="top-currencies__a">
-          <span className="top-currencies__item">{currencyLinks[0].text}</span>
-          <span className="top-arrow"></span>
-        </a>
-      </div> */}
-
       <div className="top-quick-links">
         <div className="top-quick-links__wrapper">
           <span className="links-phone" onClick={toggleMenu}>

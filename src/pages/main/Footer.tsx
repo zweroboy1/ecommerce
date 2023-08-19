@@ -7,10 +7,10 @@ const Footer = () => {
   return (
     <footer className="footer container">
       <div className="row">
-        <MyAccount />
-        <Contacts />
         <Order />
+        <Contacts />
         <Store />
+        <MyAccount />
       </div>
     </footer>
   );
