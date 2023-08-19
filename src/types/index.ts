@@ -15,7 +15,8 @@ type InputProps = {
 };
 
 type Address = {
-  [x: string]: string;
+  // [x: string]: string;
+  readonly id?: string;
   street: string;
   city: string;
   postCode: string;
@@ -68,4 +69,54 @@ type Country = {
   [key: string]: string;
 };
 
-export type { InputProps, RegistrationFormProps, ButtonProps, Address, Country };
+interface User {
+  id: number;
+  name: string;
+  // другие поля пользователя
+}
+
+type TokenResponse = {
+  access_token: string;
+  expires_in: string;
+  refresh_token: string;
+  scope: string;
+  token_type: string;
+};
+
+type UserWithToken = {
+  user: User;
+  token: TokenResponse;
+};
+
+// type Address = {
+//   readonly id?: string;
+//   streetName: string;
+//   city: string;
+//   postalCode: string;
+//   country: string;
+// };
+
+type Customer = {
+  id: string;
+  version: number;
+  email: string;
+  password?: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  addresses: Address[];
+  shippingAddressIds: string[];
+  billingAddressIds: string[];
+};
+
+export type {
+  InputProps,
+  RegistrationFormProps,
+  ButtonProps,
+  Address,
+  Country,
+  User,
+  TokenResponse,
+  UserWithToken,
+  Customer,
+};
