@@ -1,4 +1,8 @@
 /* banners */
+.carousel-container {
+  width: 100%;
+  margin: 0 auto;
+}
 
 .banner {
   touch-action: manipulation;
@@ -34,14 +38,29 @@
     padding: 0 calc(100% / 2 - 680px);
     display: flex;
 
+    &.row-reverse {
+      flex-direction: row-reverse;
+      align-items: end;
+
+      .banner__img {
+        justify-content: flex-end;
+
+        img {
+          height: 550px;
+        }
+      }
+
+      .banner__txt {
+        color: #fff;
+      }
+    }
+
     @media (max-width: 1023px) {
       padding: 0 15px;
     }
   }
 
   &__img {
-    width: 2000px;
-    height: 509px;
     flex: 1 100%;
     margin: 0 auto;
     justify-content: center;
@@ -53,11 +72,15 @@
 
   &__box {
     padding: 50px 0;
+    min-width: 520px;
   }
 
   &__title {
     font-size: 32px;
     color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__subtitle {

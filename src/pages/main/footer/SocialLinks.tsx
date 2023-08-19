@@ -1,10 +1,10 @@
 const SocialLinks = () => {
   const socialLinks = [
-    { icon: 'facebook', link: '' },
-    { icon: 'gplus', link: '' },
-    { icon: 'discord', link: '' },
-    { icon: 'instagram', link: '' },
-    { icon: 'youtube', link: '' },
+    { icon: 'facebook', link: 'https://www.facebook.com/' },
+    { icon: 'gplus', link: 'https://plus.google.com' },
+    { icon: 'discord', link: 'https://discord.com/' },
+    { icon: 'instagram', link: 'https://www.instagram.com/' },
+    { icon: 'youtube', link: 'https://www.youtube.com/' },
   ];
 
   return (

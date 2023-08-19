@@ -18,6 +18,7 @@ import {
   SPORT_ROUTE,
   CART_ROUTE,
   ALL_ORDERS_ROUTE,
+  ACCOUNT_ROUTE,
   SAVED_ROUTE,
   COMPARE_ROUTE,
   BRANDS_ROUTE,
@@ -43,6 +44,7 @@ import { Televisions } from './pages/Televisions';
 import { Sport } from './pages/Sport';
 import { Cart } from './pages/Cart';
 import { AllOrders } from './pages/AllOrders';
+import { Account } from './pages/Account';
 import { Saved } from './pages/Saved';
 import { Compare } from './pages/Compare';
 import { Brands } from './pages/Brands';
@@ -107,6 +109,10 @@ const commonRoutes = [
   {
     path: ALL_ORDERS_ROUTE,
     Component: AllOrders,
+  },
+  {
+    path: ACCOUNT_ROUTE,
+    Component: Account,
   },
   {
     path: SAVED_ROUTE,
