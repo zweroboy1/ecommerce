@@ -11,7 +11,7 @@ import {
   CT_NO_USER_ERROR,
   CT_WRONG_PASSWORD_ERROR,
 } from '../constants/apiMessages';
-import { validationSchema } from '../utils/loginValidation';
+import { loginValidationSchema } from '../utils/loginValidation';
 
 const Login: React.FC = observer(() => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -27,7 +27,7 @@ const Login: React.FC = observer(() => {
         email: '',
         password: '',
       }}
-      validationSchema={validationSchema}
+      validationSchema={loginValidationSchema}
       onSubmit={(
         values,
         {
@@ -69,8 +69,19 @@ const Login: React.FC = observer(() => {
         }
         sendRequestWithCredentials(values);
       }}
+      validateOnChange={true}
     >
-      {({ isValid, isSubmitting, dirty, touched, errors, handleChange, setSubmitting }) => (
+      {({
+        isValid,
+        isSubmitting,
+        dirty,
+        touched,
+        errors,
+        handleChange,
+        setSubmitting,
+        validateField,
+        setFieldTouched,
+      }) => (
         <Form>
           <div className="form-fields">
             <label>
@@ -81,13 +92,19 @@ const Login: React.FC = observer(() => {
               placeholder="Введите e-mail"
               name="email"
               className={(touched.email && errors.email) || emailError !== '' ? 'input__error' : ''}
-              formNoValidate
+              // formNoValidate
+              // validate={() => {
+              //   // eslint-disable-next-line no-console
+              //   console.log('validate');
+              // }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (emailError !== '') {
                   setEmailError('');
                   setSubmitting(false);
                 }
+                setFieldTouched('email', true, true);
                 handleChange(e);
+                validateField('email');
               }}
             />
             {(touched.email && errors.email) || emailError !== '' ? (
@@ -119,7 +136,9 @@ const Login: React.FC = observer(() => {
                     setPasswordError('');
                     setSubmitting(false);
                   }
+                  setFieldTouched('password', true, true);
                   handleChange(e);
+                  validateField('password');
                 }}
               />
               <button type="button" onClick={() => setShowPassword(!showPassword)}>
