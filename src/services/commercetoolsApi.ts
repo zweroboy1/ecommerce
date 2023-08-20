@@ -4,11 +4,18 @@ import {
   CT_WRONG_PASSWORD_ERROR,
   CT_LOGIN_ERROR,
   CT_INVALID_JSON_ERROR,
-  CT_EXISTING_CUSTOMER_ERROR
+  CT_EXISTING_CUSTOMER_ERROR,
 } from '../constants/apiMessages';
 
-import { Address, CreateUser, Credentials, Customer, CustomerWithToken, RegisterUser, TokenResponse } from '../types';
-
+import {
+  Address,
+  CreateUser,
+  Credentials,
+  Customer,
+  CustomerWithToken,
+  RegisterUser,
+  TokenResponse,
+} from '../types';
 
 const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
@@ -39,9 +46,7 @@ async function fetchBearerToken(): Promise<string | null> {
   }
 }
 
-async function getUserWithCredentialsToken(
-  credentials: Credentials
-): Promise<TokenResponse> {
+async function getUserWithCredentialsToken(credentials: Credentials): Promise<TokenResponse> {
   const scope = `manage_project:${projectKey}`;
   const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/${projectKey}/customers/token`;
   const requestBody = `grant_type=password&username=${encodeURIComponent(
