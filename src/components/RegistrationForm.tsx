@@ -148,7 +148,7 @@ const RegistrationForm = observer(({ ...initialValues }: PropsWithoutRef<Registe
                 name="shippingAddressPostCode"
                 placeholder="Введите индекс"
                 type="text"
-                defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
+                defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress, setFieldTouched }}
               />
 
               <label>
@@ -210,7 +210,7 @@ const RegistrationForm = observer(({ ...initialValues }: PropsWithoutRef<Registe
                 name="billingAddressPostCode"
                 placeholder="Введите индекс"
                 type="text"
-                defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
+                defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress, setFieldTouched }}
               />
 
               <label>
