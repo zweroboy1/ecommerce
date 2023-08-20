@@ -1,49 +1,54 @@
-import * as Yup from 'yup';
+import * as yup from 'yup';
+import {
+  CONTAIN_AT,
+  CONTAIN_DOMAIN_NAME,
+  MIN_8_LENGTH,
+  NOT_LEADING,
+  NO_CORRECT_EMAIL,
+  ONE_LOWERCASE_LETTER,
+  ONE_NUMBER,
+  ONE_SPECIAL_CHARACTER,
+  ONE_UPPERCASE_LETTER,
+  REQUIRED_FILL,
+} from '../constants/errorMassages';
 
-const emailValidation = (value: string): Yup.ValidationError | true => {
-  if (!value.includes('@')) {
-    return new Yup.ValidationError(
-      'Адрес электронной почты должен содержать символ "@"',
-      value,
-      'email'
-    );
-  }
-  if (!value.split('@')[1].includes('.')) {
-    return new Yup.ValidationError(
-      'Адрес электронной почты должен содержать доменное имя после @',
-      value,
-      'email'
-    );
+const emailTest = (value: string): yup.ValidationError | true => {
+  if (value === '' || value.length < 1) {
+    return new yup.ValidationError(REQUIRED_FILL, value, 'email');
   }
   if (value.trim() !== value) {
-    return new Yup.ValidationError(
-      'Адрес электронной почты не должен содержать начальные или конечные пробелы',
-      value,
-      'email'
-    );
+    return new yup.ValidationError(NOT_LEADING, value, 'email');
+  }
+  if (!value.includes('@')) {
+    return new yup.ValidationError(CONTAIN_AT, value, 'email');
+  }
+  if (!value.split('@')[1].includes('.')) {
+    return new yup.ValidationError(CONTAIN_DOMAIN_NAME, value, 'email');
   }
   return true;
 };
+const emailValidation = yup
+  .string()
+  .required(REQUIRED_FILL)
+  .test('email-validation', NO_CORRECT_EMAIL, emailTest)
+  .required(REQUIRED_FILL)
+  .email(NO_CORRECT_EMAIL);
 
-const validationSchema = Yup.object({
-  email: Yup.string()
-    .required('Необходимо заполнить!')
-    .test('email-validation', 'Invalid email', emailValidation)
-    .email('Неверный адрес электронной почты'),
-  password: Yup.string()
-    .required('Необходимо заполнить!')
-    .min(8, 'Пароль должен быть не менее 8 символов')
-    .matches(/[a-z]/, 'Пароль должен содержать минимум одну строчную букву (a-z)')
-    .matches(/[A-Z]/, 'Пароль должен содержать минимум одну заглавную букву (A-Z)')
-    .matches(/[0-9]/, 'Пароль должен содержать минимум одну цифру (0-9)')
-    .matches(/\W/, 'Пароль должен содержать минимум один специальный символ (например, !@#$%^&*)')
-    .test(
-      'no-leading-trailing-spaces',
-      'Пароль не должен содержать начальные или конечные пробелы',
-      (value) => {
-        return !value || value.trim() === value;
-      }
-    ),
+const passwordValidation = yup
+  .string()
+  .required(REQUIRED_FILL)
+  .min(8, MIN_8_LENGTH)
+  .matches(/[a-z]/, ONE_LOWERCASE_LETTER)
+  .matches(/[A-Z]/, ONE_UPPERCASE_LETTER)
+  .matches(/[0-9]/, ONE_NUMBER)
+  .matches(/\W/, ONE_SPECIAL_CHARACTER)
+  .test('no-leading-trailing-spaces', NOT_LEADING, (value) => {
+    return value.trim() === value;
+  });
+
+const loginValidationSchema = yup.object({
+  email: emailValidation,
+  password: passwordValidation,
 });
 
-export { validationSchema };
+export { loginValidationSchema };
