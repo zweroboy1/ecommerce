@@ -216,8 +216,8 @@ export async function registerUser(userRegisterData: RegisterUser): Promise<Cust
   }
 
   const userForRegistration: CreateUser = {
-    firstName: userRegisterData.name,
-    lastName: userRegisterData.surname,
+    firstName: userRegisterData.firstName,
+    lastName: userRegisterData.lastName,
     email: userRegisterData.email,
     password: userRegisterData.password,
     dateOfBirth: userRegisterData.dateOfBirth,

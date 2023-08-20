@@ -6,8 +6,8 @@ import { Footer } from './main/Footer';
 
 const Registration = () => {
   const initialValues = {
-    name: '',
-    surname: '  ',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     dateOfBirth: DATE_MINUS_13_YEARS.toLocaleDateString('en-ca'),
@@ -15,10 +15,12 @@ const Registration = () => {
     shippingAddressCity: '',
     shippingAddressPostCode: '',
     shippingAddressCountry: '',
+    isShippingAddressDefault: false,
     billingAddressStreet: '',
     billingAddressCity: '',
     billingAddressPostCode: '',
     billingAddressCountry: '',
+    isBillingAddressDefault: false,
   };
 
   return (
