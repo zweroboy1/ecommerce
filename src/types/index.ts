@@ -11,6 +11,7 @@ type InputProps = {
   defaultAddress?: {
     checkDefaultAddress: boolean;
     setCheckDefaultAddress: (value: boolean) => void;
+    setFieldTouched?: (field: string, isTouched?: boolean | undefined) => void;
   };
 };
 

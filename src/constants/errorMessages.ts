@@ -1,6 +1,10 @@
 const REQUIRED_FILL = 'Это поле должно быть заполнено';
 const MIN_1_LENGTH = 'Это поле должно содержать минимум 1 символ';
 const MIN_8_LENGTH = 'Это поле должно содержать минимум 8 символов';
+const MIN_7_LENGTH = 'Это поле должно содержать минимум 7 символов';
+const MIN_6_LENGTH = 'Это поле должно содержать минимум 6 символов';
+const MIN_5_LENGTH = 'Это поле должно содержать минимум 5 символов';
+const MIN_4_LENGTH = 'Это поле должно содержать минимум 4 символов';
 const ONLY_LETTERS = 'Это поле должно содержать только буквы';
 const ONLY_UPPERCASE_LETTER_AND_NUMBER = 'Это поле должно содержать только прописные буквы и цифры';
 const ONE_LETTER = 'Это поле должно содержать хотя бы одну букву';
@@ -19,11 +23,13 @@ const NO_CORRECT_EMAIL = 'Некорректный адрес электронн
 const USER_ALREADY_EXISTS = 'Пользователь с таким адресом электронной почты уже зарегистрирован!';
 const SOMETHING_WRONG = 'Что-то пошло не так. Попробуйте зайти позже.';
 const SUCCESS_REGISTRATION_MEGGAGE = 'Вы успешно зарегистрировались!';
+const NO_CORRECT_POST_CODE = 'Некорректный почтовый индекс для выбранной страны: ';
 
 export {
   REQUIRED_FILL,
   MIN_1_LENGTH,
   MIN_8_LENGTH,
+  MIN_5_LENGTH,
   ONLY_LETTERS,
   ONE_LOWERCASE_LETTER,
   ONE_UPPERCASE_LETTER,
@@ -40,4 +46,8 @@ export {
   USER_ALREADY_EXISTS,
   SOMETHING_WRONG,
   SUCCESS_REGISTRATION_MEGGAGE,
+  NO_CORRECT_POST_CODE,
+  MIN_7_LENGTH,
+  MIN_4_LENGTH,
+  MIN_6_LENGTH,
 };
