@@ -20,7 +20,14 @@ const NavBar = observer(() => {
               <button>Домой</button>
             </NavLink>
           )}
-          <button onClick={() => user.setIsAuth(false)}>LogOut</button>
+          <button
+            onClick={() => {
+              user.setIsAuth(false);
+              user.setUser(null);
+            }}
+          >
+            LogOut
+          </button>
         </div>
       )}
       {!user?.isAuth && (
