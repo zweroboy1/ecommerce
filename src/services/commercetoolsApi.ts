@@ -9,8 +9,8 @@ import { Credentials } from '../types/api';
 
 interface User {
   id: number;
-  name: string;
-  // другие поля пользователя
+  email: string;
+  password: string;
 }
 
 type TokenResponse = {
@@ -25,6 +25,61 @@ type UserWithToken = {
   user: User;
   token: TokenResponse;
 };
+
+type RegisterUser = {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  dateOfBirth: string;
+  shippingAddressStreet: string;
+  shippingAddressCity: string;
+  shippingAddressPostCode: string;
+  shippingAddressCountry: string;
+  isShippingAddressDefault: boolean;
+  billingAddressStreet: string;
+  billingAddressCity: string;
+  billingAddressPostCode: string;
+  billingAddressCountry: string;
+  isBillingAddressDefault: boolean;
+};
+
+type CreateUser = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  dateOfBirth: string;
+  addresses: Address[];
+  shippingAddresses: number[];
+  billingAddresses: number[];
+  defaultShippingAddress?: number;
+  defaultBillingAddress?: number;
+};
+
+type Address = {
+  readonly id?: string;
+  streetName: string;
+  city: string;
+  postalCode: string;
+  country: string;
+};
+
+type Customer = {
+  id: string;
+  version: number;
+  email: string;
+  password?: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  addresses: Address[];
+  shippingAddressIds: string[];
+  billingAddressIds: string[];
+};
+
+const CT_INVALID_JSON_ERROR = 'Request body does not contain valid JSON.';
+const CT_EXISTING_CUSTOMER_ERROR = 'There is already an existing customer with the provided email.';
 
 const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
@@ -138,6 +193,41 @@ async function getUserData(credentials: Credentials, bearerToken: string): Promi
   }
 }
 
+async function createCustomer(
+  userRegisterData: CreateUser,
+  bearerToken: string
+): Promise<Customer> {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/customers`;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userRegisterData),
+    });
+    const responseData = await response.json();
+    // console.log(responseData);
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    return responseData.customer;
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === CT_INVALID_JSON_ERROR) {
+        throw new Error(CT_ERROR);
+      }
+      if (error.message === CT_EXISTING_CUSTOMER_ERROR) {
+        throw new Error(CT_EXISTING_CUSTOMER_ERROR);
+      }
+      // throw error;
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
 export async function getUser(credentials: Credentials): Promise<UserWithToken | Error> {
   const bearerToken = await fetchBearerToken();
   if (bearerToken === null) {
@@ -164,4 +254,57 @@ export async function getUser(credentials: Credentials): Promise<UserWithToken |
       throw new Error(CT_WRONG_PASSWORD_ERROR);
     }
   }
+}
+
+export async function registerUser(userRegisterData: RegisterUser): Promise<Customer> {
+  const isSameAddress =
+    userRegisterData.shippingAddressStreet === userRegisterData.billingAddressStreet &&
+    userRegisterData.shippingAddressCity === userRegisterData.billingAddressCity &&
+    userRegisterData.shippingAddressPostCode === userRegisterData.billingAddressPostCode &&
+    userRegisterData.shippingAddressCountry === userRegisterData.billingAddressCountry;
+
+  const addresses: Address[] = [
+    {
+      streetName: userRegisterData.shippingAddressStreet,
+      city: userRegisterData.shippingAddressCity,
+      postalCode: userRegisterData.shippingAddressPostCode,
+      country: userRegisterData.shippingAddressCountry,
+    },
+  ];
+
+  if (!isSameAddress) {
+    addresses.push({
+      streetName: userRegisterData.billingAddressStreet,
+      city: userRegisterData.billingAddressCity,
+      postalCode: userRegisterData.billingAddressPostCode,
+      country: userRegisterData.billingAddressCountry,
+    });
+  }
+
+  const userForRegistration: CreateUser = {
+    firstName: userRegisterData.name,
+    lastName: userRegisterData.surname,
+    email: userRegisterData.email,
+    password: userRegisterData.password,
+    dateOfBirth: userRegisterData.dateOfBirth,
+    addresses,
+    shippingAddresses: [0],
+    billingAddresses: [isSameAddress ? 0 : 1],
+  };
+
+  if (userRegisterData.isShippingAddressDefault) {
+    userForRegistration.defaultShippingAddress = 0;
+  }
+
+  if (userRegisterData.isBillingAddressDefault) {
+    userForRegistration.defaultBillingAddress = isSameAddress ? 0 : 1;
+  }
+
+  const bearerToken = await fetchBearerToken();
+  if (bearerToken === null) {
+    throw new Error(CT_ERROR);
+  }
+
+  const customer = await createCustomer(userForRegistration, bearerToken);
+  return customer;
 }
