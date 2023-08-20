@@ -9,6 +9,13 @@ const Input = ({ label, className, defaultAddress, ...props }: PropsWithoutRef<I
       defaultAddress.setCheckDefaultAddress(false);
     }
     field.onChange(e);
+    if (field.name === 'shippingAddressPostCode' || field.name === 'billingAddressPostCode') {
+      if (defaultAddress && defaultAddress.setFieldTouched) {
+        setTimeout(() => {
+          defaultAddress.setFieldTouched?.(field.name, true);
+        }, 100);
+      }
+    }
   };
 
   return (
