@@ -1,10 +1,10 @@
 import { makeAutoObservable } from 'mobx';
-import { UserWithToken } from '../types';
+import { CustomerWithToken } from '../types';
 
 class UserStore {
   private shadowIsAuth: boolean;
 
-  private shadowUser: null | UserWithToken;
+  private shadowUser: null | CustomerWithToken;
 
   constructor() {
     this.shadowIsAuth = false;
@@ -16,7 +16,7 @@ class UserStore {
     this.shadowIsAuth = value;
   }
 
-  setUser(value: null | UserWithToken) {
+  setUser(value: null | CustomerWithToken) {
     this.shadowUser = value;
   }
 

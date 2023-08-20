@@ -3,83 +3,12 @@ import {
   CT_NO_USER_ERROR,
   CT_WRONG_PASSWORD_ERROR,
   CT_LOGIN_ERROR,
+  CT_INVALID_JSON_ERROR,
+  CT_EXISTING_CUSTOMER_ERROR
 } from '../constants/apiMessages';
 
-import { Credentials } from '../types/api';
+import { Address, CreateUser, Credentials, Customer, CustomerWithToken, RegisterUser, TokenResponse } from '../types';
 
-interface User {
-  id: number;
-  email: string;
-  password: string;
-}
-
-type TokenResponse = {
-  access_token: string;
-  expires_in: string;
-  refresh_token: string;
-  scope: string;
-  token_type: string;
-};
-
-type UserWithToken = {
-  user: User;
-  token: TokenResponse;
-};
-
-type RegisterUser = {
-  name: string;
-  surname: string;
-  email: string;
-  password: string;
-  dateOfBirth: string;
-  shippingAddressStreet: string;
-  shippingAddressCity: string;
-  shippingAddressPostCode: string;
-  shippingAddressCountry: string;
-  isShippingAddressDefault: boolean;
-  billingAddressStreet: string;
-  billingAddressCity: string;
-  billingAddressPostCode: string;
-  billingAddressCountry: string;
-  isBillingAddressDefault: boolean;
-};
-
-type CreateUser = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  dateOfBirth: string;
-  addresses: Address[];
-  shippingAddresses: number[];
-  billingAddresses: number[];
-  defaultShippingAddress?: number;
-  defaultBillingAddress?: number;
-};
-
-type Address = {
-  readonly id?: string;
-  streetName: string;
-  city: string;
-  postalCode: string;
-  country: string;
-};
-
-type Customer = {
-  id: string;
-  version: number;
-  email: string;
-  password?: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  addresses: Address[];
-  shippingAddressIds: string[];
-  billingAddressIds: string[];
-};
-
-const CT_INVALID_JSON_ERROR = 'Request body does not contain valid JSON.';
-const CT_EXISTING_CUSTOMER_ERROR = 'There is already an existing customer with the provided email.';
 
 const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
@@ -112,7 +41,7 @@ async function fetchBearerToken(): Promise<string | null> {
 
 async function getUserWithCredentialsToken(
   credentials: Credentials
-): Promise<TokenResponse | Error> {
+): Promise<TokenResponse> {
   const scope = `manage_project:${projectKey}`;
   const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/${projectKey}/customers/token`;
   const requestBody = `grant_type=password&username=${encodeURIComponent(
@@ -143,7 +72,7 @@ async function getUserWithCredentialsToken(
   }
 }
 
-async function getUserByEmail(email: string, bearerToken: string): Promise<User | null> {
+async function getUserByEmail(email: string, bearerToken: string): Promise<Customer | null> {
   const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/customers`;
   const whereClause = encodeURIComponent(`email="${email}"`);
 
@@ -166,7 +95,7 @@ async function getUserByEmail(email: string, bearerToken: string): Promise<User 
   }
 }
 
-async function getUserData(credentials: Credentials, bearerToken: string): Promise<User | Error> {
+async function getUserData(credentials: Credentials, bearerToken: string): Promise<Customer> {
   const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/login`;
   const requestBody = {
     email: credentials.email,
@@ -228,7 +157,7 @@ async function createCustomer(
   }
 }
 
-export async function getUser(credentials: Credentials): Promise<UserWithToken | Error> {
+export async function getUser(credentials: Credentials): Promise<CustomerWithToken> {
   const bearerToken = await fetchBearerToken();
   if (bearerToken === null) {
     throw new Error(CT_ERROR);

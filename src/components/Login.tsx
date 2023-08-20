@@ -4,17 +4,13 @@ import { Formik, Form, Field } from 'formik';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/Context';
-import { Credentials } from '../types/api';
+import { Credentials } from '../types';
 import { getUser } from '../services/commercetoolsApi';
-import {
-  /* CT_ERROR,CT_LOGIN_ERROR, */
-  CT_NO_USER_ERROR,
-  CT_WRONG_PASSWORD_ERROR,
-} from '../constants/apiMessages';
+import { CT_NO_USER_ERROR,  CT_WRONG_PASSWORD_ERROR } from '../constants/apiMessages';
 import { loginValidationSchema } from '../utils/loginValidation';
 
 const Login: React.FC = observer(() => {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [serviceError, setServiceError] = useState('');
@@ -49,9 +45,6 @@ const Login: React.FC = observer(() => {
             user?.setUser(userResponse);
             history('/');
           } catch (error) {
-            // eslint-disable-next-line no-console
-            console.dir(error);
-
             if (error instanceof Error && error.message === CT_NO_USER_ERROR) {
               setEmailError(CT_NO_USER_ERROR);
             } else if (error instanceof Error && error.message === CT_WRONG_PASSWORD_ERROR) {
@@ -59,12 +52,6 @@ const Login: React.FC = observer(() => {
             } else {
               setServiceError('Something went wrong. Please, try again later.');
             }
-            /*
-            еще могут приехать такие ошибки
-            CT_ERROR, // эта если запросы на комерцтулз не проходят, либо апи клиент поломался, либо если его айди/секрет не подходят или скоупы битые
-            CT_LOGIN_ERROR, // эта - если случилась ещё какая-то неведомая проблема при логине
-            и я их не обрабатываю :( не знаю, куда писать ошибки и что делать с полями/кнопками
-            */
           }
         }
         sendRequestWithCredentials(values);
@@ -92,11 +79,6 @@ const Login: React.FC = observer(() => {
               placeholder="Введите e-mail"
               name="email"
               className={(touched.email && errors.email) || emailError !== '' ? 'input__error' : ''}
-              // formNoValidate
-              // validate={() => {
-              //   // eslint-disable-next-line no-console
-              //   console.log('validate');
-              // }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (emailError !== '') {
                   setEmailError('');
