@@ -10,7 +10,7 @@ import {
   ONE_SPECIAL_CHARACTER,
   ONE_UPPERCASE_LETTER,
   REQUIRED_FILL,
-} from '../constants/errorMassages';
+} from '../constants/errorMessages';
 
 const emailTest = (value: string): yup.ValidationError | true => {
   if (value === '' || value.length < 1) {

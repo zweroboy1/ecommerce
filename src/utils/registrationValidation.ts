@@ -13,7 +13,7 @@ import {
   ONLY_LETTERS,
   ONLY_UPPERCASE_LETTER_AND_NUMBER,
   REQUIRED_FILL,
-} from '../constants/errorMassages';
+} from '../constants/errorMessages';
 
 const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
@@ -65,8 +65,8 @@ const dateOfBirthValidation = yup
   .max(DATE_MINUS_13_YEARS, MIN_DATE);
 
 const registrationValidationSchema = yup.object({
-  name: stringValidation,
-  surname: stringValidation,
+  firstName: stringValidation,
+  lastName: stringValidation,
   email: emailValidation,
   password: passwordValidation,
   dateOfBirth: dateOfBirthValidation,

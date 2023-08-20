@@ -7,6 +7,7 @@ import { Context } from '../store/Context';
 import { Credentials } from '../types';
 import { getUser } from '../services/commercetoolsApi';
 import { CT_NO_USER_ERROR, CT_WRONG_PASSWORD_ERROR } from '../constants/apiMessages';
+import { SOMETHING_WRONG } from '../constants/errorMessages';
 import { loginValidationSchema } from '../utils/loginValidation';
 
 const Login: React.FC = observer(() => {
@@ -50,7 +51,7 @@ const Login: React.FC = observer(() => {
             } else if (error instanceof Error && error.message === CT_WRONG_PASSWORD_ERROR) {
               setPasswordError(CT_WRONG_PASSWORD_ERROR);
             } else {
-              setServiceError('Something went wrong. Please, try again later.');
+              setServiceError(SOMETHING_WRONG);
             }
           }
         }
