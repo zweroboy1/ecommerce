@@ -1,8 +1,7 @@
 const MAIN_ROUTE = '/';
 const REGISTRATION_ROUTE = '/registration';
 const AUTH_ROUTE = '/login';
-const NOTFOUND_ROUTE = '/404';
-const DEFAULT_ROUTE = '*';
+const NOTFOUND_ROUTE = '*';
 const PAYMENT_ROUTE = '/payment';
 const RETURN_ROUTE = '/return';
 const PICKUP_POINTS_ROUTE = '/pickup-points';
@@ -27,7 +26,6 @@ const PROMOTIONS_ROUTE = '/promotions';
 
 export {
   MAIN_ROUTE,
-  DEFAULT_ROUTE,
   REGISTRATION_ROUTE,
   AUTH_ROUTE,
   NOTFOUND_ROUTE,
