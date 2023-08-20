@@ -22,9 +22,10 @@ type Address = {
   country: string;
 };
 
+/*
 type RegistrationFormKees =
-  | 'name'
-  | 'surname'
+  | 'firstName'
+  | 'lastName'
   | 'email'
   | 'password'
   | 'dateOfBirth'
@@ -32,10 +33,12 @@ type RegistrationFormKees =
   | 'shippingAddressCity'
   | 'shippingAddressPostCode'
   | 'shippingAddressCountry'
+  | 'isShippingAddressDefault'
   | 'billingAddressStreet'
   | 'billingAddressCity'
   | 'billingAddressPostCode'
-  | 'billingAddressCountry';
+  | 'billingAddressCountry'
+  | 'isBillingAddressDefault';
 
 type RegistrationFormProps = {
   // name: string;
@@ -53,10 +56,11 @@ type RegistrationFormProps = {
   // billingAddressCountry: string;
   [K in RegistrationFormKees]: string;
 };
+*/
 
 type RegisterUser = {
-  name: string;
-  surname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   dateOfBirth: string;
@@ -136,7 +140,6 @@ type StateFields = {
 
 export type {
   InputProps,
-  RegistrationFormProps,
   ButtonProps,
   Address,
   Country,

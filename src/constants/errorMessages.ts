@@ -16,6 +16,9 @@ const COUNTRY_CODE =
 const CONTAIN_AT = 'Адрес электронной почты должен содержать символ "@"';
 const CONTAIN_DOMAIN_NAME = 'Адрес электронной почты должен содержать доменное имя после @';
 const NO_CORRECT_EMAIL = 'Некорректный адрес электронной почты';
+const USER_ALREADY_EXISTS = 'Пользователь с таким адресом электронной почты уже зарегистрирован!';
+const SOMETHING_WRONG = 'Что-то пошло не так. Попробуйте зайти позже.';
+const SUCCESS_REGISTRATION_MEGGAGE = 'Вы успешно зарегистрировались!';
 
 export {
   REQUIRED_FILL,
@@ -34,4 +37,7 @@ export {
   CONTAIN_AT,
   CONTAIN_DOMAIN_NAME,
   NO_CORRECT_EMAIL,
+  USER_ALREADY_EXISTS,
+  SOMETHING_WRONG,
+  SUCCESS_REGISTRATION_MEGGAGE,
 };
