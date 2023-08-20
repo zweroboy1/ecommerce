@@ -15,11 +15,10 @@ type InputProps = {
 };
 
 type Address = {
-  // [x: string]: string;
   readonly id?: string;
-  street: string;
+  streetName: string;
   city: string;
-  postCode: string;
+  postalCode: string;
   country: string;
 };
 
@@ -55,6 +54,37 @@ type RegistrationFormProps = {
   [K in RegistrationFormKees]: string;
 };
 
+type RegisterUser = {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  dateOfBirth: string;
+  shippingAddressStreet: string;
+  shippingAddressCity: string;
+  shippingAddressPostCode: string;
+  shippingAddressCountry: string;
+  isShippingAddressDefault: boolean;
+  billingAddressStreet: string;
+  billingAddressCity: string;
+  billingAddressPostCode: string;
+  billingAddressCountry: string;
+  isBillingAddressDefault: boolean;
+};
+
+type CreateUser = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  dateOfBirth: string;
+  addresses: Address[];
+  shippingAddresses: number[];
+  billingAddresses: number[];
+  defaultShippingAddress?: number;
+  defaultBillingAddress?: number;
+};
+
 type ButtonProps = {
   children: string;
   className?: string;
@@ -69,12 +99,6 @@ type Country = {
   [key: string]: string;
 };
 
-interface User {
-  id: number;
-  name: string;
-  // другие поля пользователя
-}
-
 type TokenResponse = {
   access_token: string;
   expires_in: string;
@@ -83,18 +107,6 @@ type TokenResponse = {
   token_type: string;
 };
 
-type UserWithToken = {
-  user: User;
-  token: TokenResponse;
-};
-
-// type Address = {
-//   readonly id?: string;
-//   streetName: string;
-//   city: string;
-//   postalCode: string;
-//   country: string;
-// };
 
 type Customer = {
   id: string;
@@ -109,14 +121,25 @@ type Customer = {
   billingAddressIds: string[];
 };
 
+type CustomerWithToken = {
+  user: Customer;
+  token: TokenResponse;
+};
+
+export type Credentials = {
+  email: string;
+  password: string;
+};
+
 export type {
   InputProps,
   RegistrationFormProps,
   ButtonProps,
   Address,
   Country,
-  User,
   TokenResponse,
-  UserWithToken,
   Customer,
+  CustomerWithToken,
+  RegisterUser,
+  CreateUser
 };
