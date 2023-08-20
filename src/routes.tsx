@@ -1,7 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import {
   AUTH_ROUTE,
-  DEFAULT_ROUTE,
   MAIN_ROUTE,
   PAYMENT_ROUTE,
   NOTFOUND_ROUTE,
@@ -145,10 +144,6 @@ const commonRoutes = [
   {
     path: NOTFOUND_ROUTE,
     Component: NotFound,
-  },
-  {
-    path: DEFAULT_ROUTE,
-    Component: () => <Navigate to={NOTFOUND_ROUTE} replace />,
   },
 ];
 
