@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/Context';
 import { Credentials } from '../types';
 import { getUser } from '../services/commercetoolsApi';
-import { CT_NO_USER_ERROR,  CT_WRONG_PASSWORD_ERROR } from '../constants/apiMessages';
+import { CT_NO_USER_ERROR, CT_WRONG_PASSWORD_ERROR } from '../constants/apiMessages';
 import { loginValidationSchema } from '../utils/loginValidation';
 
 const Login: React.FC = observer(() => {
