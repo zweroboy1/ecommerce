@@ -107,7 +107,6 @@ type TokenResponse = {
   token_type: string;
 };
 
-
 type Customer = {
   id: string;
   version: number;
@@ -131,6 +130,10 @@ export type Credentials = {
   password: string;
 };
 
+type StateFields = {
+  customer?: null | CustomerWithToken;
+};
+
 export type {
   InputProps,
   RegistrationFormProps,
@@ -141,5 +144,6 @@ export type {
   Customer,
   CustomerWithToken,
   RegisterUser,
-  CreateUser
+  CreateUser,
+  StateFields,
 };

@@ -17,7 +17,7 @@ const NavBar = observer(() => {
         <div className="nav-bar__block">
           {!isMainPage && (
             <NavLink to={MAIN_ROUTE}>
-              <button>Домой</button>
+              <button>На главную</button>
             </NavLink>
           )}
           <button
@@ -26,7 +26,7 @@ const NavBar = observer(() => {
               user.setUser(null);
             }}
           >
-            LogOut
+            Выход
           </button>
         </div>
       )}
@@ -34,7 +34,7 @@ const NavBar = observer(() => {
         <div className="nav-bar__block">
           {!isMainPage && (
             <NavLink to={MAIN_ROUTE}>
-              <button>Домой</button>
+              <button>На главную</button>
             </NavLink>
           )}
           {!isRegistrationPage && (
