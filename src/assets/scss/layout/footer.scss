@@ -24,7 +24,6 @@
     padding-top: 40px;
     color: $text-color;
 
-
     @include media('l') {
       border-bottom: 1px solid #949494;
       padding: 15px 0 15px 20px;
@@ -34,7 +33,7 @@
       cursor: pointer;
 
       &:after {
-        content: "";
+        content: '';
         position: absolute;
         top: 50%;
         right: 20px;
