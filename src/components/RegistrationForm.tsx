@@ -89,21 +89,60 @@ const RegistrationForm = observer(({ ...initialValues }: PropsWithoutRef<Registe
         onSubmit={onSubmit}
         validationSchema={registrationValidationSchema}
       >
-        {({ values, setFieldValue, setFieldTouched, isValid, isSubmitting, errors, touched }) => (
+        {({
+          values,
+          setFieldValue,
+          setFieldTouched,
+          validateField,
+          isValid,
+          isSubmitting,
+          errors,
+          touched,
+        }) => (
           <Form>
-            <Input label="Имя" name="firstName" placeholder="Введите имя" type="text" />
+            <Input
+              label="Имя"
+              name="firstName"
+              placeholder="Введите имя"
+              type="text"
+              touch={{ setFieldTouched }}
+              valid={{ validateField }}
+            />
 
-            <Input label="Фамилия" name="lastName" placeholder="Введите фамилию" type="text" />
+            <Input
+              label="Фамилия"
+              name="lastName"
+              placeholder="Введите фамилию"
+              type="text"
+              touch={{ setFieldTouched }}
+              valid={{ validateField }}
+            />
 
-            <Input label="E-mail" name="email" placeholder="Введите e-mail" type="email" />
+            <Input
+              label="E-mail"
+              name="email"
+              placeholder="Введите e-mail"
+              type="email"
+              touch={{ setFieldTouched }}
+              valid={{ validateField }}
+            />
 
-            <Input label="Пароль" name="password" placeholder="Введите пароль" type="password" />
+            <Input
+              label="Пароль"
+              name="password"
+              placeholder="Введите пароль"
+              type="password"
+              touch={{ setFieldTouched }}
+              valid={{ validateField }}
+            />
 
             <Input
               label="Дата рождения"
               name="dateOfBirth"
               placeholder="Введите дату рождения"
               type="date"
+              touch={{ setFieldTouched }}
+              valid={{ validateField }}
             />
 
             <div className="address-row">
@@ -115,6 +154,8 @@ const RegistrationForm = observer(({ ...initialValues }: PropsWithoutRef<Registe
                 placeholder="Введите город"
                 type="text"
                 defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
+                touch={{ setFieldTouched }}
+                valid={{ validateField }}
               />
 
               <label
@@ -141,6 +182,8 @@ const RegistrationForm = observer(({ ...initialValues }: PropsWithoutRef<Registe
                 placeholder="Введите улицу"
                 type="text"
                 defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
+                touch={{ setFieldTouched }}
+                valid={{ validateField }}
               />
 
               <Input
@@ -195,6 +238,8 @@ const RegistrationForm = observer(({ ...initialValues }: PropsWithoutRef<Registe
                 placeholder="Введите город"
                 type="text"
                 defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
+                touch={{ setFieldTouched }}
+                valid={{ validateField }}
               />
 
               <Input
@@ -203,6 +248,8 @@ const RegistrationForm = observer(({ ...initialValues }: PropsWithoutRef<Registe
                 placeholder="Введите улицу"
                 type="text"
                 defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress }}
+                touch={{ setFieldTouched }}
+                valid={{ validateField }}
               />
 
               <Input

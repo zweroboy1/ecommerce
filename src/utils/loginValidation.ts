@@ -1,7 +1,5 @@
 import * as yup from 'yup';
 import {
-  CONTAIN_AT,
-  CONTAIN_DOMAIN_NAME,
   MIN_8_LENGTH,
   NOT_LEADING,
   NO_CORRECT_EMAIL,
@@ -11,27 +9,13 @@ import {
   ONE_UPPERCASE_LETTER,
   REQUIRED_FILL,
 } from '../constants/errorMessages';
+import { emailRegex, emailTest } from './registrationValidation';
 
-const emailTest = (value: string): yup.ValidationError | true => {
-  if (value === '' || value.length < 1) {
-    return new yup.ValidationError(REQUIRED_FILL, value, 'email');
-  }
-  if (value.trim() !== value) {
-    return new yup.ValidationError(NOT_LEADING, value, 'email');
-  }
-  if (!value.includes('@')) {
-    return new yup.ValidationError(CONTAIN_AT, value, 'email');
-  }
-  if (!value.split('@')[1].includes('.')) {
-    return new yup.ValidationError(CONTAIN_DOMAIN_NAME, value, 'email');
-  }
-  return true;
-};
 const emailValidation = yup
   .string()
   .required(REQUIRED_FILL)
   .test('email-validation', NO_CORRECT_EMAIL, emailTest)
-  .required(REQUIRED_FILL)
+  .matches(emailRegex, NO_CORRECT_EMAIL)
   .email(NO_CORRECT_EMAIL);
 
 const passwordValidation = yup

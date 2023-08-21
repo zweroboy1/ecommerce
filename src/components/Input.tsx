@@ -2,13 +2,28 @@ import { PropsWithoutRef } from 'react';
 import { useField } from 'formik';
 import { InputProps } from '../types';
 
-const Input = ({ label, className, defaultAddress, ...props }: PropsWithoutRef<InputProps>) => {
+const Input = ({
+  label,
+  className,
+  defaultAddress,
+  touch,
+  valid,
+  ...props
+}: PropsWithoutRef<InputProps>) => {
   const [field, meta] = useField(props);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (defaultAddress && defaultAddress.checkDefaultAddress) {
       defaultAddress.setCheckDefaultAddress(false);
     }
     field.onChange(e);
+    setTimeout(() => {
+      if (touch) {
+        touch.setFieldTouched?.(field.name, true);
+      }
+      if (valid) {
+        valid.validateField?.(field.name);
+      }
+    }, 100);
     if (field.name === 'shippingAddressPostCode' || field.name === 'billingAddressPostCode') {
       if (defaultAddress && defaultAddress.setFieldTouched) {
         setTimeout(() => {
