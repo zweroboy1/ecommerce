@@ -1,4 +1,4 @@
-const AboutСompany = () => {
+const AboutCompany = () => {
   return (
     <div className="about-company container">
       <div className="row">
@@ -31,4 +31,4 @@ const AboutСompany = () => {
   );
 };
 
-export { AboutСompany };
+export { AboutCompany };

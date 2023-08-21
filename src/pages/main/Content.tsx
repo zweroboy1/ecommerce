@@ -1,7 +1,7 @@
-import { AboutСompany } from './content/AboutСompany';
+import { AboutCompany } from './content/AboutCompany';
 import { Promotions } from './content/Promotions';
 import { Banners } from './content/Banners';
-import { BestCategories } from './content/BestСategories';
+import { BestCategories } from './content/BestCategories';
 
 const Content = () => {
   return (
@@ -10,7 +10,7 @@ const Content = () => {
         <Banners />
         <BestCategories />
         <Promotions />
-        <AboutСompany />
+        <AboutCompany />
       </div>
     </main>
   );
