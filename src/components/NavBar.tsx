@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../store/Context';
@@ -7,6 +7,7 @@ import { AUTH_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE } from '../constants/route';
 const NavBar = observer(() => {
   const { user } = useContext(Context);
   const location = useLocation();
+  const history = useNavigate();
   const isLoginPage = location.pathname === AUTH_ROUTE;
   const isRegistrationPage = location.pathname === REGISTRATION_ROUTE;
   const isMainPage = location.pathname === MAIN_ROUTE;
@@ -25,6 +26,9 @@ const NavBar = observer(() => {
             onClick={() => {
               user.setIsAuth(false);
               user.setUser(null);
+              if (!isMainPage) {
+                history(MAIN_ROUTE);
+              }
             }}
           >
             Выйти из учетной записи
