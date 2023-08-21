@@ -156,7 +156,7 @@ select {
   }
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   min-height: 1.5em;
   min-width: 1.5em;
   background: #fff;
@@ -168,17 +168,17 @@ input[type="checkbox"] {
   padding: 0;
   vertical-align: middle;
   box-sizing: border-box;
-  transition: border-color .1s ease;
+  transition: border-color 0.1s ease;
 }
 
-input[type="checkbox"]:checked {
+input[type='checkbox']:checked {
   background-size: 55%;
   background-origin: border-box;
   box-shadow: none;
 }
 
-input[type="checkbox"]:hover,
-input[type="checkbox"]:checked {
+input[type='checkbox']:hover,
+input[type='checkbox']:checked {
   background-color: $links;
   border-color: $links;
 }

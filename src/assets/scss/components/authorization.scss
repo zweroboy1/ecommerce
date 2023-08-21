@@ -18,7 +18,6 @@
   }
 
   &__container {
-
     .form-fields,
     .label {
       @include flexColumn($align: start);
@@ -87,7 +86,6 @@
 
       h2 {
         @include flex($align: flex-start, $wrap: wrap);
-
       }
 
       .label-check {
