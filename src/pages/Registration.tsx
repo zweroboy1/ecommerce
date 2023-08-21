@@ -1,8 +1,10 @@
+import { NavLink } from 'react-router-dom';
 import { RegistrationForm } from '../components/RegistrationForm';
 import { DATE_MINUS_13_YEARS } from '../utils/datetime';
 import { Top } from './main/Top';
 import { Header } from './main/Header';
 import { Footer } from './main/Footer';
+import { AUTH_ROUTE } from '../constants/route';
 
 const Registration = () => {
   const initialValues = {
@@ -40,6 +42,10 @@ const Registration = () => {
               <li>Возможность настроить магазин под себя для более удобных покупок</li>
               <li>Ускоренное оформление последующих заказов</li>
             </ul>
+            <div className="authorization__login">
+              Уже есть учетная запись? Тогда просто жмите
+              <NavLink to={AUTH_ROUTE}> Вход</NavLink>.
+            </div>
           </div>
         </div>
       </main>

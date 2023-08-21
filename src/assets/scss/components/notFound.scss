@@ -5,6 +5,10 @@
   margin: 50px 0px 30px 0px;
   padding: 40px 0px 70px 0px;
 
+  @include media('m') {
+    padding: 40px 30px 70px;
+  }
+
   &__code {
     display: inline-block;
     width: 300px;
@@ -15,6 +19,11 @@
     font-weight: bold;
     font-size: 86px;
     line-height: 70px;
+
+    @include media('m') {
+      display: block;
+      width: 100%;
+    }
   }
 
   &__code-txt {
@@ -29,6 +38,11 @@
     display: inline-block;
     padding-left: 30px;
     text-align: left;
+
+    @include media('m') {
+      text-align: center;
+      padding-left: 0;
+    }
   }
 
   &__title {
@@ -52,6 +66,10 @@
     float: left;
     list-style-type: none;
     margin-right: 20px;
+
+    @include media('m') {
+      float: none;
+    }
   }
 
   &__links-a {
