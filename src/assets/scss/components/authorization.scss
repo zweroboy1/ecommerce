@@ -157,4 +157,13 @@
     text-align: center;
     margin-top: 25px;
   }
+
+  .button {
+    margin-top: 15px;
+  }
+
+  &__login {
+    margin-top: 15px;
+    @include font($family: $font-family-title, $size: $font-size-14);
+  }
 }
