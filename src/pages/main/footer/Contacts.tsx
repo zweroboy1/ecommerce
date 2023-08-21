@@ -1,4 +1,4 @@
-import FooterMenu from './FooterMenu';
+import { FooterMenu } from './FooterMenu';
 
 const Contacts = () => {
   const menuItems = [

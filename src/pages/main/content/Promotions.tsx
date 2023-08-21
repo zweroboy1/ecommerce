@@ -9,12 +9,12 @@ import promotion4 from '../../../assets/img/promotion4.png';
 const promotionsData = [
   {
     image: promotion1,
-    endDate: new Date('2023-08-20'),
+    endDate: new Date('2023-08-30'),
     description: 'Бесплатная доставка на заказ от 1000 грн.',
   },
   {
     image: promotion2,
-    endDate: new Date('2023-08-25'),
+    endDate: new Date('2023-09-05'),
     description: 'Гоночный картинг + двухлетняя лицензия на гонки K1',
   },
   {
@@ -49,7 +49,9 @@ const Promotions = () => {
     const updateSlider = () => {
       const screenWidth = window.innerWidth;
 
-      const newSlideCount = Math.floor(screenWidth / (slideWidth + 4 * slideMargin));
+      let newSlideCount = Math.floor(screenWidth / (slideWidth + slideMargin));
+      newSlideCount = Math.min(newSlideCount, 4);
+
       const newSliderWidth = newSlideCount * (slideWidth + slideMargin) + slideMargin;
       setSliderWidth(newSliderWidth);
       setTotalImages(promotionsData.length - (newSlideCount - 1));
@@ -86,7 +88,7 @@ const Promotions = () => {
       <div className="row">
         <div className="promotions__container">
           <div className="promotions__title">Действующие акции</div>
-          <div className="promotions__body slider-container">
+          <div className="promotions__body slider-container container">
             <div className="promotions__buttons slider-buttons">
               <button className="promotions__prev slider-prev" onClick={goToPrevSlide}></button>
               <button className="promotions__next slider-next" onClick={goToNextSlide}></button>
@@ -128,6 +130,11 @@ const Promotions = () => {
                   </div>
                 ))}
               </div>
+            </div>
+            <div className="promotions__button">
+              <NavLink className="button" to={PROMOTIONS_ROUTE} title="">
+                Все промо-акции
+              </NavLink>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 const AboutСompany = () => {
   return (
-    <div className="about-company">
+    <div className="about-company container">
       <div className="row">
         <div className="about-company__container">
           <div className="about-company__title">О компании</div>

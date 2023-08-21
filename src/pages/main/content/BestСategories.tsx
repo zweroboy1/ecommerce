@@ -25,7 +25,7 @@ const bannersData = [
 
 const BestCategories = () => {
   return (
-    <div className="best-categories">
+    <div className="best-categories container">
       <div className="best-categories__grid">
         {bannersData.map((banner, index) => (
           <div className="best-categories__block" key={index}>

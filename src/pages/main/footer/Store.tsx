@@ -4,7 +4,7 @@ import {
   SITE_MAP_ROUTE,
   BLOG_ROUTE,
 } from '../../../constants/route';
-import FooterMenu from './FooterMenu';
+import { FooterMenu } from './FooterMenu';
 
 const Store = () => {
   const menuItems = [

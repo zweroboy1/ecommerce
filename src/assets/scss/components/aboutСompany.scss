@@ -2,7 +2,7 @@
 
 .about-company {
   width: 100%;
-  padding: 30px 15px;
+  padding: 30px 20px;
   box-sizing: border-box;
   float: left;
 
@@ -11,16 +11,9 @@
   }
 
   &__title {
+    @include flex($justify: flex-start, $align: flex-start, $wrap: nowrap);
+    @include font($family: $font-family-title, $size: $font-size-24);
     border-radius: 12px 12px 0 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    line-height: 1;
-    font-family: MuseoSansBlack, 'Helvetica Neue', Arial, sans-serif;
-    font-weight: bold;
-    font-size: 24px;
-    letter-spacing: normal;
-    line-height: initial;
     margin-bottom: 10px;
   }
 
@@ -30,14 +23,14 @@
   }
 
   &__content {
+    @include font();
     max-width: 100%;
     word-wrap: break-word;
-    font-family: MuseoSansBlack, 'Helvetica Neue', Arial, sans-serif;
 
     p {
       padding: 0 0 15px;
       line-height: 1.4;
-      text-align: left;
+      text-align: justify;
     }
   }
 }

@@ -1,4 +1,4 @@
-import FooterMenu from './FooterMenu';
+import { FooterMenu } from './FooterMenu';
 import { SocialLinks } from './SocialLinks';
 import { ABOUT_ROUTE, CONTACTS_ROUTE } from '../../../constants/route';
 
