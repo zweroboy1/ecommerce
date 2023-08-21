@@ -21,9 +21,8 @@ import {
   CONTAIN_AT,
   CONTAIN_DOMAIN_NAME,
 } from '../constants/errorMessages';
-
-export const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-
+// eslint-disable-next-line
+export const emailRegex = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\.\-]+$/;
 export const emailTest = (value: string): yup.ValidationError | true => {
   if (value.trim() !== value) {
     return new yup.ValidationError(NOT_LEADING, value, 'email');
