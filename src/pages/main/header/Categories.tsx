@@ -25,6 +25,10 @@ const Categories = () => {
     setMenuVisible(!menuVisible);
   };
 
+  const closeMenu = () => {
+    setMenuVisible(false);
+  };
+
   return (
     <div className="menu">
       <div className="menu__title" onClick={toggleMenu}>
@@ -35,7 +39,7 @@ const Categories = () => {
         <ul className="menu__links">
           {quickLinks.map((link, index) => (
             <li key={index} className="menu__item">
-              <NavLink className="menu__a" to={link.link}>
+              <NavLink className="menu__a" to={link.link} onClick={closeMenu}>
                 {link.text}
               </NavLink>
             </li>
