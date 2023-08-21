@@ -40,14 +40,14 @@ const stringValidation = yup
   .trim()
   .required(REQUIRED_FILL)
   .min(1, MIN_1_LENGTH)
-  .matches(/^[a-zA-Z]+$/, ONLY_LETTERS);
+  .matches(/^[a-zA-Zа-яА-ЯъЪЇїЫы]+$/, ONLY_LETTERS);
 
 const cityValidation = yup
   .string()
   .trim()
   .required(REQUIRED_FILL)
   .min(1, MIN_1_LENGTH)
-  .matches(/^[a-zA-Z]+$/, ONLY_LETTERS);
+  .matches(/^[a-zA-Zа-яА-ЯъЪЇїЫы]+$/, ONLY_LETTERS);
 
 const billingPostCodeValidation = yup
   .string()
@@ -146,7 +146,7 @@ const streetValidation = yup
   .trim()
   .required(REQUIRED_FILL)
   .min(1, MIN_1_LENGTH)
-  .matches(/[a-zA-Z]/, ONE_LETTER);
+  .matches(/[a-zA-Zа-яА-ЯъЪЇїЫы]/, ONE_LETTER);
 
 const dateOfBirthValidation = yup
   .date()
