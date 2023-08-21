@@ -13,6 +13,12 @@ type InputProps = {
     setCheckDefaultAddress: (value: boolean) => void;
     setFieldTouched?: (field: string, isTouched?: boolean | undefined) => void;
   };
+  touch?: {
+    setFieldTouched?: (field: string, isTouched?: boolean | undefined) => void;
+  };
+  valid?: {
+    validateField?: (field: string, isValid?: boolean | undefined) => void;
+  };
 };
 
 type Address = {

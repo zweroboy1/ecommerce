@@ -9,6 +9,7 @@ import {
   MIN_8_LENGTH,
   MIN_DATE,
   NOT_LEADING,
+  NO_CORRECT_EMAIL,
   NO_CORRECT_POST_CODE,
   ONE_LETTER,
   ONE_LOWERCASE_LETTER,
@@ -17,11 +18,31 @@ import {
   ONE_UPPERCASE_LETTER,
   ONLY_LETTERS,
   REQUIRED_FILL,
+  CONTAIN_AT,
+  CONTAIN_DOMAIN_NAME,
 } from '../constants/errorMessages';
 
-const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+export const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 
-const emailValidation = yup.string().required(REQUIRED_FILL).matches(emailRegex, 'Incorrect email');
+export const emailTest = (value: string): yup.ValidationError | true => {
+  if (value.trim() !== value) {
+    return new yup.ValidationError(NOT_LEADING, value, 'email');
+  }
+  if (!value.includes('@')) {
+    return new yup.ValidationError(CONTAIN_AT, value, 'email');
+  }
+  if (!value.split('@')[1].includes('.')) {
+    return new yup.ValidationError(CONTAIN_DOMAIN_NAME, value, 'email');
+  }
+  return true;
+};
+
+const emailValidation = yup
+  .string()
+  .required(REQUIRED_FILL)
+  .test('email-validation', NO_CORRECT_EMAIL, emailTest)
+  .matches(emailRegex, NO_CORRECT_EMAIL)
+  .email(NO_CORRECT_EMAIL);
 
 const passwordValidation = yup
   .string()
