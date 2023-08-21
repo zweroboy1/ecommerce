@@ -1,38 +1,22 @@
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import React, { useContext, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { Formik, Form, Field } from 'formik';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
+import { Context } from '../store/Context';
+import { Credentials } from '../types';
 import { getUser } from '../services/commercetoolsApi';
+import { CT_NO_USER_ERROR, CT_WRONG_PASSWORD_ERROR } from '../constants/apiMessages';
+import { SOMETHING_WRONG } from '../constants/errorMessages';
+import { loginValidationSchema } from '../utils/loginValidation';
 
-const Login: React.FC = () => {
-  const [showPassword, setShowPassword] = React.useState(false);
-
-  const emailValidation = (
-    value: string
-  ): Yup.ValidationError | true => {
-    if (!value.includes('@')) {
-      return new Yup.ValidationError(
-        'Email address must contain an "@" symbol',
-        value,
-        'email'
-      );
-    }
-    if (!value.split('@')[1].includes('.')) {
-      return new Yup.ValidationError(
-        'Email address must contain a domain name after @',
-        value,
-        'email'
-      );
-    }
-    if (value.trim() !== value) {
-      return new Yup.ValidationError(
-        'Email address must not contain leading or trailing whitespace',
-        value,
-        'email'
-      );
-    }
-    return true;
-  };
+const Login: React.FC = observer(() => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [serviceError, setServiceError] = useState('');
+  const history = useNavigate();
+  const { user } = useContext(Context);
 
   return (
     <Formik
@@ -40,91 +24,131 @@ const Login: React.FC = () => {
         email: '',
         password: '',
       }}
-      validationSchema={Yup.object({
-        email: Yup.string()
-          .required('Required')
-          .test('email-validation', 'Invalid email', emailValidation)
-          .email('Invalid email address'),
-        password: Yup.string()
-          .required('Required')
-          .min(8, 'Password must be at least 8 characters long')
-          .matches(
-            /[a-z]/,
-            'Password must contain at least one lowercase letter (a-z)'
-          )
-          .matches(
-            /[A-Z]/,
-            'Password must contain at least one uppercase letter (A-Z)'
-          )
-          .matches(
-            /[0-9]/,
-            'Password must contain at least one digit (0-9)'
-          )
-          .matches(
-            /\W/,
-            'Password must contain at least one special character (e.g., !@#$%^&*)'
-          )
-          .test(
-            'no-leading-trailing-spaces',
-            'Password must not contain leading or trailing whitespace',
-            (value) => {
-              return !value || value.trim() === value;
+      validationSchema={loginValidationSchema}
+      onSubmit={(
+        values,
+        {
+          setSubmitting,
+          resetForm,
+        }: { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
+      ) => {
+        async function sendRequestWithCredentials(credentials: Credentials) {
+          try {
+            const userResponse = await getUser(credentials);
+
+            if (userResponse instanceof Error) {
+              throw Error(userResponse.message);
             }
-          ),
-      })}
-      onSubmit={(values) => {
-        // console.log('Submitting:', values);
-        getUser(values);
-        // Здесь логика отправки данных на сервер, но её ещё нет :((
+
+            setSubmitting(false);
+            resetForm();
+            user?.setIsAuth(true);
+            user?.setUser(userResponse);
+            history('/');
+          } catch (error) {
+            if (error instanceof Error && error.message === CT_NO_USER_ERROR) {
+              setEmailError(CT_NO_USER_ERROR);
+            } else if (error instanceof Error && error.message === CT_WRONG_PASSWORD_ERROR) {
+              setPasswordError(CT_WRONG_PASSWORD_ERROR);
+            } else {
+              setServiceError(SOMETHING_WRONG);
+            }
+          }
+        }
+        sendRequestWithCredentials(values);
       }}
+      validateOnChange={true}
     >
-      {({ isValid, isSubmitting, dirty, touched, errors }) => (
+      {({
+        isValid,
+        isSubmitting,
+        dirty,
+        touched,
+        errors,
+        handleChange,
+        setSubmitting,
+        validateField,
+        setFieldTouched,
+      }) => (
         <Form>
-          <div>
-            <label>Email address</label>
+          <div className="form-fields">
+            <label>
+              E-mail <span>*</span>
+            </label>
             <Field
               type="email"
-              placeholder="Enter email"
+              placeholder="Введите e-mail"
               name="email"
-              className={
-                touched.email && errors.email ? 'input__error' : ''
-              }
-              formNoValidate
+              className={(touched.email && errors.email) || emailError !== '' ? 'input__error' : ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                if (emailError !== '') {
+                  setEmailError('');
+                  setSubmitting(false);
+                }
+                setFieldTouched('email', true, true);
+                handleChange(e);
+                validateField('email');
+              }}
             />
-            <ErrorMessage name="email" component="div" />
+            {(touched.email && errors.email) || emailError !== '' ? (
+              <div className="email__error">
+                {errors.email}
+                {emailError}
+              </div>
+            ) : (
+              ''
+            )}
           </div>
 
-          <div>
-            <label>Password</label>
-            <Field
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
-              name="password"
-              className={
-                touched.password && errors.password
-                  ? 'input__error'
-                  : ''
-              }
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
-            </button>
-            <ErrorMessage name="password" component="div" />
+          <div className="form-fields">
+            <label>
+              Пароль <span>*</span>
+            </label>
+            <div className="password-block">
+              <Field
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Введите пароль"
+                name="password"
+                className={
+                  (touched.password && errors.password) || passwordError !== ''
+                    ? 'input__error'
+                    : ''
+                }
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  if (passwordError !== '') {
+                    setPasswordError('');
+                    setSubmitting(false);
+                  }
+                  setFieldTouched('password', true, true);
+                  handleChange(e);
+                  validateField('password');
+                }}
+              />
+              <button type="button" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
+              </button>
+            </div>
+            {(touched.password && errors.password) || passwordError !== '' ? (
+              <div className="password__error">
+                {errors.password}
+                {passwordError}
+              </div>
+            ) : (
+              ''
+            )}
           </div>
-
           <button
+            className="button button-second"
             type="submit"
             disabled={isSubmitting || !isValid || !dirty}
           >
-            Log in
+            Войти
           </button>
+          {serviceError !== '' && <div className="service__error">{serviceError}</div>}
         </Form>
       )}
     </Formik>
   );
-};
+});
 
 export { Login };

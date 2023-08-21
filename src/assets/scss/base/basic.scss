@@ -1,0 +1,227 @@
+/* basic */
+
+@font-face {
+  font-family: MuseoSans;
+  font-display: swap;
+  src: url(/src/assets/fonts/museo-sans/MuseoSans-500.woff);
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: MuseoSansBlack;
+  font-display: swap;
+  src: url(/src/assets/fonts/museo-sans/MuseoSans-900.woff);
+  font-weight: 900;
+  font-style: normal;
+}
+
+:root {
+  @include font($size: $font-size-14);
+  background-color: $background;
+  overflow-x: hidden;
+}
+
+*,
+:after,
+:before {
+  box-sizing: border-box;
+}
+
+body {
+  @include flexColumn();
+  margin: 0;
+  color: $text-color;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+main {
+  flex-grow: 1;
+  border-top: $border;
+}
+
+body,
+p,
+div,
+li {
+  font-size: $font-size-14;
+}
+
+h1 {
+  @include font($family: $font-family-title, $size: $font-size-28, $height: 1.1);
+  margin-bottom: 10px;
+  color: $text-color;
+}
+
+h2 {
+  @include font($family: $font-family-title, $size: $font-size-24, $height: 1.1);
+  color: $text-color;
+}
+
+button {
+  border-radius: 8px;
+  border: none;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  background-color: #f9f9f9;
+
+  &:hover {
+    border: none;
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
+
+  &[disabled],
+  &[disabled]:hover {
+    background-color: gray;
+    color: $background;
+    cursor: not-allowed;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  font-size: 0;
+  border: 0;
+}
+
+li {
+  margin: 0;
+  padding: 2px 0;
+  text-indent: 0;
+  list-style: none;
+}
+
+a {
+  font-weight: 500;
+  color: $links;
+  text-decoration: inherit;
+  transition: $transition;
+
+  &:hover {
+    color: $links-hover;
+  }
+}
+
+p {
+  margin: 0;
+  padding: 6px 0;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='tel'],
+input[type='number'],
+input[type='date'],
+textarea,
+select {
+  @include font($size: $font-size-12);
+  min-height: $button-size-40;
+  height: $button-size-40;
+  outline: none !important;
+  border-color: #d5d5d5;
+  border-radius: 8px;
+  background: $background;
+  padding: 4px 8px;
+  border: $border;
+  font-style: normal;
+  font-weight: normal;
+  box-sizing: border-box;
+  margin: 0;
+  line-height: normal;
+  transition: $transition;
+
+  &:focus,
+  &:hover {
+    border-color: $links;
+    box-shadow: 0 0 0 2px rgba(0, 119, 204, 0.1);
+  }
+
+  &:focus {
+    outline: 0;
+    transition: border 0.2s linear 0s;
+  }
+}
+
+input[type='checkbox'] {
+  min-height: 1.5em;
+  min-width: 1.5em;
+  background: #fff;
+  border: 1px solid #d5d5d5;
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  border-radius: 6px;
+  margin: -2px 6px 0 0;
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+  transition: border-color 0.1s ease;
+}
+
+input[type='checkbox']:checked {
+  background-size: 55%;
+  background-origin: border-box;
+  box-shadow: none;
+}
+
+input[type='checkbox']:hover,
+input[type='checkbox']:checked {
+  background-color: $links;
+  border-color: $links;
+}
+
+#root {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.tygh {
+  @include flexColumn($align: inherit);
+  width: 100vw;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  padding-right: 0;
+  padding-left: 0;
+  max-width: 1400px;
+  min-width: 280px;
+  margin: 0 auto;
+}
+
+.row {
+  @include flex($justify: space-between);
+  align-items: center;
+  width: 100%;
+  padding: 0 20px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: $background;
+  }
+
+  a:hover {
+    color: #747bff;
+  }
+
+  button {
+    background-color: #f9f9f9;
+  }
+}

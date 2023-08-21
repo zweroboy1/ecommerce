@@ -1,0 +1,22 @@
+/* navigation */
+
+.nav-bar {
+  padding: 5px;
+
+  @include media('s') {
+    padding: 5px 0 5px 20px;
+  }
+
+  @include media('xs') {
+    padding-left: 10px;
+  }
+
+  &__block {
+    @include flex($justify: space-between);
+    gap: 10px;
+
+    @include media('xs') {
+      gap: 5px;
+    }
+  }
+}

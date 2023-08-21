@@ -1,0 +1,169 @@
+/* authorization */
+
+.authorization {
+  @include flex($justify: space-between, $align: baseline);
+  width: 100%;
+  padding: 20px;
+  gap: 20px;
+
+  @include media('m') {
+    @include flexColumn($align: stretch);
+    gap: 35px;
+  }
+
+  &__container,
+  &__information {
+    flex: 1;
+    text-align: left;
+  }
+
+  &__container {
+
+    .form-fields,
+    .label {
+      @include flexColumn($align: start);
+      margin-bottom: 25px;
+      position: relative;
+
+      label {
+        width: auto;
+        float: left;
+        color: $text-color;
+        padding: 6px 0;
+        margin-right: 10px;
+
+        span {
+          color: $important;
+        }
+      }
+
+      input,
+      select {
+        width: 80%;
+        min-width: 300px;
+
+        @include media('xxs') {
+          width: 75%;
+          min-width: 200px;
+        }
+      }
+
+      .password-block {
+        width: 100%;
+
+        button {
+          background: transparent;
+          font-size: 22px;
+          padding: 0 1em;
+
+          @include media('l') {
+            padding: 0 0.3em;
+          }
+
+          &:focus,
+          &:focus-visible,
+          &:hover {
+            border: none;
+            outline: none;
+          }
+        }
+      }
+    }
+
+    .label {
+      span {
+        width: auto;
+        color: $text-color;
+        float: left;
+        padding: 6px 0;
+        margin-right: 10px;
+      }
+    }
+
+    .address-row {
+      border: 1px solid $links;
+      margin-bottom: 10px;
+      padding: 10px;
+
+      h2 {
+        @include flex($align: flex-start, $wrap: wrap);
+      }
+
+      .label-check {
+        display: block;
+        margin: 35px 0 15px;
+
+        span {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  &__information {
+    h4 {
+      @include font($family: $font-family-title, $size: $font-size-19);
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      color: #bdc3c7;
+    }
+
+    p {
+      padding: 15px 0;
+    }
+
+    ul {
+      @include media('m') {
+        padding: 0 15px;
+      }
+    }
+
+    li {
+      padding: 5px 0;
+      list-style: disc;
+    }
+  }
+
+  .error-message,
+  .email__error,
+  .password__error {
+    position: absolute;
+    top: 70px;
+    color: $important;
+    font-size: $font-size-12;
+
+    @include media('xxs') {
+      font-size: 10px;
+    }
+  }
+
+  .error input,
+  .error select,
+  .error input:focus,
+  .error select:focus,
+  .error input:hover,
+  .error select:hover,
+  .input__error:focus,
+  .input__error:hover,
+  .input__error {
+    color: $important;
+    border-color: $important;
+    box-shadow: 0 0 0 2px rgb(244 67 54 / 8%);
+  }
+
+  .service__error {
+    @include font($family: $font-family-title, $size: $font-size-24);
+    color: $error;
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  .button {
+    margin-top: 15px;
+  }
+
+  &__login {
+    margin-top: 15px;
+    @include font($family: $font-family-title, $size: $font-size-14);
+  }
+}

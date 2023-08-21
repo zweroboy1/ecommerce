@@ -1,24 +1,61 @@
-import { NavLink } from 'react-router-dom';
-import {
-  AUTH_ROUTE,
-  DEFAULT_ROUTE,
-  REGISTRATION_ROUTE,
-} from '../constants/route';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { observer } from 'mobx-react-lite';
+import { Context } from '../store/Context';
+import { AUTH_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE } from '../constants/route';
 
-const NavBar = () => {
+const NavBar = observer(() => {
+  const { user } = useContext(Context);
+  const location = useLocation();
+  const history = useNavigate();
+  const isLoginPage = location.pathname === AUTH_ROUTE;
+  const isRegistrationPage = location.pathname === REGISTRATION_ROUTE;
+  const isMainPage = location.pathname === MAIN_ROUTE;
+
   return (
-    <div>
-      <NavLink to={DEFAULT_ROUTE}>
-        <button>Main page</button>
-      </NavLink>
-      <NavLink to={REGISTRATION_ROUTE}>
-        <button>Registration page</button>
-      </NavLink>
-      <NavLink to={AUTH_ROUTE}>
-        <button>Auth page</button>
-      </NavLink>
-    </div>
+    <nav className="nav-bar">
+      {user?.isAuth && (
+        <div className="nav-bar__block">
+          {!isMainPage && (
+            <NavLink to={MAIN_ROUTE}>
+              <button className="button">Домой</button>
+            </NavLink>
+          )}
+          <button
+            className="button button-second"
+            onClick={() => {
+              user.setIsAuth(false);
+              user.setUser(null);
+              if (!isMainPage) {
+                history(MAIN_ROUTE);
+              }
+            }}
+          >
+            Выйти из учетной записи
+          </button>
+        </div>
+      )}
+      {!user?.isAuth && (
+        <div className="nav-bar__block">
+          {!isMainPage && (
+            <NavLink to={MAIN_ROUTE}>
+              <button className="button">Домой</button>
+            </NavLink>
+          )}
+          {!isRegistrationPage && (
+            <NavLink to={REGISTRATION_ROUTE}>
+              <button className="button">Регистрация</button>
+            </NavLink>
+          )}
+          {!isLoginPage && (
+            <NavLink to={AUTH_ROUTE}>
+              <button className="button">Вход</button>
+            </NavLink>
+          )}
+        </div>
+      )}
+    </nav>
   );
-};
+});
 
 export { NavBar };

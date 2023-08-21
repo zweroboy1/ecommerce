@@ -1,0 +1,143 @@
+/* promotions */
+
+.promotions {
+  width: 100%;
+  background: #fdde55;
+
+  .row {
+    max-width: 1400px;
+    min-width: 280px;
+    margin: 0 auto;
+    align-items: flex-start;
+  }
+
+  &__container {
+    padding: 20px 15px;
+    margin: 0 auto;
+  }
+
+  &__title {
+    @include flex($justify: flex-start, $align: flex-start, $wrap: wrap);
+    @include font($family: $font-family-title, $size: $font-size-24, $height: 1);
+    margin: 10px 0 20px;
+  }
+
+  &__scroller-list {
+    @include flex($justify: flex-start);
+    opacity: 1;
+  }
+
+  &__item-wrapper {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    max-height: 305px;
+    border-radius: 12px;
+    float: left;
+    margin: 0;
+    padding: 0;
+    background: $background;
+    overflow: hidden;
+    box-sizing: border-box;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0);
+  }
+
+  &__image {
+    max-height: 210px;
+    position: relative;
+    flex: 1 100%;
+    background: #f6f6f6;
+    overflow: hidden;
+    margin: -2px;
+
+    a {
+      cursor: pointer;
+      text-align: center;
+    }
+  }
+
+  &__pict {
+    width: 300px;
+    max-width: 300px;
+    height: auto;
+  }
+
+  &__days {
+    @include flexColumn($justify: center);
+    @include font($size: $font-size-12);
+    max-width: 70px;
+    min-width: 50px;
+    margin: 15px 0 15px 15px;
+    padding: 10px 5px;
+    height: auto;
+    text-align: center;
+    color: #4d4d4d;
+    border-bottom: 1px solid #e1e1e1;
+    box-shadow: 0 1px 1px #f6f6f6, 0 2px 1px #d5d5d5, 0 3px 1px #fbfbfb, 0 4px 1px #d5d5d5;
+    border-radius: 8px;
+    position: relative;
+    box-sizing: border-box;
+    background: #eee;
+
+    &::before {
+      content: '';
+      border-top: 5px dotted $background;
+      width: 100%;
+      height: 0;
+      position: absolute;
+      top: -2px;
+    }
+
+    div {
+      font-size: 12px;
+      color: #595959;
+    }
+
+    span {
+      font-size: 24px;
+      display: block;
+      padding-top: 2px;
+      font-size: 32px;
+      line-height: 90%;
+      font-weight: bold;
+      color: $text-color;
+    }
+  }
+
+  &__txt {
+    display: inline-flex;
+    flex: 1 calc(100% - 130px);
+    flex-direction: column;
+    padding: 15px;
+    min-height: 80px;
+    min-height: 75px;
+    padding: 15px;
+    box-sizing: content-box;
+
+    a {
+      color: $text-color;
+      transition: $transition;
+
+      &:hover {
+        color: $important;
+      }
+    }
+  }
+
+  &__date {
+    display: block;
+    @include font($size: $font-size-12);
+    margin-top: 5px;
+  }
+
+  &__button {
+    right: 0;
+    margin: 15px 0 0;
+    text-align: left;
+
+    a {
+      margin-top: 20px;
+      margin-left: 5px;
+    }
+  }
+}

@@ -1,0 +1,6 @@
+/* main pages*/
+
+.content .row {
+  @include flexColumn();
+  padding: 0;
+}
