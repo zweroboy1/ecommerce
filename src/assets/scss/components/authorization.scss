@@ -18,6 +18,7 @@
   }
 
   &__container {
+
     .form-fields,
     .label {
       @include flexColumn($align: start);
@@ -90,7 +91,7 @@
 
       .label-check {
         display: block;
-        margin: 15px 0;
+        margin: 35px 0 15px;
 
         span {
           font-weight: bold;
@@ -129,6 +130,11 @@
     position: absolute;
     top: 70px;
     color: $important;
+    font-size: $font-size-12;
+
+    @include media('xxs') {
+      font-size: 10px;
+    }
   }
 
   .error input,
