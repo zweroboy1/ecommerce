@@ -21,6 +21,10 @@ const TopLinks = () => {
     setMenuVisible(!menuVisible);
   };
 
+  const closeMenu = () => {
+    setMenuVisible(false);
+  };
+
   return (
     <div className="top-links">
       <div className="top-links__wrapper">
@@ -32,7 +36,7 @@ const TopLinks = () => {
         <ul className={`text-links ${menuVisible ? 'active' : ''}`}>
           {quickLinks.map((link, index) => (
             <li key={index} className="text-links__item">
-              <NavLink className="text-links__a" to={link.link}>
+              <NavLink className="text-links__a" to={link.link} onClick={closeMenu}>
                 {link.text}
               </NavLink>
             </li>
