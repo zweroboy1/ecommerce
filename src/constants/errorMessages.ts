@@ -22,7 +22,7 @@ const CONTAIN_DOMAIN_NAME = 'Адрес электронной почты дол
 const NO_CORRECT_EMAIL = 'Некорректный адрес электронной почты';
 const USER_ALREADY_EXISTS = 'Пользователь с таким адресом электронной почты уже зарегистрирован!';
 const SOMETHING_WRONG = 'Что-то пошло не так. Попробуйте зайти позже.';
-const SUCCESS_REGISTRATION_MEGGAGE = 'Вы успешно зарегистрировались!';
+const SUCCESS_REGISTRATION_MEGGAGE = 'Поздравляем! Вы успешно зарегистрировались!';
 const NO_CORRECT_POST_CODE = 'Некорректный почтовый индекс для выбранной страны: ';
 
 export {

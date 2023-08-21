@@ -27,8 +27,8 @@ const Categories = () => {
 
   return (
     <div className="menu">
-      <div className="menu__title">
-        <i className="menu__icon" onClick={toggleMenu}></i>
+      <div className="menu__title" onClick={toggleMenu}>
+        <i className="menu__icon"></i>
         <span>Категории</span>
       </div>
       <div className={`menu__categories ${menuVisible ? 'active' : ''}`}>

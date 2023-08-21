@@ -23,23 +23,21 @@ const TopLinks = () => {
 
   return (
     <div className="top-links">
-      <div className="top-quick-links">
-        <div className="top-quick-links__wrapper">
-          <span className="links-phone" onClick={toggleMenu}>
-            <span className="icon icon-short-list"></span>
-            <span className="top-arrow links-phone__arrow"></span>
-          </span>
+      <div className="top-links__wrapper">
+        <span className="links-phone" onClick={toggleMenu}>
+          <span className="icon icon-short-list"></span>
+          <span className="top-arrow links-phone__arrow"></span>
+        </span>
 
-          <ul className={`text-links ${menuVisible ? 'active' : ''}`}>
-            {quickLinks.map((link, index) => (
-              <li key={index} className="text-links__item">
-                <NavLink className="text-links__a" to={link.link}>
-                  {link.text}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className={`text-links ${menuVisible ? 'active' : ''}`}>
+          {quickLinks.map((link, index) => (
+            <li key={index} className="text-links__item">
+              <NavLink className="text-links__a" to={link.link}>
+                {link.text}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

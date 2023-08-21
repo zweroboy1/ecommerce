@@ -5,9 +5,14 @@
   flex-shrink: 0;
 
   .row {
-    align-items: start;
-    flex-wrap: wrap;
+    @include flex($justify: space-between, $align: start, $wrap: wrap);
     gap: 10px 40px;
+
+    @include media('l') {
+      @include flexColumn($align: stretch);
+      padding: 0;
+      gap: 2px;
+    }
 
     div {
       text-align: left;
@@ -15,17 +20,48 @@
   }
 
   &__header {
-    font-size: 18px;
-    font-family: MuseoSansBlack, 'Helvetica Neue', Arial, sans-serif;
-    font-weight: bold;
-    text-transform: none;
-    letter-spacing: normal;
+    @include font($size: $font-size-19);
     padding-top: 40px;
-    color: #000;
+    color: $text-color;
+
+
+    @include media('l') {
+      border-bottom: 1px solid #949494;
+      padding: 15px 0 15px 20px;
+      @include font($family: $font-family-title);
+      position: relative;
+      background-color: #fde36e;
+      cursor: pointer;
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: $text-color transparent transparent transparent;
+      }
+
+      &.open:after {
+        top: 40%;
+        border-color: transparent transparent $text-color transparent;
+      }
+    }
   }
 
   &__body {
     margin: 10px 0 20px;
+
+    @include media('l') {
+      display: none;
+
+      &.open {
+        display: block;
+        padding: 0 20px;
+      }
+    }
   }
 
   &__item {
@@ -34,6 +70,11 @@
 
     a {
       color: $links;
+      transition: $transition;
+
+      &:hover {
+        color: $links-hover;
+      }
     }
   }
 }

@@ -5,23 +5,19 @@
   margin-top: 30px;
 
   &__grid {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    @include flex($wrap: wrap);
   }
 
   &__block {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    @include flexColumn($align: initial);
     flex: 0 0 auto;
+    gap: 15px;
+    margin: 5px 5px 5px 10px;
+    padding: 0;
     max-width: 350px;
-    margin: 5px;
-    padding-left: 0;
-    padding-right: 0;
+    min-height: 1px;
     box-sizing: border-box;
     float: left;
-    min-height: 1px;
     margin-left: 10px;
   }
 
@@ -41,15 +37,20 @@
   }
 
   &__img {
-    padding: 20px 20px 0;
+    padding: 20px;
   }
 
   &__pict {
+    flex: 0;
     max-height: 100%;
     width: auto;
-    flex: 0;
     width: 600px;
     height: 462px;
+    transition: $transition;
+
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 
   &__box {
@@ -57,6 +58,6 @@
   }
 
   &__title {
-    font-size: 16px;
+    @include font($size: $font-size-16);
   }
 }

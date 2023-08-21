@@ -5,7 +5,7 @@ import { BestCategories } from './content/BestСategories';
 
 const Content = () => {
   return (
-    <main className="content container">
+    <main className="content">
       <div className="row">
         <Banners />
         <BestCategories />

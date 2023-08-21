@@ -15,8 +15,8 @@ const Banners = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
+    // autoplay: true,
+    // autoplaySpeed: 3000,
   };
 
   const banners = [
@@ -57,7 +57,7 @@ const Banners = () => {
                     muted
                     playsInline
                   ></video>
-                  <div className={`banner__content ${banner.class}`}>
+                  <div className={`banner__content ${banner.class ? banner.class : ''}`}>
                     <div className="banner__img">
                       <img alt="banner" title="" src={banner.image} />
                     </div>
@@ -70,9 +70,9 @@ const Banners = () => {
                           </span>
                         </div>
                         <div className="banner__txt">
-                          {banner.description1}
+                          <span>{banner.description1}</span>
                           <br />
-                          {banner.description2}
+                          <span>{banner.description2}</span>
                         </div>
                       </div>
                     </div>

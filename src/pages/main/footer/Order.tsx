@@ -1,5 +1,5 @@
 import { ALL_ORDERS_ROUTE, SAVED_ROUTE, COMPARE_ROUTE } from '../../../constants/route';
-import FooterMenu from './FooterMenu';
+import { FooterMenu } from './FooterMenu';
 
 const Order = () => {
   const menuItems = [

@@ -151,16 +151,16 @@ const RegistrationForm = observer(({ ...initialValues }: PropsWithoutRef<Registe
                 defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress, setFieldTouched }}
               />
 
-              <label>
+              <label className="label-check">
                 <Field type="checkbox" name="isShippingAddressDefault" />
-                Сделать адресом доставки по умолчанию
+                <span>Сделать адресом доставки по умолчанию</span>
               </label>
             </div>
 
             <div className="address-row">
               <h2>Адрес оплаты</h2>
 
-              <label>
+              <label className="label-check">
                 <input
                   type="checkbox"
                   onChange={async (e) => {
@@ -213,14 +213,14 @@ const RegistrationForm = observer(({ ...initialValues }: PropsWithoutRef<Registe
                 defaultAddress={{ checkDefaultAddress, setCheckDefaultAddress, setFieldTouched }}
               />
 
-              <label>
+              <label className="label-check">
                 <Field type="checkbox" name="isBillingAddressDefault" />
-                Сделать адресом оплаты по умолчанию
+                <span>Сделать адресом оплаты по умолчанию</span>
               </label>
             </div>
 
             <Button className="button button-second" type="submit" disabled={!isValid}>
-              {isSubmitting ? 'Submitting...' : 'Регистрация'}
+              {isSubmitting ? 'Отправка...' : 'Регистрация'}
             </Button>
 
             {registrationInfo !== '' && <div className="service__error">{registrationInfo}</div>}

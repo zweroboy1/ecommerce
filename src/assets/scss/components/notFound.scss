@@ -6,11 +6,11 @@
   padding: 40px 0px 70px 0px;
 
   &__code {
-    top: 92px;
-    left: 63px;
     display: inline-block;
     width: 300px;
-    color: #e74c3c;
+    top: 92px;
+    left: 63px;
+    color: $error;
     text-align: center;
     font-weight: bold;
     font-size: 86px;

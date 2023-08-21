@@ -17,16 +17,17 @@ const NavBar = observer(() => {
         <div className="nav-bar__block">
           {!isMainPage && (
             <NavLink to={MAIN_ROUTE}>
-              <button>На главную</button>
+              <button className="button">Домой</button>
             </NavLink>
           )}
           <button
+            className="button button-second"
             onClick={() => {
               user.setIsAuth(false);
               user.setUser(null);
             }}
           >
-            Выход
+            Выйти из учетной записи
           </button>
         </div>
       )}
@@ -34,17 +35,17 @@ const NavBar = observer(() => {
         <div className="nav-bar__block">
           {!isMainPage && (
             <NavLink to={MAIN_ROUTE}>
-              <button>На главную</button>
+              <button className="button">Домой</button>
             </NavLink>
           )}
           {!isRegistrationPage && (
             <NavLink to={REGISTRATION_ROUTE}>
-              <button>Регистрация</button>
+              <button className="button">Регистрация</button>
             </NavLink>
           )}
           {!isLoginPage && (
             <NavLink to={AUTH_ROUTE}>
-              <button>Вход</button>
+              <button className="button">Вход</button>
             </NavLink>
           )}
         </div>
