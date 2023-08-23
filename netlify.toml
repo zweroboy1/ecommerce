@@ -1,5 +1,9 @@
 [build]
-command = "npm run build"
-publish = "dist"
-base = "/"
-branches = { deploy-preview = ["*"], production = "develop" }
+  command = "npm run build"
+  publish = "/dist"
+  base = "/"
+  branches = { deploy-preview = ["*"], production = "develop" }
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
