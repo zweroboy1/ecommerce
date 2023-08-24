@@ -1,5 +1,8 @@
 vite.config.ts
 jest.config.js
+jest.config.mjs
+jest-setup.ts
+babel.config.js
 commitlint.config.js
 node_modules/
 dist/
@@ -8,3 +11,8 @@ package-lock.json
 tsconfig.json
 tsconfig.node.json
 .prettierrc
+block-navigation.js
+prettify.js
+sorter.js
+typings.d.ts
+fileMock.ts
