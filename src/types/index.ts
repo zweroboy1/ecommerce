@@ -129,23 +129,6 @@ type Customer = {
   addresses: Address[];
   shippingAddressIds: string[];
   billingAddressIds: string[];
-  defaultShippingAddressId?: string;
-  defaultBillingAddressId?: string;
-};
-
-type CustomerUpdating = {
-  id: string;
-  version: number;
-  email: string;
-  password?: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  addresses: Address[];
-  shippingAddresses: Address[];
-  billingAddresses: Address[];
-  defaultShippingAddressId?: string;
-  defaultBillingAddressId?: string;
 };
 
 type CustomerWithToken = {
@@ -173,5 +156,4 @@ export type {
   RegisterUser,
   CreateUser,
   StateFields,
-  CustomerUpdating,
 };

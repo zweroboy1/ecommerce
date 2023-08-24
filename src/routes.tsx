@@ -110,6 +110,10 @@ const commonRoutes = [
     Component: AllOrders,
   },
   {
+    path: ACCOUNT_ROUTE,
+    Component: Account,
+  },
+  {
     path: SAVED_ROUTE,
     Component: Saved,
   },
@@ -153,10 +157,6 @@ export const publicRoutes = [
     path: AUTH_ROUTE,
     Component: Auth,
   },
-  {
-    path: ACCOUNT_ROUTE,
-    Component: () => <Navigate to={REGISTRATION_ROUTE} replace />,
-  },
 ];
 
 export const authRoutes = [
@@ -168,9 +168,5 @@ export const authRoutes = [
   {
     path: AUTH_ROUTE,
     Component: () => <Navigate to={MAIN_ROUTE} replace />,
-  },
-  {
-    path: ACCOUNT_ROUTE,
-    Component: Account,
   },
 ];
