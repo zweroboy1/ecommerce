@@ -8,6 +8,75 @@ import { UpdatingField } from './UpdatingField';
 
 const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpdating>) => {
   const [showedPage, setShowedPage] = useState('userInfo');
+  const [isUpdatePersonalDataForm, setIsUpdatePersonalDataForm] = useState({
+    firstName: false,
+    lastName: false,
+    dateOfBirth: false,
+  });
+
+  const isUpdatePersonalData =
+    isUpdatePersonalDataForm.firstName ||
+    isUpdatePersonalDataForm.lastName ||
+    isUpdatePersonalDataForm.dateOfBirth;
+
+  const getAllAddressIds = (): { [key: string]: string[] } => {
+    const addressIds: { [key: string]: string[] } = {
+      shippingAddresses: [],
+      billingAddresses: [],
+      addresses: [],
+    };
+    initialValues.shippingAddresses.forEach((address) => {
+      if (address.id) {
+        addressIds.shippingAddresses.push(address.id);
+      }
+    });
+    initialValues.billingAddresses.forEach((address) => {
+      if (address.id) {
+        addressIds.billingAddresses.push(address.id);
+      }
+    });
+    initialValues.addresses.forEach((address) => {
+      if (address.id) {
+        addressIds.addresses.push(address.id);
+      }
+    });
+    return addressIds;
+  };
+
+  const updatingAddressObject = (
+    ids: { [key: string]: string[] },
+    state: { [key: string]: { [key: string]: boolean } } = {}
+  ): { [key: string]: { [key: string]: boolean } } => {
+    const allAddressIds = getAllAddressIds();
+    return Object.keys(allAddressIds).reduce<{ [key: string]: { [key: string]: boolean } }>(
+      (acc, key) => {
+        acc[key] = allAddressIds[key].reduce<{ [key: string]: boolean }>((accInner, id) => {
+          if (ids?.[key]?.includes(id)) {
+            // eslint-disable-next-line no-param-reassign
+            accInner[id] = true;
+          } else {
+            // eslint-disable-next-line no-param-reassign
+            accInner[id] = state[key]?.[id] || false;
+          }
+          return accInner;
+        }, {});
+        return acc;
+      },
+      {}
+    );
+  };
+
+  const [isUpdateAddress, setIsUpdateAddress] = useState(updatingAddressObject({}));
+
+  const setIsUpdateFieldsOfPersonalDataForm = (name: string, value: boolean) => {
+    setIsUpdatePersonalDataForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const isUpdateAddresForm = [
+    ...Object.values(isUpdateAddress)
+      .map((addressesIds) => Object.values(addressesIds))
+      .flat(),
+  ].some((value) => value === true);
 
   const changePage = (namePage: string) => {
     if (showedPage !== namePage) {
@@ -46,6 +115,8 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                   type="text"
                   touch={{ setFieldTouched }}
                   valid={{ validateField }}
+                  isUpdateForm={isUpdatePersonalDataForm.firstName}
+                  setIsUpdateFields={setIsUpdateFieldsOfPersonalDataForm}
                 />
 
                 <UpdatingField
@@ -55,6 +126,8 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                   type="text"
                   touch={{ setFieldTouched }}
                   valid={{ validateField }}
+                  isUpdateForm={isUpdatePersonalDataForm.lastName}
+                  setIsUpdateFields={setIsUpdateFieldsOfPersonalDataForm}
                 />
 
                 <UpdatingField
@@ -63,11 +136,80 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                   type="date"
                   touch={{ setFieldTouched }}
                   valid={{ validateField }}
+                  isUpdateForm={isUpdatePersonalDataForm.dateOfBirth}
+                  setIsUpdateFields={setIsUpdateFieldsOfPersonalDataForm}
                 />
+
+                {!isUpdatePersonalData && (
+                  <Button
+                    className="button"
+                    type="button"
+                    onClick={() => {
+                      setIsUpdatePersonalDataForm({
+                        firstName: true,
+                        lastName: true,
+                        dateOfBirth: true,
+                      });
+                    }}
+                  >
+                    Редактировать профиль
+                  </Button>
+                )}
+
+                {isUpdatePersonalData && (
+                  <Button className="button" type="button" onClick={() => {}}>
+                    Сохранить
+                  </Button>
+                )}
+                {isUpdatePersonalData && (
+                  <Button
+                    className="button"
+                    type="button"
+                    onClick={() => {
+                      setIsUpdatePersonalDataForm({
+                        firstName: false,
+                        lastName: false,
+                        dateOfBirth: false,
+                      });
+                    }}
+                  >
+                    Отменить
+                  </Button>
+                )}
               </div>
             )}
             {showedPage === 'address' && (
               <>
+                <div className="button-wrapp">
+                  {!isUpdateAddresForm && (
+                    <Button
+                      className="button"
+                      type="button"
+                      onClick={() => {
+                        setIsUpdateAddress(updatingAddressObject(getAllAddressIds()));
+                      }}
+                    >
+                      Редактировать адреса
+                    </Button>
+                  )}
+
+                  {isUpdateAddresForm && (
+                    <Button className="button" type="button" onClick={() => {}}>
+                      Сохранить
+                    </Button>
+                  )}
+                  {isUpdateAddresForm && (
+                    <Button
+                      className="button"
+                      type="button"
+                      onClick={() => {
+                        setIsUpdateAddress(updatingAddressObject({}));
+                      }}
+                    >
+                      Отменить
+                    </Button>
+                  )}
+                </div>
                 <div className="address-row">
                   <h2>Адреса доставки</h2>
                   <FieldArray
@@ -83,6 +225,48 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                               }`}
                               key={address.id}
                             >
+                              <div className="button-wrapper">
+                                {!isUpdateAddress.shippingAddresses[address.id || ''] && (
+                                  <Button
+                                    className="button"
+                                    type="button"
+                                    onClick={() => {
+                                      setIsUpdateAddress({
+                                        ...isUpdateAddress,
+                                        shippingAddresses: {
+                                          ...isUpdateAddress.shippingAddresses,
+                                          [address.id || '']: true,
+                                        },
+                                      });
+                                    }}
+                                  >
+                                    Редактировать этот адрес
+                                  </Button>
+                                )}
+
+                                {isUpdateAddress.shippingAddresses[address.id || ''] && (
+                                  <Button className="button" type="button" onClick={() => {}}>
+                                    Сохранить
+                                  </Button>
+                                )}
+                                {isUpdateAddress.shippingAddresses[address.id || ''] && (
+                                  <Button
+                                    className="button"
+                                    type="button"
+                                    onClick={() => {
+                                      setIsUpdateAddress({
+                                        ...isUpdateAddress,
+                                        shippingAddresses: {
+                                          ...isUpdateAddress.shippingAddresses,
+                                          [address.id || '']: false,
+                                        },
+                                      });
+                                    }}
+                                  >
+                                    Отменить
+                                  </Button>
+                                )}
+                              </div>
                               {address.id === values.defaultShippingAddressId && (
                                 <span>Адрес доставки по умолчанию</span>
                               )}
@@ -93,6 +277,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                 type="text"
                                 touch={{ setFieldTouched }}
                                 valid={{ validateField }}
+                                isUpdateForm={isUpdateAddress.shippingAddresses[address.id || '']}
                               />
                               <UpdatingField
                                 label="Город"
@@ -101,6 +286,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                 type="text"
                                 touch={{ setFieldTouched }}
                                 valid={{ validateField }}
+                                isUpdateForm={isUpdateAddress.shippingAddresses[address.id || '']}
                               />
                               <UpdatingField
                                 label="Улица"
@@ -109,6 +295,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                 type="text"
                                 touch={{ setFieldTouched }}
                                 valid={{ validateField }}
+                                isUpdateForm={isUpdateAddress.shippingAddresses[address.id || '']}
                               />
                               <UpdatingField
                                 label="Индекс"
@@ -117,6 +304,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                 type="text"
                                 touch={{ setFieldTouched }}
                                 valid={{ validateField }}
+                                isUpdateForm={isUpdateAddress.shippingAddresses[address.id || '']}
                               />
                             </div>
                           ))}
@@ -143,6 +331,48 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                 }`}
                                 key={address.id}
                               >
+                                <div className="button-wrapper">
+                                  {!isUpdateAddress.billingAddresses[address.id || ''] && (
+                                    <Button
+                                      className="button"
+                                      type="button"
+                                      onClick={() => {
+                                        setIsUpdateAddress({
+                                          ...isUpdateAddress,
+                                          billingAddresses: {
+                                            ...isUpdateAddress.billingAddresses,
+                                            [address.id || '']: true,
+                                          },
+                                        });
+                                      }}
+                                    >
+                                      Редактировать этот адрес
+                                    </Button>
+                                  )}
+
+                                  {isUpdateAddress.billingAddresses[address.id || ''] && (
+                                    <Button className="button" type="button" onClick={() => {}}>
+                                      Сохранить
+                                    </Button>
+                                  )}
+                                  {isUpdateAddress.billingAddresses[address.id || ''] && (
+                                    <Button
+                                      className="button"
+                                      type="button"
+                                      onClick={() => {
+                                        setIsUpdateAddress({
+                                          ...isUpdateAddress,
+                                          billingAddresses: {
+                                            ...isUpdateAddress.billingAddresses,
+                                            [address.id || '']: false,
+                                          },
+                                        });
+                                      }}
+                                    >
+                                      Отменить
+                                    </Button>
+                                  )}
+                                </div>
                                 {address.id === values.defaultBillingAddressId && (
                                   <span>Адрес оплаты по умолчанию</span>
                                 )}
@@ -153,6 +383,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
+                                  isUpdateForm={isUpdateAddress.billingAddresses[address.id || '']}
                                 />
                                 <UpdatingField
                                   label="Город"
@@ -161,6 +392,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
+                                  isUpdateForm={isUpdateAddress.billingAddresses[address.id || '']}
                                 />
                                 <UpdatingField
                                   label="Улица"
@@ -169,6 +401,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
+                                  isUpdateForm={isUpdateAddress.billingAddresses[address.id || '']}
                                 />
                                 <UpdatingField
                                   label="Индекс"
@@ -177,6 +410,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
+                                  isUpdateForm={isUpdateAddress.billingAddresses[address.id || '']}
                                 />
                               </div>
                             );
@@ -199,6 +433,48 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                             values.addresses.length > 0 &&
                             values.addresses.map((address, index) => (
                               <div className="address" key={address.id}>
+                                <div className="button-wrapper">
+                                  {!isUpdateAddress.addresses[address.id || ''] && (
+                                    <Button
+                                      className="button"
+                                      type="button"
+                                      onClick={() => {
+                                        setIsUpdateAddress({
+                                          ...isUpdateAddress,
+                                          addresses: {
+                                            ...isUpdateAddress.addresses,
+                                            [address.id || '']: true,
+                                          },
+                                        });
+                                      }}
+                                    >
+                                      Редактировать этот адрес
+                                    </Button>
+                                  )}
+
+                                  {isUpdateAddress.addresses[address.id || ''] && (
+                                    <Button className="button" type="button" onClick={() => {}}>
+                                      Сохранить
+                                    </Button>
+                                  )}
+                                  {isUpdateAddress.addresses[address.id || ''] && (
+                                    <Button
+                                      className="button"
+                                      type="button"
+                                      onClick={() => {
+                                        setIsUpdateAddress({
+                                          ...isUpdateAddress,
+                                          addresses: {
+                                            ...isUpdateAddress.addresses,
+                                            [address.id || '']: false,
+                                          },
+                                        });
+                                      }}
+                                    >
+                                      Отменить
+                                    </Button>
+                                  )}
+                                </div>
                                 <UpdatingField
                                   label="Страна"
                                   name={`addresses.${index}.country`}
@@ -206,6 +482,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
+                                  isUpdateForm={isUpdateAddress.addresses[address.id || '']}
                                 />
                                 <UpdatingField
                                   label="Город"
@@ -214,6 +491,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
+                                  isUpdateForm={isUpdateAddress.addresses[address.id || '']}
                                 />
                                 <UpdatingField
                                   label="Улица"
@@ -222,6 +500,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
+                                  isUpdateForm={isUpdateAddress.addresses[address.id || '']}
                                 />
                                 <UpdatingField
                                   label="Индекс"
@@ -230,6 +509,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
+                                  isUpdateForm={isUpdateAddress.addresses[address.id || '']}
                                 />
                               </div>
                             ))}
@@ -251,6 +531,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                   type="email"
                   touch={{ setFieldTouched }}
                   valid={{ validateField }}
+                  // isUpdateForm={isUpdatePersonalDataForm}
                 />
 
                 {/* <UpdatingField
