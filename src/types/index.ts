@@ -19,6 +19,8 @@ type InputProps = {
   valid?: {
     validateField?: (field: string, isValid?: boolean | undefined) => void;
   };
+  isUpdateForm?: boolean;
+  setIsUpdateFields?: (name: string, value: boolean) => void;
 };
 
 type Address = {
