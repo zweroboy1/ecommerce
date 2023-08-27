@@ -43,7 +43,6 @@ const UpdatingSelectField = observer(
         <div className="field-wrapper">
           {isUpdateForm ? (
             <div className="input-wrapper">
-              {/* <input {...field} {...props} id={field.name} onChange={handleChange} /> */}
               <Field {...field} {...props} as="select" onChange={handleChange}>
                 {Object.keys(country).map((key, i) => (
                   <option key={key} value={country[key]} disabled={i === 0}>
