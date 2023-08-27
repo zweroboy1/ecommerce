@@ -50,7 +50,7 @@ const UpdatingField = observer(
                   onClick={() => {
                     if (setIsUpdateFields) {
                       setIsUpdateFields(field.name, false);
-                    } else {
+                    } else if (isUpdate) {
                       setIsUpdate(false);
                     }
                   }}
