@@ -1,10 +1,11 @@
 import { PropsWithoutRef, useState } from 'react';
 import { FieldArray, Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
-import { registrationValidationSchema } from '../utils/registrationValidation';
 import { Button } from './Button';
 import { CustomerUpdating } from '../types';
 import { UpdatingField } from './UpdatingField';
+import { updatingValidationSchema } from '../utils/updatingValidation';
+import { UpdatingSelectField } from './UpdatingSelectField';
 
 const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpdating>) => {
   const [showedPage, setShowedPage] = useState('userInfo');
@@ -100,7 +101,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
       <Formik
         initialValues={initialValues}
         onSubmit={() => {}}
-        validationSchema={registrationValidationSchema}
+        validationSchema={updatingValidationSchema}
       >
         {({ values, setFieldTouched, validateField }) => (
           <Form>
@@ -270,13 +271,15 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                               {address.id === values.defaultShippingAddressId && (
                                 <span>Адрес доставки по умолчанию</span>
                               )}
-                              <UpdatingField
+
+                              <UpdatingSelectField
                                 label="Страна"
                                 name={`shippingAddresses.${index}.country`}
                                 placeholder="Введите страну"
                                 type="text"
                                 touch={{ setFieldTouched }}
                                 valid={{ validateField }}
+                                refFieldName={`shippingAddresses.${index}.postalCode`}
                                 isUpdateForm={isUpdateAddress.shippingAddresses[address.id || '']}
                               />
                               <UpdatingField
