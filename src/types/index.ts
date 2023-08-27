@@ -21,6 +21,7 @@ type InputProps = {
   };
   isUpdateForm?: boolean;
   setIsUpdateFields?: (name: string, value: boolean) => void;
+  refFieldName?: string;
 };
 
 type Address = {
