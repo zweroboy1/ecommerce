@@ -18,7 +18,6 @@ const UpdatingSelectField = observer(
     ...props
   }: PropsWithoutRef<InputProps>) => {
     const [field, meta] = useField(props);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [isUpdate, setIsUpdate] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +63,7 @@ const UpdatingSelectField = observer(
                   onClick={() => {
                     if (setIsUpdateFields) {
                       setIsUpdateFields(field.name, false);
-                    } else {
+                    } else if (isUpdate) {
                       setIsUpdate(false);
                     }
                   }}
