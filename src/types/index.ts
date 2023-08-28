@@ -22,6 +22,11 @@ type InputProps = {
   isUpdateForm?: boolean;
   setIsUpdateFields?: (name: string, value: boolean) => void;
   refFieldName?: string;
+  initValue?: string;
+  setIsChangeFields?: (name: string, value: boolean) => void;
+  setFieldValue?: (field: string, value: string) => void;
+  isChangeField?: boolean;
+  onSave?: () => void;
 };
 
 type Address = {
@@ -113,6 +118,7 @@ type CustomerUpdating = {
   billingAddresses: Address[];
   defaultShippingAddressId?: string;
   defaultBillingAddressId?: string;
+  bearerToken: string;
 };
 
 type CustomerWithToken = {

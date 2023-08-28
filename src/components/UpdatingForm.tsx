@@ -1,15 +1,24 @@
-import { PropsWithoutRef, useState } from 'react';
+import { PropsWithoutRef, useState, useContext } from 'react';
 import { FieldArray, Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import { Button } from './Button';
-import { CustomerUpdating } from '../types';
+import { Address, CustomerUpdating } from '../types';
 import { UpdatingField } from './UpdatingField';
 import { updatingValidationSchema } from '../utils/updatingValidation';
 import { UpdatingSelectField } from './UpdatingSelectField';
+import { updateUser } from '../services/commercetoolsApi';
+import { Context } from '../store/Context';
 
 const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpdating>) => {
+  const { user } = useContext(Context);
+
   const [showedPage, setShowedPage] = useState('userInfo');
   const [isUpdatePersonalDataForm, setIsUpdatePersonalDataForm] = useState({
+    firstName: false,
+    lastName: false,
+    dateOfBirth: false,
+  });
+  const [isChangePersonalDataForm, setIsChangePersonalDataForm] = useState({
     firstName: false,
     lastName: false,
     dateOfBirth: false,
@@ -19,6 +28,11 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
     isUpdatePersonalDataForm.firstName ||
     isUpdatePersonalDataForm.lastName ||
     isUpdatePersonalDataForm.dateOfBirth;
+
+  const isChangePersonalData =
+    isChangePersonalDataForm.firstName ||
+    isChangePersonalDataForm.lastName ||
+    isChangePersonalDataForm.dateOfBirth;
 
   const getAllAddressIds = (): { [key: string]: string[] } => {
     const addressIds: { [key: string]: string[] } = {
@@ -73,6 +87,10 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
     setIsUpdatePersonalDataForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const setIsChangeFieldsOfPersonalDataForm = (name: string, value: boolean) => {
+    setIsChangePersonalDataForm((prev) => ({ ...prev, [name]: value }));
+  };
+
   const isUpdateAddresForm = [
     ...Object.values(isUpdateAddress)
       .map((addressesIds) => Object.values(addressesIds))
@@ -82,6 +100,142 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
   const changePage = (namePage: string) => {
     if (showedPage !== namePage) {
       setShowedPage(namePage);
+    }
+  };
+
+  const preparePersonalDataForSave = (
+    values: Partial<Record<'firstName' | 'lastName' | 'dateOfBirth', string>>,
+    fieldValuesSettings: { firstName: boolean; lastName: boolean; dateOfBirth: boolean }
+  ): {
+    [key: string]:
+      | string
+      | number
+      | boolean
+      | Address
+      | Address[]
+      | number[]
+      | boolean[]
+      | undefined;
+    action: string;
+  }[] => {
+    const firstName = {
+      action: fieldValuesSettings.firstName ? 'setFirstName' : 'unset',
+      firstName: values.firstName,
+    };
+    const lastName = {
+      action: fieldValuesSettings.lastName ? 'setLastName' : 'unset',
+      lastName: values.lastName,
+    };
+    const dateOfBirth = {
+      action: fieldValuesSettings.dateOfBirth ? 'setDateOfBirth' : 'unset',
+      dateOfBirth: values.dateOfBirth,
+    };
+    return [firstName, lastName, dateOfBirth].filter(({ action }) => action !== 'unset');
+  };
+
+  const savePersonalData = async (
+    type: string,
+    values: Partial<Record<'firstName' | 'lastName' | 'dateOfBirth', string>>
+  ) => {
+    if (type === 'firstName') {
+      const data = preparePersonalDataForSave(values, {
+        firstName: true,
+        lastName: false,
+        dateOfBirth: false,
+      });
+      try {
+        const userData = await updateUser(
+          data,
+          initialValues.id,
+          initialValues.bearerToken,
+          initialValues.version
+        );
+        const userToken = user?.user?.token;
+        if (userToken) {
+          user?.setUser({ user: userData, token: userToken });
+        }
+        setIsChangePersonalDataForm({ ...isChangePersonalDataForm, firstName: false });
+        setIsUpdatePersonalDataForm({ ...isUpdatePersonalDataForm, firstName: false });
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      }
+    }
+    if (type === 'lastName') {
+      const data = preparePersonalDataForSave(values, {
+        firstName: false,
+        lastName: true,
+        dateOfBirth: false,
+      });
+      try {
+        const userData = await updateUser(
+          data,
+          initialValues.id,
+          initialValues.bearerToken,
+          initialValues.version
+        );
+        const userToken = user?.user?.token;
+        if (userToken) {
+          user?.setUser({ user: userData, token: userToken });
+        }
+        setIsChangePersonalDataForm({ ...isChangePersonalDataForm, lastName: false });
+        setIsUpdatePersonalDataForm({ ...isUpdatePersonalDataForm, lastName: false });
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      }
+    }
+    if (type === 'dateOfBirth') {
+      const data = preparePersonalDataForSave(values, {
+        firstName: false,
+        lastName: false,
+        dateOfBirth: true,
+      });
+      try {
+        const userData = await updateUser(
+          data,
+          initialValues.id,
+          initialValues.bearerToken,
+          initialValues.version
+        );
+        const userToken = user?.user?.token;
+        if (userToken) {
+          user?.setUser({ user: userData, token: userToken });
+        }
+        setIsChangePersonalDataForm({ ...isChangePersonalDataForm, dateOfBirth: false });
+        setIsUpdatePersonalDataForm({ ...isUpdatePersonalDataForm, dateOfBirth: false });
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      }
+    }
+    if (type === 'all') {
+      const data = preparePersonalDataForSave(values, isChangePersonalDataForm);
+      try {
+        const userData = await updateUser(
+          data,
+          initialValues.id,
+          initialValues.bearerToken,
+          initialValues.version
+        );
+        const userToken = user?.user?.token;
+        if (userToken) {
+          user?.setUser({ user: userData, token: userToken });
+        }
+        setIsChangePersonalDataForm({
+          firstName: false,
+          lastName: false,
+          dateOfBirth: false,
+        });
+        setIsUpdatePersonalDataForm({
+          firstName: false,
+          lastName: false,
+          dateOfBirth: false,
+        });
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      }
     }
   };
 
@@ -103,7 +257,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
         onSubmit={() => {}}
         validationSchema={updatingValidationSchema}
       >
-        {({ values, setFieldTouched, validateField }) => (
+        {({ values, setFieldTouched, validateField, setFieldValue }) => (
           <Form>
             {showedPage === 'userInfo' && (
               <div className="user-info">
@@ -118,6 +272,13 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                   valid={{ validateField }}
                   isUpdateForm={isUpdatePersonalDataForm.firstName}
                   setIsUpdateFields={setIsUpdateFieldsOfPersonalDataForm}
+                  initValue={initialValues.firstName}
+                  setIsChangeFields={setIsChangeFieldsOfPersonalDataForm}
+                  setFieldValue={setFieldValue}
+                  isChangeField={isChangePersonalDataForm.firstName}
+                  onSave={async () => {
+                    await savePersonalData('firstName', { firstName: values.firstName });
+                  }}
                 />
 
                 <UpdatingField
@@ -129,6 +290,13 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                   valid={{ validateField }}
                   isUpdateForm={isUpdatePersonalDataForm.lastName}
                   setIsUpdateFields={setIsUpdateFieldsOfPersonalDataForm}
+                  initValue={initialValues.lastName}
+                  setIsChangeFields={setIsChangeFieldsOfPersonalDataForm}
+                  setFieldValue={setFieldValue}
+                  isChangeField={isChangePersonalDataForm.lastName}
+                  onSave={async () => {
+                    await savePersonalData('lastName', { lastName: values.lastName });
+                  }}
                 />
 
                 <UpdatingField
@@ -139,6 +307,13 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                   valid={{ validateField }}
                   isUpdateForm={isUpdatePersonalDataForm.dateOfBirth}
                   setIsUpdateFields={setIsUpdateFieldsOfPersonalDataForm}
+                  initValue={initialValues.dateOfBirth}
+                  setIsChangeFields={setIsChangeFieldsOfPersonalDataForm}
+                  setFieldValue={setFieldValue}
+                  isChangeField={isChangePersonalDataForm.dateOfBirth}
+                  onSave={async () => {
+                    await savePersonalData('dateOfBirth', { dateOfBirth: values.dateOfBirth });
+                  }}
                 />
 
                 {!isUpdatePersonalData && (
@@ -158,7 +333,20 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                 )}
 
                 {isUpdatePersonalData && (
-                  <Button className="button" type="button" onClick={() => {}}>
+                  <Button
+                    className="button"
+                    type="button"
+                    disabled={!isChangePersonalData}
+                    onClick={async () => {
+                      if (isChangePersonalData) {
+                        await savePersonalData('all', {
+                          firstName: values.firstName,
+                          lastName: values.lastName,
+                          dateOfBirth: values.dateOfBirth,
+                        });
+                      }
+                    }}
+                  >
                     Сохранить
                   </Button>
                 )}
@@ -168,6 +356,14 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                     type="button"
                     onClick={() => {
                       setIsUpdatePersonalDataForm({
+                        firstName: false,
+                        lastName: false,
+                        dateOfBirth: false,
+                      });
+                      setFieldValue('firstName', initialValues.firstName, true);
+                      setFieldValue('lastName', initialValues.lastName, true);
+                      setFieldValue('dateOfBirth', initialValues.dateOfBirth, true);
+                      setIsChangePersonalDataForm({
                         firstName: false,
                         lastName: false,
                         dateOfBirth: false,
