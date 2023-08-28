@@ -1,6 +1,6 @@
 import { Customer, CustomerUpdating } from '../types';
 
-const prepareCustomerUpdating = (customer: Customer): CustomerUpdating => {
+const prepareCustomerUpdating = (customer: Customer, bearerToken: string): CustomerUpdating => {
   const {
     id,
     version,
@@ -40,6 +40,7 @@ const prepareCustomerUpdating = (customer: Customer): CustomerUpdating => {
     billingAddresses,
     defaultShippingAddressId,
     defaultBillingAddressId,
+    bearerToken,
   };
 };
 

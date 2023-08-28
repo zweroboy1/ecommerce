@@ -334,3 +334,46 @@ export async function getProduct(productId: string): Promise<ProductAllData | nu
     throw new Error('Oooops!!! We have a problem2!!!');
   }
 }
+
+export async function updateUser(
+  data: {
+    [key: string]:
+      | string
+      | number
+      | boolean
+      | Address
+      | Address[]
+      | number[]
+      | boolean[]
+      | undefined;
+    action: string;
+  }[],
+  id: string,
+  bearerToken: string,
+  version: number
+): Promise<Customer> {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/customers/${id}`;
+  const requestBody = {
+    version,
+    actions: data,
+  };
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+    const responseData = await response.json();
+
+    if (!response.ok || !responseData) {
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    throw new Error(CT_LOGIN_ERROR);
+  }
+}
