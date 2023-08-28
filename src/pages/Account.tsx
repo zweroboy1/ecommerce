@@ -8,7 +8,10 @@ import { prepareCustomerUpdating } from '../utils/prepareCustomerUpdating';
 
 const Account = () => {
   const { user } = useContext(Context);
-  const customerUpdating = prepareCustomerUpdating(user!.user!.user);
+  const customerUpdating = prepareCustomerUpdating(
+    user!.user!.user,
+    user!.user!.token.access_token
+  );
 
   return (
     <div className="tygh">
@@ -16,7 +19,7 @@ const Account = () => {
       <Header />
       <main className="main">
         <h1>Мой профиль</h1>
-        <UpdatingForm {...{ ...customerUpdating }} />
+        <UpdatingForm {...{ ...customerUpdating, bearerToken: user!.user!.token.access_token }} />
       </main>
       <Footer />
     </div>

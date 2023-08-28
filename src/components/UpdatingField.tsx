@@ -13,6 +13,11 @@ const UpdatingField = observer(
     valid,
     isUpdateForm,
     setIsUpdateFields,
+    initValue,
+    setIsChangeFields,
+    setFieldValue,
+    isChangeField,
+    onSave,
     ...props
   }: PropsWithoutRef<InputProps>) => {
     const [field, meta] = useField(props);
@@ -20,6 +25,11 @@ const UpdatingField = observer(
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       field.onChange(e);
+      if (initValue && initValue !== e.target.value && setIsChangeFields) {
+        setIsChangeFields(field.name, true);
+      } else if (setIsChangeFields) {
+        setIsChangeFields(field.name, false);
+      }
       setTimeout(() => {
         if (touch) {
           touch.setFieldTouched?.(field.name, true);
@@ -40,7 +50,13 @@ const UpdatingField = observer(
             <div className="input-wrapper">
               <input {...field} {...props} id={field.name} onChange={handleChange} />
               {!field.name.includes('Address') && (
-                <Button className="save-icon" onClick={() => setIsUpdate((prev) => !prev)}>
+                <Button
+                  className="save-icon"
+                  onClick={() => {
+                    if (onSave) onSave();
+                  }}
+                  disabled={!isChangeField}
+                >
                   save
                 </Button>
               )}
@@ -50,6 +66,8 @@ const UpdatingField = observer(
                   onClick={() => {
                     if (setIsUpdateFields) {
                       setIsUpdateFields(field.name, false);
+                      setIsChangeFields?.(field.name, false);
+                      if (initValue) setFieldValue?.(field.name, initValue);
                     } else if (isUpdate) {
                       setIsUpdate(false);
                     }
