@@ -10,11 +10,11 @@ import { Goods } from './Goods';
 import { Loader } from './Loader';
 import { Pagination } from './Pagination';
 
-const Phones: React.FC = () => {
+const Phones = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 2;
   const [currentSort, setCurrentSort] = useState('default');
-  const [selectedFilters, setSelectedFilters] = useState({}); // Initialize selectedFilters here
+  const [selectedFilters, setSelectedFilters] = useState({});
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -45,7 +45,9 @@ const Phones: React.FC = () => {
             <LeftMenu />
           </div>
           <div className="right">
-            <Filters onFilterChange={handleFilterChange} />
+            <Filters
+              onFilterChange={(filterId, values) => handleFilterChange(filterId, values[0])}
+            />
             <Sorting onSortChange={handleSortChange} />
             <Goods currentSort={currentSort} selectedFilters={selectedFilters} />
             <Loader />
