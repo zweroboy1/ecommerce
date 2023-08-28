@@ -35,7 +35,7 @@ import { Return } from './pages/Return';
 import { PickupPoints } from './pages/PickupPoints';
 import { GiftCertificates } from './pages/GiftCertificates';
 import { Contacts } from './pages/Contacts';
-import { Phones } from './pages/Phones';
+import { Phones } from './pages/catalog/Phones';
 import { Electronics } from './pages/Electronics';
 import { VideoGames } from './pages/VideoGames';
 import { PhotoVideo } from './pages/PhotoVideo';

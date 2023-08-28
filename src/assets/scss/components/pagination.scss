@@ -1,0 +1,49 @@
+.pagination {
+  margin: 0;
+  padding: 20px 0 0 0;
+  text-align: center;
+  clear: both;
+
+  .page-number {
+    background: none;
+    box-shadow: inset 0 0 0 2px #07c, 0 5px 15px 0 rgba(0, 119, 204, 0.2);
+    color: #000;
+    font-weight: bold;
+    padding: 0 10px;
+    margin: 2px;
+    min-width: $button-size-40;
+    height: $button-size-40;
+    line-height: $button-size-40;
+    border-radius: 8px;
+    font-size: 14px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .page-button {
+    color: #595959;
+    padding: 0 15px;
+    margin: 5px;
+    min-width: $button-size-40;
+    height: $button-size-40;
+    line-height: $button-size-40;
+    box-shadow: inset 0 0 0 1px #eee;
+    border-radius: 8px;
+    width: auto;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    background-color: #fff;
+    color: $links;
+
+    &[disabled],
+    &[disabled]:hover {
+      background-color: #fff;
+      color: #595959;
+    }
+  }
+}

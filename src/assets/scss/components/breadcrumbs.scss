@@ -1,0 +1,33 @@
+.breadcrumbs {
+  position: relative;
+  width: 100%;
+  padding: 5px 0;
+  margin-bottom: 14px;
+  border-bottom: $border;
+  text-align: left;
+
+  &__link {
+    display: inline-block;
+    padding: 0;
+    color: $top-links;
+    line-height: 30px;
+    height: 30px;
+    font-size: $font-size-14;
+  }
+
+  &__slash {
+    display: inline-flex;
+    vertical-align: bottom;
+    align-items: center;
+    padding: 0;
+    color: #737373;
+    height: 30px;
+    margin: 0px 6px;
+  }
+
+  &__current {
+    display: inline;
+    color: #737373;
+    padding: 2px;
+  }
+}

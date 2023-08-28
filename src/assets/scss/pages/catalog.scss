@@ -1,0 +1,33 @@
+.main {
+  .row {
+    align-items: flex-start;
+    padding: 0 20px;
+  }
+
+  .catalog {
+    @include flex($justify: stretch, $align: flex-start);
+    flex-direction: row;
+
+    .menu {
+      text-align: left;
+
+      &__item {
+        display: inline-block;
+        width: 100%;
+        padding: 15px 20px 0 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: $font-size-14;
+
+        a {
+          font-weight: normal;
+          color: rgba(0, 0, 0, 0.85);
+        }
+      }
+    }
+
+    .right {
+      @include flexColumn();
+    }
+  }
+}

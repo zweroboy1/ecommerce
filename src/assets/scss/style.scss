@@ -20,6 +20,13 @@
 @import 'components/aboutCompany';
 @import 'components/socialLinks';
 @import 'components/authorization';
+@import 'components/breadcrumbs';
+@import 'components/filters';
+@import 'components/leftMenu';
+@import 'components/sorting';
+@import 'components/goods';
+@import 'components/loader';
+@import 'components/pagination';
 
 /* Layout */
 //Макет сайта (стили для шапки сайта, футера и боковой панели)
@@ -30,3 +37,4 @@
 /* Pages */
 //Стили, специфичные для каждой страницы
 @import 'pages/main';
+@import 'pages/catalog';
