@@ -5,6 +5,7 @@ import { Footer } from './main/Footer';
 import { CATEGORIES } from '../constants/categories';
 import ProductList from '../components/ProductList';
 import Breadcrumbs from '../components/Breadcrumbs';
+import CatalogMenu from '../components/CatalogMenu';
 import { Breadcrumb } from '../types';
 import { NotFound } from './NotFound';
 
@@ -65,7 +66,8 @@ const Catalog = () => {
         <hr />
         <Breadcrumbs breadcrumbs={categoryBreadcrumbs} />
         <hr />
-        <ProductList category={category} />
+        <ProductList category={subcategory || category || 'catalog'} />
+        <CatalogMenu categories={CATEGORIES} />
       </main>
       <Footer />
     </div>
