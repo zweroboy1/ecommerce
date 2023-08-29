@@ -25,6 +25,7 @@ import {
   BLOG_ROUTE,
   ABOUT_ROUTE,
   PROMOTIONS_ROUTE,
+  CATALOG_ROUTE,
 } from './constants/route';
 import { Auth } from './pages/Auth';
 import { Main } from './pages/Main';
@@ -51,6 +52,7 @@ import { SiteMap } from './pages/SiteMap';
 import { Blog } from './pages/Blog';
 import { About } from './pages/About';
 import { PromotionsAll } from './pages/PromotionsAll';
+import { Catalog } from './pages/Catalog';
 
 const commonRoutes = [
   {
@@ -136,6 +138,18 @@ const commonRoutes = [
   {
     path: PROMOTIONS_ROUTE,
     Component: PromotionsAll,
+  },
+  {
+    path: `${CATALOG_ROUTE}/:category/:subcategory`,
+    Component: Catalog,
+  },
+  {
+    path: `${CATALOG_ROUTE}/:category`,
+    Component: Catalog,
+  },
+  {
+    path: CATALOG_ROUTE,
+    Component: Catalog,
   },
   {
     path: NOTFOUND_ROUTE,

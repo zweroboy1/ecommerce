@@ -21,8 +21,12 @@ const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 const apiRegion = import.meta.env.VITE_CTP_REGION;
+let BEARER_TOKEN: string | null = null;
 
 async function fetchBearerToken(): Promise<string | null> {
+  if (BEARER_TOKEN) {
+    return BEARER_TOKEN;
+  }
   try {
     const response = await fetch(`https://auth.${apiRegion}.commercetools.com/oauth/token`, {
       method: 'POST',
@@ -40,6 +44,7 @@ async function fetchBearerToken(): Promise<string | null> {
     if (!bearerToken) {
       return null;
     }
+    BEARER_TOKEN = bearerToken;
     return String(bearerToken);
   } catch (error) {
     return null;
@@ -241,4 +246,31 @@ export async function registerUser(userRegisterData: RegisterUser): Promise<Cust
 
   const customer = await createCustomer(userForRegistration, bearerToken);
   return customer;
+}
+
+export async function getProducts() {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/products?limit=20&offset=0`;
+
+  const bearerToken = await fetchBearerToken();
+  if (bearerToken === null) {
+    throw new Error(CT_ERROR);
+  }
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    });
+    const responseData = await response.json();
+
+    if (!response.ok || responseData.results[0] === undefined) {
+      throw new Error('Oooops!!! We have a problem!!!');
+    }
+    return responseData.results[0];
+  } catch (error) {
+    throw new Error('Oooops!!! We have a problem2!!!');
+  }
 }

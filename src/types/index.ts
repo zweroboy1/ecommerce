@@ -165,6 +165,26 @@ type StateFields = {
   customer?: null | CustomerWithToken;
 };
 
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+};
+
+type Category = {
+  id: number;
+  enName: string;
+  ruName: string;
+  url: string;
+  parentId: number | null;
+};
+
+type Breadcrumb = {
+  id: number;
+  name: string;
+  url: string;
+};
+
 export type {
   InputProps,
   ButtonProps,
@@ -177,4 +197,7 @@ export type {
   CreateUser,
   StateFields,
   CustomerUpdating,
+  Product,
+  Category,
+  Breadcrumb,
 };
