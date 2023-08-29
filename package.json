@@ -22,6 +22,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
+    "react-paginate": "^8.2.0",
     "react-router-dom": "^6.15.0",
     "react-slick": "^0.29.0",
     "slick-carousel": "^1.8.1",
@@ -69,7 +70,7 @@
     "sass": "^1.66.0",
     "sass-loader": "^13.3.2",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.0.2",
+    "typescript": "5.0.2",
     "vite": "^4.4.5",
     "vite-plugin-legacy": "^2.1.0"
   },

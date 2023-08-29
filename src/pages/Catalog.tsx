@@ -1,4 +1,6 @@
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
 import { Top } from './main/Top';
 import { Header } from './main/Header';
 import { Footer } from './main/Footer';
@@ -41,6 +43,11 @@ const buildBreadcrumbs = (categoryUrl: string, breadcrumbs: Breadcrumb[] = []): 
 
 const Catalog = () => {
   const { category = '', subcategory = '' } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const page = Number(searchParams.get('page'));
+  const [currentPage, setCurrentPage] = useState(page);
+
   const findedCategory = CATEGORIES.find((cat) => cat.url === category);
   const findedSubcategory = CATEGORIES.find((cat) => cat.url === subcategory);
   if (!findedCategory || !findedSubcategory) {
@@ -48,7 +55,6 @@ const Catalog = () => {
   }
 
   let categoryBreadcrumbs: Breadcrumb[] = [];
-
   if (subcategory) {
     categoryBreadcrumbs = buildBreadcrumbs(String(subcategory));
   } else if (category) {
@@ -56,6 +62,17 @@ const Catalog = () => {
   } else {
     categoryBreadcrumbs = buildBreadcrumbs('');
   }
+
+  // Получение параметров из query string
+  /*
+  const sort = searchParams.get('sort');
+  const brand = searchParams.get('brand');
+  const color = searchParams.get('color');
+  const priceMin = searchParams.get('price-min');
+  const priceMax = searchParams.get('price-max');
+*/
+  // console.log(page, sort, brand, color, priceMin, priceMax);
+  const totalPages = 2;
 
   return (
     <div className="tygh">
@@ -68,6 +85,17 @@ const Catalog = () => {
         <hr />
         <ProductList category={subcategory || category || 'catalog'} />
         <CatalogMenu categories={CATEGORIES} />
+
+        <ReactPaginate
+          pageCount={totalPages} // Общее количество страниц
+          pageRangeDisplayed={5} // Количество отображаемых номеров страниц
+          marginPagesDisplayed={2} // Количество отображаемых страниц по краям
+          initialPage={currentPage - 1} // Текущая страница
+          onPageChange={(selectedPage) => setCurrentPage(selectedPage.selected + 1)} // Обработчик изменения страницы
+          containerClassName="pagination" // Класс контейнера пагинации (добавьте стили)
+          activeClassName="active" // Класс для активной страницы (добавьте стили)
+          disabledClassName="disabled" // Класс для неактивной страницы (добавьте стили)
+        />
       </main>
       <Footer />
     </div>
