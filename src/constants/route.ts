@@ -23,6 +23,7 @@ const SITE_MAP_ROUTE = '/site-map';
 const BLOG_ROUTE = '/blog';
 const ABOUT_ROUTE = '/about';
 const PROMOTIONS_ROUTE = '/promotions';
+const CATALOG_ROUTE = '/catalog';
 
 export {
   MAIN_ROUTE,
@@ -50,4 +51,5 @@ export {
   BLOG_ROUTE,
   ABOUT_ROUTE,
   PROMOTIONS_ROUTE,
+  CATALOG_ROUTE,
 };
