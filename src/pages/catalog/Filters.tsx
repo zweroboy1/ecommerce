@@ -65,7 +65,6 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       ...prevFilters,
       [filterId]: values,
     }));
-
     onFilterChange(filterId, values);
   };
 
@@ -143,7 +142,11 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
                         data-ca-filter-id={filter.id}
                         value={option}
                         id={`elm_checkbox_${filter.id}_${index}`}
-                        checked={selectedFilters[filter.id]?.includes(option)}
+                        checked={
+                          selectedFilters[filter.id]
+                            ? selectedFilters[filter.id].includes(option)
+                            : false
+                        }
                         onChange={() => {
                           const newValue = selectedFilters[filter.id]?.includes(option)
                             ? selectedFilters[filter.id]?.filter((item) => item !== option)

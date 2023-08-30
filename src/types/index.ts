@@ -32,42 +32,6 @@ type Address = {
   country: string;
 };
 
-/*
-type RegistrationFormKees =
-  | 'firstName'
-  | 'lastName'
-  | 'email'
-  | 'password'
-  | 'dateOfBirth'
-  | 'shippingAddressStreet'
-  | 'shippingAddressCity'
-  | 'shippingAddressPostCode'
-  | 'shippingAddressCountry'
-  | 'isShippingAddressDefault'
-  | 'billingAddressStreet'
-  | 'billingAddressCity'
-  | 'billingAddressPostCode'
-  | 'billingAddressCountry'
-  | 'isBillingAddressDefault';
-
-type RegistrationFormProps = {
-  // name: string;
-  // surname: string;
-  // email: string;
-  // password: string;
-  // dateOfBirth: string;
-  // shippingAddressStreet: string;
-  // shippingAddressCity: string;
-  // shippingAddressPostCode: string;
-  // shippingAddressCountry: string;
-  // billingAddressStreet: string;
-  // billingAddressCity: string;
-  // billingAddressPostCode: string;
-  // billingAddressCountry: string;
-  [K in RegistrationFormKees]: string;
-};
-*/
-
 type RegisterUser = {
   firstName: string;
   lastName: string;
@@ -165,12 +129,6 @@ type StateFields = {
   customer?: null | CustomerWithToken;
 };
 
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-};
-
 type Category = {
   id: number;
   enName: string;
@@ -183,6 +141,41 @@ type Breadcrumb = {
   id: number;
   name: string;
   url: string;
+};
+
+type ProductAllData = {
+  id: string;
+  masterData: {
+    current: {
+      name: Record<string, string>;
+      description: Record<string, string>;
+      slug: Record<string, string>;
+      masterVariant: {
+        images: {
+          url: string;
+          dimensions: {
+            w: number;
+            h: number;
+          };
+        }[];
+        prices: {
+          value: {
+            centAmount: number;
+          };
+          country?: string;
+        }[];
+      };
+    };
+  };
+};
+
+type Product = {
+  id: string;
+  name: string;
+  description: string;
+  slug: string;
+  price: number;
+  images: string[];
 };
 
 export type {
@@ -200,4 +193,5 @@ export type {
   Product,
   Category,
   Breadcrumb,
+  ProductAllData,
 };

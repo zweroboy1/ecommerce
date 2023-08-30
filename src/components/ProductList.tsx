@@ -1,12 +1,23 @@
-// import {getProducts} from '../services/commercetoolsApi';
-
-import { Product } from '../types';
+import { useEffect, useState } from 'react';
+import { Product, ProductAllData } from '../types';
+import { getProducts } from '../services/commercetoolsApi';
+import { mapProduct } from '../utils/mapProduct';
 
 interface ProductListProps {
   category: string;
 }
 
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+}
+
 // Моковая функция getProducts
+/*
 function getProducts(): Product[] {
   return [
     { id: 1, name: 'Product 1', price: 100 },
@@ -19,13 +30,26 @@ function getProducts(): Product[] {
     { id: 8, name: 'Product 8', price: 500 },
   ];
 }
-
+*/
 function ProductList({ category }: ProductListProps) {
-  // const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
-  const products: Product[] = getProducts();
-  //  setProducts(fetchedProducts);
+  useEffect(() => {
+    async function getProductsFromServer() {
+      try {
+        const response = await getProducts();
+        const fetchedProducts = response.map((el: ProductAllData) => mapProduct(el));
+        // console.log(response);
+        // console.log(fetchedProducts);
+        setProducts(shuffleArray(fetchedProducts));
+      } catch (error) {
+        // console.log(error);
+      }
+    }
+    getProductsFromServer();
+  }, [category]);
 
+  /*
   return (
     <div>
       <h2>Products in {category}</h2>
@@ -33,9 +57,41 @@ function ProductList({ category }: ProductListProps) {
         {products.map((product) => (
           <li key={product.id}>
             {product.name} - ${product.price}
+            ${product.images[0]}
           </li>
         ))}
       </ul>
+    </div>
+  );
+*/
+
+  return (
+    <div className="goods">
+      {products.map((product) => (
+        <div className="goods__card">
+          <div className="goods__image">
+            <a href="#">
+              <img src={product.images[0]} alt={product.name} />
+            </a>
+          </div>
+          <div className="goods__info">
+            <h2 className="goods__name">
+              <a className="goods__title" href="#">
+                {product.name}
+              </a>
+            </h2>
+            <div className="goods__prices">
+              <div className="goods__price-block">
+                <span className="goods__discounted-price">$ {product.price}</span>
+                <span className="goods__old-price">$ {product.price + 100}</span>
+              </div>
+              <div className="goods__control">
+                <i className="goods__control-icon cart__icon header-icon"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
