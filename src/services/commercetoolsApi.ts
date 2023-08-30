@@ -269,7 +269,7 @@ export async function getProducts() {
     if (!response.ok || responseData.results[0] === undefined) {
       throw new Error('Oooops!!! We have a problem!!!');
     }
-    return responseData.results[0];
+    return responseData.results;
   } catch (error) {
     throw new Error('Oooops!!! We have a problem2!!!');
   }
