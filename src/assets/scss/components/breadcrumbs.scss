@@ -26,8 +26,11 @@
   }
 
   &__current {
-    display: inline;
-    color: #737373;
-    padding: 2px;
+    display: inline-block;
+    line-height: 30px;
+    height: 30px;
+    color: $important;
+    text-decoration: double;
+    padding: 0;
   }
 }

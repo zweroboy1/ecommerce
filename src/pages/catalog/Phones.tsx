@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Top } from '../main/Top';
 import { Header } from '../main/Header';
 import { Footer } from '../main/Footer';
-import { Breadcrumbs } from '../../components/Breadcrumbs';
 import { LeftMenu } from './LeftMenu';
 import { Filters } from './Filters';
 import { Sorting } from './Sorting';
@@ -38,7 +37,6 @@ const Phones = () => {
       <main className="main content">
         <div className="row">
           <h1>Телефоны</h1>
-          <Breadcrumbs />
         </div>
         <div className="row catalog">
           <div className="left">

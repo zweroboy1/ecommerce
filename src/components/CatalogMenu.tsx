@@ -25,22 +25,26 @@ const CatalogMenu = ({ categories }: { categories: Category[] }) => {
   };
 
   return (
-    <ul className="catalog-menu">
-      {categories
-        .filter((cat) => cat.parentId === null || !categoriesFirstLevel.includes(cat.parentId))
-        .map((category) => (
-          <li key={category.id} className="catalog-menu__category-list">
-            <NavLink className="catalog-menu__category" to={`/catalog/${category.url}`}>
-              {category.ruName}
-            </NavLink>
-            {category.parentId !== null &&
-              renderSubCategories(
-                category.url,
-                categories.filter((subCategory) => subCategory.parentId === category.id)
-              )}
-          </li>
-        ))}
-    </ul>
+    <div className="menu">
+      <div className={`menu__categories`}>
+        <ul className="catalog-menu">
+          {categories
+            .filter((cat) => cat.parentId === null || !categoriesFirstLevel.includes(cat.parentId))
+            .map((category) => (
+              <li key={category.id} className="catalog-menu__category-list">
+                <NavLink className="catalog-menu__category" to={`/catalog/${category.url}`}>
+                  {category.ruName}
+                </NavLink>
+                {category.parentId !== null &&
+                  renderSubCategories(
+                    category.url,
+                    categories.filter((subCategory) => subCategory.parentId === category.id)
+                  )}
+              </li>
+            ))}
+        </ul>
+      </div>
+    </div>
   );
 };
 
