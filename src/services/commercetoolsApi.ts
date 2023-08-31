@@ -17,11 +17,23 @@ import {
   TokenResponse,
 } from '../types';
 
+import { PRODUCTS_ON_PAGE } from '../constants';
+import { getCategoryCtIds } from '../utils/getCategoryCtIds';
+
 const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 const apiRegion = import.meta.env.VITE_CTP_REGION;
 let BEARER_TOKEN: string | null = null;
+
+function createQueryString(params: Record<string, string | number>): string {
+  const queryParams = Object.entries(params)
+    .filter(([, value]) => value !== '')
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join('&');
+
+  return queryParams;
+}
 
 async function fetchBearerToken(): Promise<string | null> {
   if (BEARER_TOKEN) {
@@ -248,8 +260,23 @@ export async function registerUser(userRegisterData: RegisterUser): Promise<Cust
   return customer;
 }
 
-export async function getProducts() {
-  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/products?limit=20&offset=0`;
+export async function getProducts(category: string = '', page: number = 1) {
+  const ctIds = getCategoryCtIds(category);
+  const cateroriesWhere =
+    ctIds.length === 0
+      ? ''
+      : `masterData(current(categories(${ctIds.map((id) => `id="${id}"`).join(' or ')})))`;
+
+  const queryString = createQueryString({
+    where: cateroriesWhere,
+    // это по имени sort: 'masterData.current.name.en-US asc',
+    limit: PRODUCTS_ON_PAGE,
+    offset: (page - 1) * PRODUCTS_ON_PAGE,
+  });
+
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/products?${queryString}`;
+
+  // const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/product-projections?${queryString}`;
 
   const bearerToken = await fetchBearerToken();
   if (bearerToken === null) {
@@ -266,10 +293,10 @@ export async function getProducts() {
     });
     const responseData = await response.json();
 
-    if (!response.ok || responseData.results[0] === undefined) {
+    if (!response.ok) {
       throw new Error('Oooops!!! We have a problem!!!');
     }
-    return responseData.results;
+    return responseData.results[0] === undefined ? [] : responseData.results;
   } catch (error) {
     throw new Error('Oooops!!! We have a problem2!!!');
   }
