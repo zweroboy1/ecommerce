@@ -27,6 +27,7 @@ type InputProps = {
   setFieldValue?: (field: string, value: string) => void;
   isChangeField?: boolean;
   onSave?: () => void;
+  setIsChangeAddressesFields?: (val: boolean) => void;
 };
 
 type Address = {

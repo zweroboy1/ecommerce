@@ -15,6 +15,11 @@ const UpdatingSelectField = observer(
     isUpdateForm,
     setIsUpdateFields,
     refFieldName,
+    initValue,
+    setIsChangeFields,
+    setFieldValue,
+    isChangeField,
+    onSave,
     ...props
   }: PropsWithoutRef<InputProps>) => {
     const [field, meta] = useField(props);
@@ -22,6 +27,11 @@ const UpdatingSelectField = observer(
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       field.onChange(e);
+      if (initValue && initValue !== e.target.value && setIsChangeFields) {
+        setIsChangeFields(field.name, true);
+      } else if (setIsChangeFields) {
+        setIsChangeFields(field.name, false);
+      }
       setTimeout(() => {
         if (touch) {
           touch.setFieldTouched?.(field.name, true);
