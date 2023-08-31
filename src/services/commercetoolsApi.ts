@@ -224,14 +224,21 @@ export async function registerUser(userRegisterData: RegisterUser): Promise<Cust
     },
   ];
 
-  if (!isSameAddress) {
-    addresses.push({
-      streetName: userRegisterData.billingAddressStreet,
-      city: userRegisterData.billingAddressCity,
-      postalCode: userRegisterData.billingAddressPostCode,
-      country: userRegisterData.billingAddressCountry,
-    });
-  }
+  // if (!isSameAddress) {
+  //   addresses.push({
+  //     streetName: userRegisterData.billingAddressStreet,
+  //     city: userRegisterData.billingAddressCity,
+  //     postalCode: userRegisterData.billingAddressPostCode,
+  //     country: userRegisterData.billingAddressCountry,
+  //   });
+  // }
+
+  addresses.push({
+    streetName: userRegisterData.billingAddressStreet,
+    city: userRegisterData.billingAddressCity,
+    postalCode: userRegisterData.billingAddressPostCode,
+    country: userRegisterData.billingAddressCountry,
+  });
 
   const userForRegistration: CreateUser = {
     firstName: userRegisterData.firstName,
@@ -241,7 +248,8 @@ export async function registerUser(userRegisterData: RegisterUser): Promise<Cust
     dateOfBirth: userRegisterData.dateOfBirth,
     addresses,
     shippingAddresses: [0],
-    billingAddresses: [isSameAddress ? 0 : 1],
+    billingAddresses: [1],
+    // billingAddresses: [isSameAddress ? 0 : 1],
   };
 
   if (userRegisterData.isShippingAddressDefault) {
