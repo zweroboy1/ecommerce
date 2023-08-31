@@ -1,14 +1,20 @@
 import { useState, useContext } from 'react';
 import { FieldArray, Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
+import { ToastContainer, toast } from 'react-toastify';
 import { Button } from './Button';
 import { Address } from '../types';
 import { UpdatingField } from './UpdatingField';
-import { updatingValidationSchema } from '../utils/updatingValidation';
+import {
+  updatingAddressValidationSchema,
+  updatingPersonalDataValidationSchema,
+  updatingValidationSchema,
+} from '../utils/updatingValidation';
 import { UpdatingSelectField } from './UpdatingSelectField';
 import { updateUser } from '../services/commercetoolsApi';
 import { Context } from '../store/Context';
 import { prepareCustomerUpdating } from '../utils/prepareCustomerUpdating';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UpdatingForm = observer(() => {
   const { user } = useContext(Context);
@@ -29,6 +35,16 @@ const UpdatingForm = observer(() => {
     lastName: false,
     dateOfBirth: false,
   });
+  const [isValidPersonalDataFields, setIsValidPersonalDataFields] = useState({
+    firstName: true,
+    lastName: true,
+    dateOfBirth: true,
+  });
+
+  const isValidPersonalData =
+    isValidPersonalDataFields.firstName &&
+    isValidPersonalDataFields.lastName &&
+    isValidPersonalDataFields.dateOfBirth;
 
   const isUpdatePersonalData =
     isUpdatePersonalDataForm.firstName ||
@@ -125,10 +141,63 @@ const UpdatingForm = observer(() => {
     });
     return objOfAddressesFields;
   };
+  const initialValidAddressesObject = () => {
+    const objOfAddressesFields: { [key: string]: { [key: string]: { [key: string]: boolean } } } = {
+      shippingAddresses: {},
+      billingAddresses: {},
+      addresses: {},
+    };
+    initialValues.shippingAddresses.forEach((address) => {
+      if (address.id) {
+        objOfAddressesFields.shippingAddresses[address.id] = {
+          country: true,
+          city: true,
+          street: true,
+          postalCode: true,
+        };
+      }
+    });
+    initialValues.billingAddresses.forEach((address) => {
+      if (address.id) {
+        objOfAddressesFields.billingAddresses[address.id] = {
+          country: true,
+          city: true,
+          street: true,
+          postalCode: true,
+        };
+      }
+    });
+    initialValues.addresses.forEach((address) => {
+      if (address.id) {
+        objOfAddressesFields.addresses[address.id] = {
+          country: true,
+          city: true,
+          street: true,
+          postalCode: true,
+        };
+      }
+    });
+    return objOfAddressesFields;
+  };
 
   const [isUpdateAddressesForm, setIsUpdateAddressesForm] = useState(updatingAddressObject({}));
 
   const [isChangeAddressesForm, setIsChangeAddressesForm] = useState(initialAddressesObject);
+  const [isValidAddressesFields, setIsValidAddressesFields] = useState(initialValidAddressesObject);
+
+  const isValidAddress = (type: string, id: string) => {
+    return Object.values(isValidAddressesFields[type][id]).every((value) => value === true);
+  };
+
+  const isValidAddressesOfType = (type: 'shippingAddresses' | 'billingAddresses' | 'addresses') =>
+    initialValues[type].every((address) => {
+      return isValidAddress(type, address.id || '');
+    });
+
+  const isValidAddresses =
+    isValidAddressesOfType('shippingAddresses') &&
+    isValidAddressesOfType('billingAddresses') &&
+    isValidAddressesOfType('addresses');
 
   const isChangeAddress = (type: string, id: string) => {
     return Object.values(isChangeAddressesForm[type][id]).some((value) => value === true);
@@ -258,9 +327,15 @@ const UpdatingForm = observer(() => {
       }
       setIsUpdateAddressesForm(updatingAddressObject({}));
       setIsChangeAddressesForm(initialAddressesObject);
+      toast.success('Изменения успешно сохранены!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
+      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
     }
   };
 
@@ -287,9 +362,15 @@ const UpdatingForm = observer(() => {
         }
         setIsChangePersonalDataForm({ ...isChangePersonalDataForm, firstName: false });
         setIsUpdatePersonalDataForm({ ...isUpdatePersonalDataForm, firstName: false });
+        toast.success('Имя успешно изменено!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
+        toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       }
     }
     if (type === 'lastName') {
@@ -311,9 +392,15 @@ const UpdatingForm = observer(() => {
         }
         setIsChangePersonalDataForm({ ...isChangePersonalDataForm, lastName: false });
         setIsUpdatePersonalDataForm({ ...isUpdatePersonalDataForm, lastName: false });
+        toast.success('Фамилия успешно изменена!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
+        toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       }
     }
     if (type === 'dateOfBirth') {
@@ -335,9 +422,15 @@ const UpdatingForm = observer(() => {
         }
         setIsChangePersonalDataForm({ ...isChangePersonalDataForm, dateOfBirth: false });
         setIsUpdatePersonalDataForm({ ...isUpdatePersonalDataForm, dateOfBirth: false });
+        toast.success('Дата рождения успешно изменена!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
+        toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       }
     }
     if (type === 'all') {
@@ -363,15 +456,22 @@ const UpdatingForm = observer(() => {
           lastName: false,
           dateOfBirth: false,
         });
+        toast.success('Все изменения успешно сохранены!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
+        toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       }
     }
   };
 
   return (
     <div className="form-wrapper">
+      <ToastContainer />
       <div className="button-wrapper">
         <Button className="button" type="button" onClick={() => changePage('userInfo')}>
           Персональные данные
@@ -401,6 +501,27 @@ const UpdatingForm = observer(() => {
                   type="text"
                   touch={{ setFieldTouched }}
                   valid={{ validateField }}
+                  setValid={async (value) => {
+                    try {
+                      await updatingPersonalDataValidationSchema.validate(
+                        {
+                          firstName: value,
+                          lastName: values.lastName,
+                          dateOfBirth: values.dateOfBirth,
+                        },
+                        { abortEarly: false }
+                      );
+                      setIsValidPersonalDataFields({
+                        ...isValidPersonalDataFields,
+                        firstName: true,
+                      });
+                    } catch (error) {
+                      setIsValidPersonalDataFields({
+                        ...isValidPersonalDataFields,
+                        firstName: false,
+                      });
+                    }
+                  }}
                   isUpdateForm={isUpdatePersonalDataForm.firstName}
                   setIsUpdateFields={setIsUpdateFieldsOfPersonalDataForm}
                   initValue={initialValues.firstName}
@@ -419,6 +540,27 @@ const UpdatingForm = observer(() => {
                   type="text"
                   touch={{ setFieldTouched }}
                   valid={{ validateField }}
+                  setValid={async (value) => {
+                    try {
+                      await updatingPersonalDataValidationSchema.validate(
+                        {
+                          firstName: values.firstName,
+                          lastName: value,
+                          dateOfBirth: values.dateOfBirth,
+                        },
+                        { abortEarly: false }
+                      );
+                      setIsValidPersonalDataFields({
+                        ...isValidPersonalDataFields,
+                        lastName: true,
+                      });
+                    } catch (error) {
+                      setIsValidPersonalDataFields({
+                        ...isValidPersonalDataFields,
+                        lastName: false,
+                      });
+                    }
+                  }}
                   isUpdateForm={isUpdatePersonalDataForm.lastName}
                   setIsUpdateFields={setIsUpdateFieldsOfPersonalDataForm}
                   initValue={initialValues.lastName}
@@ -436,6 +578,27 @@ const UpdatingForm = observer(() => {
                   type="date"
                   touch={{ setFieldTouched }}
                   valid={{ validateField }}
+                  setValid={async (value) => {
+                    try {
+                      await updatingPersonalDataValidationSchema.validate(
+                        {
+                          firstName: values.firstName,
+                          lastName: values.lastName,
+                          dateOfBirth: value,
+                        },
+                        { abortEarly: false }
+                      );
+                      setIsValidPersonalDataFields({
+                        ...isValidPersonalDataFields,
+                        dateOfBirth: true,
+                      });
+                    } catch (error) {
+                      setIsValidPersonalDataFields({
+                        ...isValidPersonalDataFields,
+                        dateOfBirth: false,
+                      });
+                    }
+                  }}
                   isUpdateForm={isUpdatePersonalDataForm.dateOfBirth}
                   setIsUpdateFields={setIsUpdateFieldsOfPersonalDataForm}
                   initValue={initialValues.dateOfBirth}
@@ -467,7 +630,7 @@ const UpdatingForm = observer(() => {
                   <Button
                     className="button"
                     type="button"
-                    disabled={!isChangePersonalData}
+                    disabled={!isChangePersonalData || !isValidPersonalData}
                     onClick={async () => {
                       if (isChangePersonalData) {
                         await savePersonalData('all', {
@@ -556,7 +719,8 @@ const UpdatingForm = observer(() => {
                                           ]);
                                         }}
                                         disabled={
-                                          !isChangeAddress('shippingAddresses', address.id || '')
+                                          !isChangeAddress('shippingAddresses', address.id || '') ||
+                                          !isValidAddress('shippingAddresses', address.id || '')
                                         }
                                       >
                                         Сохранить
@@ -631,6 +795,46 @@ const UpdatingForm = observer(() => {
                                       isChangeAddressesForm.shippingAddresses[address.id || '']
                                         .country
                                     }
+                                    setValid={async (value) => {
+                                      try {
+                                        await updatingAddressValidationSchema.validate(
+                                          {
+                                            country: value,
+                                            city: values.shippingAddresses[index]?.city,
+                                            streetName: values.shippingAddresses[index]?.streetName,
+                                            postalCode: values.shippingAddresses[index]?.postalCode,
+                                          },
+                                          { abortEarly: false }
+                                        );
+                                        setIsValidAddressesFields({
+                                          ...isValidAddressesFields,
+                                          shippingAddresses: {
+                                            ...isValidAddressesFields.shippingAddresses,
+                                            [address.id || '']: {
+                                              ...isValidAddressesFields.shippingAddresses[
+                                                address.id || ''
+                                              ],
+                                              country: true,
+                                              postalCode: true,
+                                            },
+                                          },
+                                        });
+                                      } catch (error) {
+                                        setIsValidAddressesFields({
+                                          ...isValidAddressesFields,
+                                          shippingAddresses: {
+                                            ...isValidAddressesFields.shippingAddresses,
+                                            [address.id || '']: {
+                                              ...isValidAddressesFields.shippingAddresses[
+                                                address.id || ''
+                                              ],
+                                              country: true,
+                                              postalCode: false,
+                                            },
+                                          },
+                                        });
+                                      }
+                                    }}
                                   />
                                   <UpdatingField
                                     label="Город"
@@ -653,6 +857,44 @@ const UpdatingForm = observer(() => {
                                     isChangeField={
                                       isChangeAddressesForm.shippingAddresses[address.id || ''].city
                                     }
+                                    setValid={async (value) => {
+                                      try {
+                                        await updatingAddressValidationSchema.validate(
+                                          {
+                                            country: values.shippingAddresses[index]?.country,
+                                            city: value,
+                                            streetName: values.shippingAddresses[index]?.streetName,
+                                            postalCode: values.shippingAddresses[index]?.postalCode,
+                                          },
+                                          { abortEarly: false }
+                                        );
+                                        setIsValidAddressesFields({
+                                          ...isValidAddressesFields,
+                                          shippingAddresses: {
+                                            ...isValidAddressesFields.shippingAddresses,
+                                            [address.id || '']: {
+                                              ...isValidAddressesFields.shippingAddresses[
+                                                address.id || ''
+                                              ],
+                                              city: true,
+                                            },
+                                          },
+                                        });
+                                      } catch (error) {
+                                        setIsValidAddressesFields({
+                                          ...isValidAddressesFields,
+                                          shippingAddresses: {
+                                            ...isValidAddressesFields.shippingAddresses,
+                                            [address.id || '']: {
+                                              ...isValidAddressesFields.shippingAddresses[
+                                                address.id || ''
+                                              ],
+                                              city: false,
+                                            },
+                                          },
+                                        });
+                                      }
+                                    }}
                                   />
                                   <UpdatingField
                                     label="Улица"
@@ -676,6 +918,44 @@ const UpdatingForm = observer(() => {
                                       isChangeAddressesForm.shippingAddresses[address.id || '']
                                         .streetName
                                     }
+                                    setValid={async (value) => {
+                                      try {
+                                        await updatingAddressValidationSchema.validate(
+                                          {
+                                            country: values.shippingAddresses[index]?.country,
+                                            city: values.shippingAddresses[index]?.city,
+                                            streetName: value,
+                                            postalCode: values.shippingAddresses[index]?.postalCode,
+                                          },
+                                          { abortEarly: false }
+                                        );
+                                        setIsValidAddressesFields({
+                                          ...isValidAddressesFields,
+                                          shippingAddresses: {
+                                            ...isValidAddressesFields.shippingAddresses,
+                                            [address.id || '']: {
+                                              ...isValidAddressesFields.shippingAddresses[
+                                                address.id || ''
+                                              ],
+                                              streetName: true,
+                                            },
+                                          },
+                                        });
+                                      } catch (error) {
+                                        setIsValidAddressesFields({
+                                          ...isValidAddressesFields,
+                                          shippingAddresses: {
+                                            ...isValidAddressesFields.shippingAddresses,
+                                            [address.id || '']: {
+                                              ...isValidAddressesFields.shippingAddresses[
+                                                address.id || ''
+                                              ],
+                                              streetName: false,
+                                            },
+                                          },
+                                        });
+                                      }
+                                    }}
                                   />
                                   <UpdatingField
                                     label="Индекс"
@@ -699,6 +979,44 @@ const UpdatingForm = observer(() => {
                                       isChangeAddressesForm.shippingAddresses[address.id || '']
                                         .postalCode
                                     }
+                                    setValid={async (value) => {
+                                      try {
+                                        await updatingAddressValidationSchema.validate(
+                                          {
+                                            country: values.shippingAddresses[index]?.country,
+                                            city: values.shippingAddresses[index]?.city,
+                                            streetName: values.shippingAddresses[index]?.streetName,
+                                            postalCode: value,
+                                          },
+                                          { abortEarly: false }
+                                        );
+                                        setIsValidAddressesFields({
+                                          ...isValidAddressesFields,
+                                          shippingAddresses: {
+                                            ...isValidAddressesFields.shippingAddresses,
+                                            [address.id || '']: {
+                                              ...isValidAddressesFields.shippingAddresses[
+                                                address.id || ''
+                                              ],
+                                              postalCode: true,
+                                            },
+                                          },
+                                        });
+                                      } catch (error) {
+                                        setIsValidAddressesFields({
+                                          ...isValidAddressesFields,
+                                          shippingAddresses: {
+                                            ...isValidAddressesFields.shippingAddresses,
+                                            [address.id || '']: {
+                                              ...isValidAddressesFields.shippingAddresses[
+                                                address.id || ''
+                                              ],
+                                              postalCode: false,
+                                            },
+                                          },
+                                        });
+                                      }
+                                    }}
                                   />
                                 </div>
                               )
@@ -757,7 +1075,8 @@ const UpdatingForm = observer(() => {
                                         ]);
                                       }}
                                       disabled={
-                                        !isChangeAddress('billingAddresses', address.id || '')
+                                        !isChangeAddress('billingAddresses', address.id || '') ||
+                                        !isValidAddress('billingAddresses', address.id || '')
                                       }
                                     >
                                       Сохранить
@@ -831,6 +1150,46 @@ const UpdatingForm = observer(() => {
                                   isChangeField={
                                     isChangeAddressesForm.billingAddresses[address.id || ''].country
                                   }
+                                  setValid={async (value) => {
+                                    try {
+                                      await updatingAddressValidationSchema.validate(
+                                        {
+                                          country: value,
+                                          city: values.billingAddresses[index]?.city,
+                                          streetName: values.billingAddresses[index]?.streetName,
+                                          postalCode: values.billingAddresses[index]?.postalCode,
+                                        },
+                                        { abortEarly: false }
+                                      );
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        billingAddresses: {
+                                          ...isValidAddressesFields.billingAddresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.billingAddresses[
+                                              address.id || ''
+                                            ],
+                                            country: true,
+                                            postalCode: true,
+                                          },
+                                        },
+                                      });
+                                    } catch (error) {
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        billingAddresses: {
+                                          ...isValidAddressesFields.billingAddresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.billingAddresses[
+                                              address.id || ''
+                                            ],
+                                            country: true,
+                                            postalCode: false,
+                                          },
+                                        },
+                                      });
+                                    }
+                                  }}
                                 />
                                 <UpdatingField
                                   label="Город"
@@ -853,6 +1212,42 @@ const UpdatingForm = observer(() => {
                                   isChangeField={
                                     isChangeAddressesForm.billingAddresses[address.id || ''].city
                                   }
+                                  setValid={async (value) => {
+                                    try {
+                                      await updatingAddressValidationSchema.validate(
+                                        {
+                                          country: values.billingAddresses[index]?.country,
+                                          city: value,
+                                          streetName: values.billingAddresses[index]?.streetName,
+                                          postalCode: values.billingAddresses[index]?.postalCode,
+                                        },
+                                        { abortEarly: false }
+                                      );
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        billingAddresses: {
+                                          ...isValidAddressesFields.billingAddresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.billingAddresses[
+                                              address.id || ''
+                                            ],
+                                            city: true,
+                                          },
+                                        },
+                                      });
+                                    } catch (error) {
+                                      setIsValidAddressesFields((prev) => ({
+                                        ...prev,
+                                        billingAddresses: {
+                                          ...prev.billingAddresses,
+                                          [address.id || '']: {
+                                            ...prev.billingAddresses[address.id || ''],
+                                            city: false,
+                                          },
+                                        },
+                                      }));
+                                    }
+                                  }}
                                 />
                                 <UpdatingField
                                   label="Улица"
@@ -876,6 +1271,44 @@ const UpdatingForm = observer(() => {
                                     isChangeAddressesForm.billingAddresses[address.id || '']
                                       .streetName
                                   }
+                                  setValid={async (value) => {
+                                    try {
+                                      await updatingAddressValidationSchema.validate(
+                                        {
+                                          country: values.billingAddresses[index]?.country,
+                                          city: values.billingAddresses[index]?.city,
+                                          streetName: value,
+                                          postalCode: values.billingAddresses[index]?.postalCode,
+                                        },
+                                        { abortEarly: false }
+                                      );
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        billingAddresses: {
+                                          ...isValidAddressesFields.billingAddresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.billingAddresses[
+                                              address.id || ''
+                                            ],
+                                            streetName: true,
+                                          },
+                                        },
+                                      });
+                                    } catch (error) {
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        billingAddresses: {
+                                          ...isValidAddressesFields.billingAddresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.billingAddresses[
+                                              address.id || ''
+                                            ],
+                                            streetName: false,
+                                          },
+                                        },
+                                      });
+                                    }
+                                  }}
                                 />
                                 <UpdatingField
                                   label="Индекс"
@@ -899,6 +1332,44 @@ const UpdatingForm = observer(() => {
                                     isChangeAddressesForm.billingAddresses[address.id || '']
                                       .postalCode
                                   }
+                                  setValid={async (value) => {
+                                    try {
+                                      await updatingAddressValidationSchema.validate(
+                                        {
+                                          country: values.billingAddresses[index]?.country,
+                                          city: values.billingAddresses[index]?.city,
+                                          streetName: values.billingAddresses[index]?.streetName,
+                                          postalCode: value,
+                                        },
+                                        { abortEarly: false }
+                                      );
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        billingAddresses: {
+                                          ...isValidAddressesFields.billingAddresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.billingAddresses[
+                                              address.id || ''
+                                            ],
+                                            postalCode: true,
+                                          },
+                                        },
+                                      });
+                                    } catch (error) {
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        billingAddresses: {
+                                          ...isValidAddressesFields.billingAddresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.billingAddresses[
+                                              address.id || ''
+                                            ],
+                                            postalCode: false,
+                                          },
+                                        },
+                                      });
+                                    }
+                                  }}
                                 />
                               </div>
                             );
@@ -951,7 +1422,10 @@ const UpdatingForm = observer(() => {
                                           },
                                         ]);
                                       }}
-                                      disabled={!isChangeAddress('addresses', address.id || '')}
+                                      disabled={
+                                        !isChangeAddress('addresses', address.id || '') ||
+                                        !isValidAddress('addresses', address.id || '')
+                                      }
                                     >
                                       Сохранить
                                     </Button>
@@ -1011,6 +1485,42 @@ const UpdatingForm = observer(() => {
                                   isChangeField={
                                     isChangeAddressesForm.addresses[address.id || ''].country
                                   }
+                                  setValid={async (value) => {
+                                    try {
+                                      await updatingAddressValidationSchema.validate(
+                                        {
+                                          country: value,
+                                          city: values.addresses[index]?.city,
+                                          streetName: values.addresses[index]?.streetName,
+                                          postalCode: values.addresses[index]?.postalCode,
+                                        },
+                                        { abortEarly: false }
+                                      );
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        addresses: {
+                                          ...isValidAddressesFields.addresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.addresses[address.id || ''],
+                                            country: true,
+                                            postalCode: true,
+                                          },
+                                        },
+                                      });
+                                    } catch (error) {
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        addresses: {
+                                          ...isValidAddressesFields.addresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.addresses[address.id || ''],
+                                            country: true,
+                                            postalCode: false,
+                                          },
+                                        },
+                                      });
+                                    }
+                                  }}
                                 />
                                 <UpdatingField
                                   label="Город"
@@ -1027,6 +1537,40 @@ const UpdatingForm = observer(() => {
                                   isChangeField={
                                     isChangeAddressesForm.addresses[address.id || ''].city
                                   }
+                                  setValid={async (value) => {
+                                    try {
+                                      await updatingAddressValidationSchema.validate(
+                                        {
+                                          country: values.addresses[index]?.country,
+                                          city: value,
+                                          streetName: values.addresses[index]?.streetName,
+                                          postalCode: values.addresses[index]?.postalCode,
+                                        },
+                                        { abortEarly: false }
+                                      );
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        addresses: {
+                                          ...isValidAddressesFields.addresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.addresses[address.id || ''],
+                                            city: true,
+                                          },
+                                        },
+                                      });
+                                    } catch (error) {
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        addresses: {
+                                          ...isValidAddressesFields.addresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.addresses[address.id || ''],
+                                            city: false,
+                                          },
+                                        },
+                                      });
+                                    }
+                                  }}
                                 />
                                 <UpdatingField
                                   label="Улица"
@@ -1043,6 +1587,40 @@ const UpdatingForm = observer(() => {
                                   isChangeField={
                                     isChangeAddressesForm.addresses[address.id || ''].streetName
                                   }
+                                  setValid={async (value) => {
+                                    try {
+                                      await updatingAddressValidationSchema.validate(
+                                        {
+                                          country: values.addresses[index]?.country,
+                                          city: values.addresses[index]?.city,
+                                          streetName: value,
+                                          postalCode: values.addresses[index]?.postalCode,
+                                        },
+                                        { abortEarly: false }
+                                      );
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        addresses: {
+                                          ...isValidAddressesFields.addresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.addresses[address.id || ''],
+                                            streetName: true,
+                                          },
+                                        },
+                                      });
+                                    } catch (error) {
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        addresses: {
+                                          ...isValidAddressesFields.addresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.addresses[address.id || ''],
+                                            streetName: false,
+                                          },
+                                        },
+                                      });
+                                    }
+                                  }}
                                 />
                                 <UpdatingField
                                   label="Индекс"
@@ -1059,6 +1637,40 @@ const UpdatingForm = observer(() => {
                                   isChangeField={
                                     isChangeAddressesForm.addresses[address.id || ''].postalCode
                                   }
+                                  setValid={async (value) => {
+                                    try {
+                                      await updatingAddressValidationSchema.validate(
+                                        {
+                                          country: values.addresses[index]?.country,
+                                          city: values.addresses[index]?.city,
+                                          streetName: values.addresses[index]?.streetName,
+                                          postalCode: value,
+                                        },
+                                        { abortEarly: false }
+                                      );
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        addresses: {
+                                          ...isValidAddressesFields.addresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.addresses[address.id || ''],
+                                            postalCode: true,
+                                          },
+                                        },
+                                      });
+                                    } catch (error) {
+                                      setIsValidAddressesFields({
+                                        ...isValidAddressesFields,
+                                        addresses: {
+                                          ...isValidAddressesFields.addresses,
+                                          [address.id || '']: {
+                                            ...isValidAddressesFields.addresses[address.id || ''],
+                                            postalCode: false,
+                                          },
+                                        },
+                                      });
+                                    }
+                                  }}
                                 />
                               </div>
                             ))}
@@ -1097,7 +1709,7 @@ const UpdatingForm = observer(() => {
                           ),
                         ]);
                       }}
-                      disabled={!isChangeAddresses}
+                      disabled={!isChangeAddresses || !isValidAddresses}
                     >
                       Сохранить все изменения
                     </Button>

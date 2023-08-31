@@ -18,6 +18,7 @@ const UpdatingField = observer(
     setFieldValue,
     isChangeField,
     onSave,
+    setValid,
     ...props
   }: PropsWithoutRef<InputProps>) => {
     const [field, meta] = useField(props);
@@ -37,6 +38,9 @@ const UpdatingField = observer(
         if (valid) {
           valid.validateField?.(field.name);
         }
+        if (setValid) {
+          setValid(e.target.value);
+        }
       }, 100);
     };
 
@@ -55,7 +59,7 @@ const UpdatingField = observer(
                   onClick={() => {
                     if (onSave) onSave();
                   }}
-                  disabled={!isChangeField}
+                  disabled={!isChangeField || !!meta.error}
                 >
                   save
                 </Button>
