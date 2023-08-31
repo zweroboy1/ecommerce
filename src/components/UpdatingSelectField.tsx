@@ -20,6 +20,7 @@ const UpdatingSelectField = observer(
     setFieldValue,
     isChangeField,
     onSave,
+    setValid,
     ...props
   }: PropsWithoutRef<InputProps>) => {
     const [field, meta] = useField(props);
@@ -38,6 +39,9 @@ const UpdatingSelectField = observer(
         }
         if (valid) {
           valid.validateField?.(field.name);
+        }
+        if (setValid) {
+          setValid(e.target.value);
         }
         if (refFieldName) {
           touch?.setFieldTouched?.(refFieldName, true);
