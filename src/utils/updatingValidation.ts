@@ -69,6 +69,13 @@ const addressesArray = yup.array().of(
   })
 );
 
+const addressValidation = yup.object().shape({
+  postalCode: postCodeValidation,
+  city: cityValidation,
+  streetName: streetValidation,
+  country: yup.string().required(REQUIRED_FILL),
+});
+
 const updatingValidationSchema = yup.object().shape({
   firstName: stringValidation,
   lastName: stringValidation,
@@ -78,4 +85,16 @@ const updatingValidationSchema = yup.object().shape({
   addresses: addressesArray,
 });
 
-export { updatingValidationSchema };
+const updatingPersonalDataValidationSchema = yup.object().shape({
+  firstName: stringValidation,
+  lastName: stringValidation,
+  dateOfBirth: dateOfBirthValidation,
+});
+
+const updatingAddressValidationSchema = addressValidation;
+
+export {
+  updatingValidationSchema,
+  updatingPersonalDataValidationSchema,
+  updatingAddressValidationSchema,
+};
