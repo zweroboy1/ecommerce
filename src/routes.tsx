@@ -26,6 +26,7 @@ import {
   ABOUT_ROUTE,
   PROMOTIONS_ROUTE,
   CATALOG_ROUTE,
+  PRODUCT_ROUTE,
 } from './constants/route';
 import { Auth } from './pages/Auth';
 import { Main } from './pages/Main';
@@ -53,6 +54,7 @@ import { Blog } from './pages/Blog';
 import { About } from './pages/About';
 import { PromotionsAll } from './pages/PromotionsAll';
 import { Catalog } from './pages/Catalog';
+import { ProductPage } from './pages/ProductPage';
 
 const commonRoutes = [
   {
@@ -150,6 +152,10 @@ const commonRoutes = [
   {
     path: CATALOG_ROUTE,
     Component: Catalog,
+  },
+  {
+    path: `${PRODUCT_ROUTE}/:productId`,
+    Component: ProductPage,
   },
   {
     path: NOTFOUND_ROUTE,

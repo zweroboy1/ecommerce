@@ -15,6 +15,7 @@ import {
   CustomerWithToken,
   RegisterUser,
   TokenResponse,
+  ProductAllData,
 } from '../types';
 
 import { PRODUCTS_ON_PAGE } from '../constants';
@@ -260,7 +261,10 @@ export async function registerUser(userRegisterData: RegisterUser): Promise<Cust
   return customer;
 }
 
-export async function getProducts(category: string = '', page: number = 1) {
+export async function getProducts(
+  category: string = '',
+  page: number = 1
+): Promise<ProductAllData[]> {
   const ctIds = getCategoryCtIds(category);
   const cateroriesWhere =
     ctIds.length === 0
@@ -297,6 +301,35 @@ export async function getProducts(category: string = '', page: number = 1) {
       throw new Error('Oooops!!! We have a problem!!!');
     }
     return responseData.results[0] === undefined ? [] : responseData.results;
+  } catch (error) {
+    throw new Error('Oooops!!! We have a problem2!!!');
+  }
+}
+
+export async function getProduct(productId: string): Promise<ProductAllData | null> {
+  const queryString = createQueryString({
+    where: `masterData(current(slug(ru="${productId}")))`,
+  });
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/products?${queryString}`;
+  const bearerToken = await fetchBearerToken();
+  if (bearerToken === null) {
+    throw new Error(CT_ERROR);
+  }
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    });
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      throw new Error('Oooops!!! We have a problem!!!');
+    }
+    return responseData.results[0] === undefined ? null : responseData.results[0];
   } catch (error) {
     throw new Error('Oooops!!! We have a problem2!!!');
   }

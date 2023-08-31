@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Product, ProductAllData } from '../types';
+import { Product } from '../types';
 import { getProducts } from '../services/commercetoolsApi';
 import { mapProduct } from '../utils/mapProduct';
 
@@ -40,7 +40,7 @@ function ProductList({ category }: ProductListProps) {
       try {
         const response = await getProducts(category);
         // console.log(response);
-        const fetchedProducts = response.map((el: ProductAllData) => mapProduct(el));
+        const fetchedProducts = response.map((el) => mapProduct(el));
 
         // console.log(category, fetchedProducts);
         // setProducts(shuffleArray(fetchedProducts));
