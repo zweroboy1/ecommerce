@@ -1,17 +1,23 @@
-import { PropsWithoutRef, useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { FieldArray, Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import { Button } from './Button';
-import { Address, CustomerUpdating } from '../types';
+import { Address } from '../types';
 import { UpdatingField } from './UpdatingField';
 import { updatingValidationSchema } from '../utils/updatingValidation';
 import { UpdatingSelectField } from './UpdatingSelectField';
 import { updateUser } from '../services/commercetoolsApi';
 import { Context } from '../store/Context';
+import { prepareCustomerUpdating } from '../utils/prepareCustomerUpdating';
 
-const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpdating>) => {
+const UpdatingForm = observer(() => {
   const { user } = useContext(Context);
+  const customerUpdating = prepareCustomerUpdating(
+    user!.user!.user,
+    user!.user!.token.access_token
+  );
 
+  const initialValues = { ...customerUpdating, bearerToken: user!.user!.token.access_token };
   const [showedPage, setShowedPage] = useState('userInfo');
   const [isUpdatePersonalDataForm, setIsUpdatePersonalDataForm] = useState({
     firstName: false,
@@ -81,7 +87,62 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
     );
   };
 
-  const [isUpdateAddress, setIsUpdateAddress] = useState(updatingAddressObject({}));
+  const initialAddressesObject = () => {
+    const objOfAddressesFields: { [key: string]: { [key: string]: { [key: string]: boolean } } } = {
+      shippingAddresses: {},
+      billingAddresses: {},
+      addresses: {},
+    };
+    initialValues.shippingAddresses.forEach((address) => {
+      if (address.id) {
+        objOfAddressesFields.shippingAddresses[address.id] = {
+          country: false,
+          city: false,
+          street: false,
+          postalCode: false,
+        };
+      }
+    });
+    initialValues.billingAddresses.forEach((address) => {
+      if (address.id) {
+        objOfAddressesFields.billingAddresses[address.id] = {
+          country: false,
+          city: false,
+          street: false,
+          postalCode: false,
+        };
+      }
+    });
+    initialValues.addresses.forEach((address) => {
+      if (address.id) {
+        objOfAddressesFields.addresses[address.id] = {
+          country: false,
+          city: false,
+          street: false,
+          postalCode: false,
+        };
+      }
+    });
+    return objOfAddressesFields;
+  };
+
+  const [isUpdateAddressesForm, setIsUpdateAddressesForm] = useState(updatingAddressObject({}));
+
+  const [isChangeAddressesForm, setIsChangeAddressesForm] = useState(initialAddressesObject);
+
+  const isChangeAddress = (type: string, id: string) => {
+    return Object.values(isChangeAddressesForm[type][id]).some((value) => value === true);
+  };
+
+  const isChangeAddressesOfType = (type: 'shippingAddresses' | 'billingAddresses' | 'addresses') =>
+    initialValues[type].some((address) => {
+      return isChangeAddress(type, address.id || '');
+    });
+
+  const isChangeAddresses =
+    isChangeAddressesOfType('shippingAddresses') ||
+    isChangeAddressesOfType('billingAddresses') ||
+    isChangeAddressesOfType('addresses');
 
   const setIsUpdateFieldsOfPersonalDataForm = (name: string, value: boolean) => {
     setIsUpdatePersonalDataForm((prev) => ({ ...prev, [name]: value }));
@@ -91,8 +152,53 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
     setIsChangePersonalDataForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const setIsChangeFieldOfShippingAddressesForm = (id: string, name: string, value: boolean) => {
+    setIsChangeAddressesForm((prev) => ({
+      ...prev,
+      shippingAddresses: {
+        ...prev.shippingAddresses,
+        [id]: { ...prev.shippingAddresses[id], [name]: value },
+      },
+    }));
+  };
+
+  const setIsChangeFieldOfBillingAddressesForm = (id: string, name: string, value: boolean) => {
+    setIsChangeAddressesForm((prev) => ({
+      ...prev,
+      billingAddresses: {
+        ...prev.billingAddresses,
+        [id]: { ...prev.billingAddresses[id], [name]: value },
+      },
+    }));
+  };
+
+  const setIsChangeFieldOfAddressesForm = (id: string, name: string, value: boolean) => {
+    setIsChangeAddressesForm((prev) => ({
+      ...prev,
+      addresses: {
+        ...prev.addresses,
+        [id]: { ...prev.addresses[id], [name]: value },
+      },
+    }));
+  };
+
+  const resetChangeAddressesOfId = (type: string, id: string) => {
+    setIsChangeAddressesForm((prev) => ({
+      ...prev,
+      [type]: {
+        ...prev[type],
+        [id]: {
+          country: false,
+          city: false,
+          street: false,
+          postalCode: false,
+        },
+      },
+    }));
+  };
+
   const isUpdateAddresForm = [
-    ...Object.values(isUpdateAddress)
+    ...Object.values(isUpdateAddressesForm)
       .map((addressesIds) => Object.values(addressesIds))
       .flat(),
   ].some((value) => value === true);
@@ -131,6 +237,31 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
       dateOfBirth: values.dateOfBirth,
     };
     return [firstName, lastName, dateOfBirth].filter(({ action }) => action !== 'unset');
+  };
+
+  const saveAddresses = async (addresses: Address[]) => {
+    const data = addresses.map((address) => ({
+      action: 'changeAddress',
+      addressId: address.id,
+      address: { ...address },
+    }));
+    try {
+      const userData = await updateUser(
+        data,
+        initialValues.id,
+        initialValues.bearerToken,
+        initialValues.version
+      );
+      const userToken = user?.user?.token;
+      if (userToken) {
+        user?.setUser({ user: userData, token: userToken });
+      }
+      setIsUpdateAddressesForm(updatingAddressObject({}));
+      setIsChangeAddressesForm(initialAddressesObject);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+    }
   };
 
   const savePersonalData = async (
@@ -257,7 +388,7 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
         onSubmit={() => {}}
         validationSchema={updatingValidationSchema}
       >
-        {({ values, setFieldTouched, validateField, setFieldValue }) => (
+        {({ values, setFieldTouched, validateField, setFieldValue, setValues }) => (
           <Form>
             {showedPage === 'userInfo' && (
               <div className="user-info">
@@ -377,36 +508,6 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
             )}
             {showedPage === 'address' && (
               <>
-                <div className="button-wrapp">
-                  {!isUpdateAddresForm && (
-                    <Button
-                      className="button"
-                      type="button"
-                      onClick={() => {
-                        setIsUpdateAddress(updatingAddressObject(getAllAddressIds()));
-                      }}
-                    >
-                      Редактировать адреса
-                    </Button>
-                  )}
-
-                  {isUpdateAddresForm && (
-                    <Button className="button" type="button" onClick={() => {}}>
-                      Сохранить
-                    </Button>
-                  )}
-                  {isUpdateAddresForm && (
-                    <Button
-                      className="button"
-                      type="button"
-                      onClick={() => {
-                        setIsUpdateAddress(updatingAddressObject({}));
-                      }}
-                    >
-                      Отменить
-                    </Button>
-                  )}
-                </div>
                 <div className="address-row">
                   <h2>Адреса доставки</h2>
                   <FieldArray
@@ -415,98 +516,193 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                       <>
                         {values.shippingAddresses &&
                           values.shippingAddresses.length > 0 &&
-                          values.shippingAddresses.map((address, index) => (
-                            <div
-                              className={`address ${
-                                address.id === values.defaultShippingAddressId ? 'default' : ''
-                              }`}
-                              key={address.id}
-                            >
-                              <div className="button-wrapper">
-                                {!isUpdateAddress.shippingAddresses[address.id || ''] && (
-                                  <Button
-                                    className="button"
-                                    type="button"
-                                    onClick={() => {
-                                      setIsUpdateAddress({
-                                        ...isUpdateAddress,
-                                        shippingAddresses: {
-                                          ...isUpdateAddress.shippingAddresses,
-                                          [address.id || '']: true,
-                                        },
-                                      });
-                                    }}
-                                  >
-                                    Редактировать этот адрес
-                                  </Button>
-                                )}
+                          values.shippingAddresses.map(
+                            (address, index) =>
+                              address.id && (
+                                <div
+                                  className={`address ${
+                                    address.id === values.defaultShippingAddressId ? 'default' : ''
+                                  }`}
+                                  key={address.id}
+                                >
+                                  <div className="button-wrapper">
+                                    {!isUpdateAddressesForm.shippingAddresses[address.id || ''] && (
+                                      <Button
+                                        className="button"
+                                        type="button"
+                                        onClick={() => {
+                                          setIsUpdateAddressesForm({
+                                            ...isUpdateAddressesForm,
+                                            shippingAddresses: {
+                                              ...isUpdateAddressesForm.shippingAddresses,
+                                              [address.id || '']: true,
+                                            },
+                                          });
+                                        }}
+                                      >
+                                        Редактировать этот адрес
+                                      </Button>
+                                    )}
 
-                                {isUpdateAddress.shippingAddresses[address.id || ''] && (
-                                  <Button className="button" type="button" onClick={() => {}}>
-                                    Сохранить
-                                  </Button>
-                                )}
-                                {isUpdateAddress.shippingAddresses[address.id || ''] && (
-                                  <Button
-                                    className="button"
-                                    type="button"
-                                    onClick={() => {
-                                      setIsUpdateAddress({
-                                        ...isUpdateAddress,
-                                        shippingAddresses: {
-                                          ...isUpdateAddress.shippingAddresses,
-                                          [address.id || '']: false,
-                                        },
-                                      });
-                                    }}
-                                  >
-                                    Отменить
-                                  </Button>
-                                )}
-                              </div>
-                              {address.id === values.defaultShippingAddressId && (
-                                <span>Адрес доставки по умолчанию</span>
-                              )}
+                                    {isUpdateAddressesForm.shippingAddresses[address.id || ''] && (
+                                      <Button
+                                        className="button"
+                                        type="button"
+                                        onClick={async () => {
+                                          await saveAddresses([
+                                            {
+                                              ...address,
+                                            },
+                                          ]);
+                                        }}
+                                        disabled={
+                                          !isChangeAddress('shippingAddresses', address.id || '')
+                                        }
+                                      >
+                                        Сохранить
+                                      </Button>
+                                    )}
+                                    {isUpdateAddressesForm.shippingAddresses[address.id || ''] && (
+                                      <Button
+                                        className="button"
+                                        type="button"
+                                        onClick={() => {
+                                          setIsUpdateAddressesForm({
+                                            ...isUpdateAddressesForm,
+                                            shippingAddresses: {
+                                              ...isUpdateAddressesForm.shippingAddresses,
+                                              [address.id || '']: false,
+                                            },
+                                          });
+                                          resetChangeAddressesOfId(
+                                            'shippingAddresses',
+                                            address.id || ''
+                                          );
+                                          setFieldValue(
+                                            `shippingAddresses.${index}.country`,
+                                            initialValues.shippingAddresses[index]?.country,
+                                            true
+                                          );
+                                          setFieldValue(
+                                            `shippingAddresses.${index}.city`,
+                                            initialValues.shippingAddresses[index]?.city,
+                                            true
+                                          );
+                                          setFieldValue(
+                                            `shippingAddresses.${index}.streetName`,
+                                            initialValues.shippingAddresses[index]?.streetName,
+                                            true
+                                          );
+                                          setFieldValue(
+                                            `shippingAddresses.${index}.postalCode`,
+                                            initialValues.shippingAddresses[index]?.postalCode,
+                                            true
+                                          );
+                                        }}
+                                      >
+                                        Отменить
+                                      </Button>
+                                    )}
+                                  </div>
+                                  {address.id === values.defaultShippingAddressId && (
+                                    <span>Адрес доставки по умолчанию</span>
+                                  )}
 
-                              <UpdatingSelectField
-                                label="Страна"
-                                name={`shippingAddresses.${index}.country`}
-                                placeholder="Введите страну"
-                                type="text"
-                                touch={{ setFieldTouched }}
-                                valid={{ validateField }}
-                                refFieldName={`shippingAddresses.${index}.postalCode`}
-                                isUpdateForm={isUpdateAddress.shippingAddresses[address.id || '']}
-                              />
-                              <UpdatingField
-                                label="Город"
-                                name={`shippingAddresses.${index}.city`}
-                                placeholder="Введите город"
-                                type="text"
-                                touch={{ setFieldTouched }}
-                                valid={{ validateField }}
-                                isUpdateForm={isUpdateAddress.shippingAddresses[address.id || '']}
-                              />
-                              <UpdatingField
-                                label="Улица"
-                                name={`shippingAddresses.${index}.streetName`}
-                                placeholder="Введите улицу"
-                                type="text"
-                                touch={{ setFieldTouched }}
-                                valid={{ validateField }}
-                                isUpdateForm={isUpdateAddress.shippingAddresses[address.id || '']}
-                              />
-                              <UpdatingField
-                                label="Индекс"
-                                name={`shippingAddresses.${index}.postalCode`}
-                                placeholder="Введите индекс"
-                                type="text"
-                                touch={{ setFieldTouched }}
-                                valid={{ validateField }}
-                                isUpdateForm={isUpdateAddress.shippingAddresses[address.id || '']}
-                              />
-                            </div>
-                          ))}
+                                  <UpdatingSelectField
+                                    label="Страна"
+                                    name={`shippingAddresses.${index}.country`}
+                                    placeholder="Введите страну"
+                                    type="text"
+                                    touch={{ setFieldTouched }}
+                                    valid={{ validateField }}
+                                    refFieldName={`shippingAddresses.${index}.postalCode`}
+                                    isUpdateForm={
+                                      isUpdateAddressesForm.shippingAddresses[address.id || '']
+                                    }
+                                    initValue={initialValues.shippingAddresses[index]?.country}
+                                    setIsChangeFields={(name: string, value: boolean) =>
+                                      setIsChangeFieldOfShippingAddressesForm(
+                                        address.id || '',
+                                        name,
+                                        value
+                                      )
+                                    }
+                                    isChangeField={
+                                      isChangeAddressesForm.shippingAddresses[address.id || '']
+                                        .country
+                                    }
+                                  />
+                                  <UpdatingField
+                                    label="Город"
+                                    name={`shippingAddresses.${index}.city`}
+                                    placeholder="Введите город"
+                                    type="text"
+                                    touch={{ setFieldTouched }}
+                                    valid={{ validateField }}
+                                    isUpdateForm={
+                                      isUpdateAddressesForm.shippingAddresses[address.id || '']
+                                    }
+                                    initValue={initialValues.shippingAddresses[index]?.city}
+                                    setIsChangeFields={(name: string, value: boolean) =>
+                                      setIsChangeFieldOfShippingAddressesForm(
+                                        address.id || '',
+                                        name,
+                                        value
+                                      )
+                                    }
+                                    isChangeField={
+                                      isChangeAddressesForm.shippingAddresses[address.id || ''].city
+                                    }
+                                  />
+                                  <UpdatingField
+                                    label="Улица"
+                                    name={`shippingAddresses.${index}.streetName`}
+                                    placeholder="Введите улицу"
+                                    type="text"
+                                    touch={{ setFieldTouched }}
+                                    valid={{ validateField }}
+                                    isUpdateForm={
+                                      isUpdateAddressesForm.shippingAddresses[address.id || '']
+                                    }
+                                    initValue={initialValues.shippingAddresses[index]?.streetName}
+                                    setIsChangeFields={(name: string, value: boolean) =>
+                                      setIsChangeFieldOfShippingAddressesForm(
+                                        address.id || '',
+                                        name,
+                                        value
+                                      )
+                                    }
+                                    isChangeField={
+                                      isChangeAddressesForm.shippingAddresses[address.id || '']
+                                        .streetName
+                                    }
+                                  />
+                                  <UpdatingField
+                                    label="Индекс"
+                                    name={`shippingAddresses.${index}.postalCode`}
+                                    placeholder="Введите индекс"
+                                    type="text"
+                                    touch={{ setFieldTouched }}
+                                    valid={{ validateField }}
+                                    isUpdateForm={
+                                      isUpdateAddressesForm.shippingAddresses[address.id || '']
+                                    }
+                                    initValue={initialValues.shippingAddresses[index]?.postalCode}
+                                    setIsChangeFields={(name: string, value: boolean) =>
+                                      setIsChangeFieldOfShippingAddressesForm(
+                                        address.id || '',
+                                        name,
+                                        value
+                                      )
+                                    }
+                                    isChangeField={
+                                      isChangeAddressesForm.shippingAddresses[address.id || '']
+                                        .postalCode
+                                    }
+                                  />
+                                </div>
+                              )
+                          )}
                       </>
                     )}
                   />
@@ -531,15 +727,15 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                 key={address.id}
                               >
                                 <div className="button-wrapper">
-                                  {!isUpdateAddress.billingAddresses[address.id || ''] && (
+                                  {!isUpdateAddressesForm.billingAddresses[address.id || ''] && (
                                     <Button
                                       className="button"
                                       type="button"
                                       onClick={() => {
-                                        setIsUpdateAddress({
-                                          ...isUpdateAddress,
+                                        setIsUpdateAddressesForm({
+                                          ...isUpdateAddressesForm,
                                           billingAddresses: {
-                                            ...isUpdateAddress.billingAddresses,
+                                            ...isUpdateAddressesForm.billingAddresses,
                                             [address.id || '']: true,
                                           },
                                         });
@@ -549,23 +745,60 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                     </Button>
                                   )}
 
-                                  {isUpdateAddress.billingAddresses[address.id || ''] && (
-                                    <Button className="button" type="button" onClick={() => {}}>
+                                  {isUpdateAddressesForm.billingAddresses[address.id || ''] && (
+                                    <Button
+                                      className="button"
+                                      type="button"
+                                      onClick={async () => {
+                                        await saveAddresses([
+                                          {
+                                            ...address,
+                                          },
+                                        ]);
+                                      }}
+                                      disabled={
+                                        !isChangeAddress('billingAddresses', address.id || '')
+                                      }
+                                    >
                                       Сохранить
                                     </Button>
                                   )}
-                                  {isUpdateAddress.billingAddresses[address.id || ''] && (
+                                  {isUpdateAddressesForm.billingAddresses[address.id || ''] && (
                                     <Button
                                       className="button"
                                       type="button"
                                       onClick={() => {
-                                        setIsUpdateAddress({
-                                          ...isUpdateAddress,
+                                        setIsUpdateAddressesForm({
+                                          ...isUpdateAddressesForm,
                                           billingAddresses: {
-                                            ...isUpdateAddress.billingAddresses,
+                                            ...isUpdateAddressesForm.billingAddresses,
                                             [address.id || '']: false,
                                           },
                                         });
+                                        resetChangeAddressesOfId(
+                                          'billingAddresses',
+                                          address.id || ''
+                                        );
+                                        setFieldValue(
+                                          `billingAddresses.${index}.country`,
+                                          initialValues.billingAddresses[index]?.country,
+                                          true
+                                        );
+                                        setFieldValue(
+                                          `billingAddresses.${index}.city`,
+                                          initialValues.billingAddresses[index]?.city,
+                                          true
+                                        );
+                                        setFieldValue(
+                                          `billingAddresses.${index}.streetName`,
+                                          initialValues.billingAddresses[index]?.streetName,
+                                          true
+                                        );
+                                        setFieldValue(
+                                          `billingAddresses.${index}.postalCode`,
+                                          initialValues.billingAddresses[index]?.postalCode,
+                                          true
+                                        );
                                       }}
                                     >
                                       Отменить
@@ -575,14 +808,29 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                 {address.id === values.defaultBillingAddressId && (
                                   <span>Адрес оплаты по умолчанию</span>
                                 )}
-                                <UpdatingField
+
+                                <UpdatingSelectField
                                   label="Страна"
                                   name={`billingAddresses.${index}.country`}
                                   placeholder="Введите страну"
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
-                                  isUpdateForm={isUpdateAddress.billingAddresses[address.id || '']}
+                                  refFieldName={`billingAddresses.${index}.postalCode`}
+                                  isUpdateForm={
+                                    isUpdateAddressesForm.billingAddresses[address.id || '']
+                                  }
+                                  initValue={initialValues.billingAddresses[index]?.country}
+                                  setIsChangeFields={(name: string, value: boolean) =>
+                                    setIsChangeFieldOfBillingAddressesForm(
+                                      address.id || '',
+                                      name,
+                                      value
+                                    )
+                                  }
+                                  isChangeField={
+                                    isChangeAddressesForm.billingAddresses[address.id || ''].country
+                                  }
                                 />
                                 <UpdatingField
                                   label="Город"
@@ -591,7 +839,20 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
-                                  isUpdateForm={isUpdateAddress.billingAddresses[address.id || '']}
+                                  isUpdateForm={
+                                    isUpdateAddressesForm.billingAddresses[address.id || '']
+                                  }
+                                  initValue={initialValues.billingAddresses[index]?.city}
+                                  setIsChangeFields={(name: string, value: boolean) =>
+                                    setIsChangeFieldOfBillingAddressesForm(
+                                      address.id || '',
+                                      name,
+                                      value
+                                    )
+                                  }
+                                  isChangeField={
+                                    isChangeAddressesForm.billingAddresses[address.id || ''].city
+                                  }
                                 />
                                 <UpdatingField
                                   label="Улица"
@@ -600,7 +861,21 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
-                                  isUpdateForm={isUpdateAddress.billingAddresses[address.id || '']}
+                                  isUpdateForm={
+                                    isUpdateAddressesForm.billingAddresses[address.id || '']
+                                  }
+                                  initValue={initialValues.billingAddresses[index]?.streetName}
+                                  setIsChangeFields={(name: string, value: boolean) =>
+                                    setIsChangeFieldOfBillingAddressesForm(
+                                      address.id || '',
+                                      name,
+                                      value
+                                    )
+                                  }
+                                  isChangeField={
+                                    isChangeAddressesForm.billingAddresses[address.id || '']
+                                      .streetName
+                                  }
                                 />
                                 <UpdatingField
                                   label="Индекс"
@@ -609,7 +884,21 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
-                                  isUpdateForm={isUpdateAddress.billingAddresses[address.id || '']}
+                                  isUpdateForm={
+                                    isUpdateAddressesForm.billingAddresses[address.id || '']
+                                  }
+                                  initValue={initialValues.billingAddresses[index]?.postalCode}
+                                  setIsChangeFields={(name: string, value: boolean) =>
+                                    setIsChangeFieldOfBillingAddressesForm(
+                                      address.id || '',
+                                      name,
+                                      value
+                                    )
+                                  }
+                                  isChangeField={
+                                    isChangeAddressesForm.billingAddresses[address.id || '']
+                                      .postalCode
+                                  }
                                 />
                               </div>
                             );
@@ -633,15 +922,15 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                             values.addresses.map((address, index) => (
                               <div className="address" key={address.id}>
                                 <div className="button-wrapper">
-                                  {!isUpdateAddress.addresses[address.id || ''] && (
+                                  {!isUpdateAddressesForm.addresses[address.id || ''] && (
                                     <Button
                                       className="button"
                                       type="button"
                                       onClick={() => {
-                                        setIsUpdateAddress({
-                                          ...isUpdateAddress,
+                                        setIsUpdateAddressesForm({
+                                          ...isUpdateAddressesForm,
                                           addresses: {
-                                            ...isUpdateAddress.addresses,
+                                            ...isUpdateAddressesForm.addresses,
                                             [address.id || '']: true,
                                           },
                                         });
@@ -651,37 +940,77 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                     </Button>
                                   )}
 
-                                  {isUpdateAddress.addresses[address.id || ''] && (
-                                    <Button className="button" type="button" onClick={() => {}}>
+                                  {isUpdateAddressesForm.addresses[address.id || ''] && (
+                                    <Button
+                                      className="button"
+                                      type="button"
+                                      onClick={async () => {
+                                        await saveAddresses([
+                                          {
+                                            ...address,
+                                          },
+                                        ]);
+                                      }}
+                                      disabled={!isChangeAddress('addresses', address.id || '')}
+                                    >
                                       Сохранить
                                     </Button>
                                   )}
-                                  {isUpdateAddress.addresses[address.id || ''] && (
+                                  {isUpdateAddressesForm.addresses[address.id || ''] && (
                                     <Button
                                       className="button"
                                       type="button"
                                       onClick={() => {
-                                        setIsUpdateAddress({
-                                          ...isUpdateAddress,
+                                        setIsUpdateAddressesForm({
+                                          ...isUpdateAddressesForm,
                                           addresses: {
-                                            ...isUpdateAddress.addresses,
+                                            ...isUpdateAddressesForm.addresses,
                                             [address.id || '']: false,
                                           },
                                         });
+                                        resetChangeAddressesOfId('addresses', address.id || '');
+                                        setFieldValue(
+                                          `addresses.${index}.country`,
+                                          initialValues.addresses[index]?.country,
+                                          true
+                                        );
+                                        setFieldValue(
+                                          `addresses.${index}.city`,
+                                          initialValues.addresses[index]?.city,
+                                          true
+                                        );
+                                        setFieldValue(
+                                          `addresses.${index}.streetName`,
+                                          initialValues.addresses[index]?.streetName,
+                                          true
+                                        );
+                                        setFieldValue(
+                                          `addresses.${index}.postalCode`,
+                                          initialValues.addresses[index]?.postalCode,
+                                          true
+                                        );
                                       }}
                                     >
                                       Отменить
                                     </Button>
                                   )}
                                 </div>
-                                <UpdatingField
+                                <UpdatingSelectField
                                   label="Страна"
                                   name={`addresses.${index}.country`}
                                   placeholder="Введите страну"
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
-                                  isUpdateForm={isUpdateAddress.addresses[address.id || '']}
+                                  refFieldName={`addresses.${index}.country`}
+                                  isUpdateForm={isUpdateAddressesForm.addresses[address.id || '']}
+                                  initValue={initialValues.addresses[index]?.country}
+                                  setIsChangeFields={(name: string, value: boolean) =>
+                                    setIsChangeFieldOfAddressesForm(address.id || '', name, value)
+                                  }
+                                  isChangeField={
+                                    isChangeAddressesForm.addresses[address.id || ''].country
+                                  }
                                 />
                                 <UpdatingField
                                   label="Город"
@@ -690,7 +1019,14 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
-                                  isUpdateForm={isUpdateAddress.addresses[address.id || '']}
+                                  isUpdateForm={isUpdateAddressesForm.addresses[address.id || '']}
+                                  initValue={initialValues.addresses[index]?.city}
+                                  setIsChangeFields={(name: string, value: boolean) =>
+                                    setIsChangeFieldOfAddressesForm(address.id || '', name, value)
+                                  }
+                                  isChangeField={
+                                    isChangeAddressesForm.addresses[address.id || ''].city
+                                  }
                                 />
                                 <UpdatingField
                                   label="Улица"
@@ -699,7 +1035,14 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
-                                  isUpdateForm={isUpdateAddress.addresses[address.id || '']}
+                                  isUpdateForm={isUpdateAddressesForm.addresses[address.id || '']}
+                                  initValue={initialValues.addresses[index]?.streetName}
+                                  setIsChangeFields={(name: string, value: boolean) =>
+                                    setIsChangeFieldOfAddressesForm(address.id || '', name, value)
+                                  }
+                                  isChangeField={
+                                    isChangeAddressesForm.addresses[address.id || ''].streetName
+                                  }
                                 />
                                 <UpdatingField
                                   label="Индекс"
@@ -708,7 +1051,14 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                                   type="text"
                                   touch={{ setFieldTouched }}
                                   valid={{ validateField }}
-                                  isUpdateForm={isUpdateAddress.addresses[address.id || '']}
+                                  isUpdateForm={isUpdateAddressesForm.addresses[address.id || '']}
+                                  initValue={initialValues.addresses[index]?.postalCode}
+                                  setIsChangeFields={(name: string, value: boolean) =>
+                                    setIsChangeFieldOfAddressesForm(address.id || '', name, value)
+                                  }
+                                  isChangeField={
+                                    isChangeAddressesForm.addresses[address.id || ''].postalCode
+                                  }
                                 />
                               </div>
                             ))}
@@ -717,6 +1067,55 @@ const UpdatingForm = observer(({ ...initialValues }: PropsWithoutRef<CustomerUpd
                     />
                   </div>
                 )}
+                <div className="button-wrapp">
+                  {!isUpdateAddresForm && (
+                    <Button
+                      className="button"
+                      type="button"
+                      onClick={() => {
+                        setIsUpdateAddressesForm(updatingAddressObject(getAllAddressIds()));
+                      }}
+                    >
+                      Редактировать адреса
+                    </Button>
+                  )}
+
+                  {isUpdateAddresForm && (
+                    <Button
+                      className="button"
+                      type="button"
+                      onClick={async () => {
+                        await saveAddresses([
+                          ...Object.values<Address>(values.shippingAddresses).filter((address) =>
+                            isChangeAddress('shippingAddresses', address.id || '')
+                          ),
+                          ...Object.values<Address>(values.billingAddresses).filter((address) =>
+                            isChangeAddress('billingAddresses', address.id || '')
+                          ),
+                          ...Object.values<Address>(values.addresses).filter((address) =>
+                            isChangeAddress('addresses', address.id || '')
+                          ),
+                        ]);
+                      }}
+                      disabled={!isChangeAddresses}
+                    >
+                      Сохранить все изменения
+                    </Button>
+                  )}
+                  {isUpdateAddresForm && (
+                    <Button
+                      className="button"
+                      type="button"
+                      onClick={() => {
+                        setIsUpdateAddressesForm(updatingAddressObject({}));
+                        setIsChangeAddressesForm(initialAddressesObject);
+                        setValues(initialValues, false);
+                      }}
+                    >
+                      Отменить все изменения
+                    </Button>
+                  )}
+                </div>
               </>
             )}
             {showedPage === 'personalData' && (
