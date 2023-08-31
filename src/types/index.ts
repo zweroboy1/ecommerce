@@ -135,6 +135,7 @@ type Category = {
   ruName: string;
   url: string;
   parentId: number | null;
+  ctId: string | null;
 };
 
 type Breadcrumb = {

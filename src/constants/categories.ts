@@ -7,6 +7,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Каталог',
     url: '',
     parentId: null,
+    ctId: null,
   },
   {
     id: 2,
@@ -14,6 +15,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Бытовая техника',
     url: 'home-appliances',
     parentId: 1,
+    ctId: 'cab55354-b11a-48e0-8545-cc37fa17f3ca',
   },
   {
     id: 3,
@@ -21,6 +23,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Холодильники',
     url: 'refrigerators',
     parentId: 2,
+    ctId: '47cda409-4099-4949-85f6-4a6ebe54b1ab',
   },
   {
     id: 4,
@@ -28,6 +31,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Стиральные машины',
     url: 'washing-machines',
     parentId: 2,
+    ctId: '91f69b2a-1a5c-4780-aad4-e983efdccd5f',
   },
   {
     id: 5,
@@ -35,6 +39,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Пылесосы',
     url: 'vacuum-cleaners',
     parentId: 2,
+    ctId: '16feea11-43f4-4866-8065-d8b63ed9056b',
   },
   {
     id: 6,
@@ -42,6 +47,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Аудио, видео',
     url: 'audio-video',
     parentId: 1,
+    ctId: '50f6861e-1387-4297-b863-3f69e52649f3',
   },
   {
     id: 7,
@@ -49,6 +55,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Телевизоры',
     url: 'televisions',
     parentId: 6,
+    ctId: 'd21f43f6-6f14-4712-8944-d08e3277960d',
   },
   {
     id: 8,
@@ -56,6 +63,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Наушники',
     url: 'headphones',
     parentId: 6,
+    ctId: '4a217654-9a01-448e-8375-40b47a808154',
   },
   {
     id: 9,
@@ -63,6 +71,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Видеокамеры',
     url: 'video-cameras',
     parentId: 6,
+    ctId: '0982b2ae-0d15-44e0-a5e3-9a3af1a0aa72',
   },
   {
     id: 10,
@@ -70,6 +79,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Микрофоны',
     url: 'microphones',
     parentId: 6,
+    ctId: '8391c846-a505-4445-9b8d-b9b51bd1fe1b',
   },
   {
     id: 11,
@@ -77,6 +87,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Телефоны',
     url: 'phones',
     parentId: 1,
+    ctId: '0bf9f061-81d3-4a38-9ef8-b81155ca13ac',
   },
   {
     id: 12,
@@ -84,6 +95,7 @@ const CATEGORIES: Category[] = [
     ruName: 'Ноутбуки',
     url: 'notebooks',
     parentId: 1,
+    ctId: 'a27df8ae-17f0-44bf-9992-c39b6f9837a2',
   },
 ];
 
