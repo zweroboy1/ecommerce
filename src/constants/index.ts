@@ -1,2 +1,3 @@
 const LOCALSTORAGE_NAME = 'ecommerce';
-export { LOCALSTORAGE_NAME };
+const PRODUCTS_ON_PAGE = 12;
+export { LOCALSTORAGE_NAME, PRODUCTS_ON_PAGE };

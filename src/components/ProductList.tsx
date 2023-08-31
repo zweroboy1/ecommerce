@@ -7,6 +7,7 @@ interface ProductListProps {
   category: string;
 }
 
+/*
 function shuffleArray<T>(array: T[]): T[] {
   const shuffledArray = [...array];
   for (let i = shuffledArray.length - 1; i > 0; i -= 1) {
@@ -15,7 +16,7 @@ function shuffleArray<T>(array: T[]): T[] {
   }
   return shuffledArray;
 }
-
+*/
 // Моковая функция getProducts
 /*
 function getProducts(): Product[] {
@@ -37,11 +38,13 @@ function ProductList({ category }: ProductListProps) {
   useEffect(() => {
     async function getProductsFromServer() {
       try {
-        const response = await getProducts();
-        const fetchedProducts = response.map((el: ProductAllData) => mapProduct(el));
+        const response = await getProducts(category);
         // console.log(response);
-        // console.log(fetchedProducts);
-        setProducts(shuffleArray(fetchedProducts));
+        const fetchedProducts = response.map((el: ProductAllData) => mapProduct(el));
+
+        // console.log(category, fetchedProducts);
+        // setProducts(shuffleArray(fetchedProducts));
+        setProducts(fetchedProducts);
       } catch (error) {
         // console.log(error);
       }
@@ -68,7 +71,7 @@ function ProductList({ category }: ProductListProps) {
   return (
     <div className="goods">
       {products.map((product) => (
-        <div className="goods__card">
+        <div key={product.id} className="goods__card">
           <div className="goods__image">
             <a href="#">
               <img src={product.images[0]} alt={product.name} />
