@@ -479,9 +479,9 @@ const UpdatingForm = observer(() => {
         <Button className="button" type="button" onClick={() => changePage('address')}>
           Адреса
         </Button>
-        {/* <Button className="button" type="button" onClick={() => changePage('personalData')}>
+        <Button className="button" type="button" onClick={() => changePage('personalData')}>
           Настройки профиля
-        </Button> */}
+        </Button>
       </div>
       <Formik
         initialValues={initialValues}
