@@ -136,6 +136,10 @@
         text-align: left;
         border-radius: 12px;
       }
+
+      .catalog-menu__category-list:first-child {
+        display: none;
+      }
     }
 
     .search {
@@ -273,22 +277,6 @@
 
     @include media('xxs') {
       top: 20px;
-    }
-
-    .compared-products__icon {
-      background: url(/src/assets/svg/stats.svg) no-repeat center center / cover;
-    }
-
-    .wishlist__icon {
-      background: url(/src/assets/svg/heart.svg) no-repeat center center / cover;
-    }
-
-    .my-account__icon {
-      background: url(/src/assets/svg/profile.svg) no-repeat center center / cover;
-    }
-
-    .cart__icon {
-      background: url(/src/assets/svg/cart.svg) no-repeat center center / cover;
     }
   }
 }

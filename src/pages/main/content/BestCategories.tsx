@@ -1,12 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import {
-  ELECTRONICS_ROUTE,
-  PHONES_ROUTE,
-  PHOTO_VIDEO_ROUTE,
-  SPORT_ROUTE,
-  TELEVISIONS_ROUTE,
-  VIDEO_GAMES_ROUTE,
-} from '../../../constants/route';
+import { PHONES_ROUTE } from '../../../constants/route';
 import banner1 from '../../../assets/img/banner1.png';
 import banner2 from '../../../assets/img/banner2.png';
 import banner3 from '../../../assets/img/banner3.png';
@@ -15,12 +8,12 @@ import banner5 from '../../../assets/img/banner5.png';
 import banner6 from '../../../assets/img/banner6.png';
 
 const bannersData = [
-  { img: banner1, title: 'Электроника', link: ELECTRONICS_ROUTE },
+  { img: banner1, title: 'Электроника', link: '' },
   { img: banner2, title: 'Телефоны', link: PHONES_ROUTE },
-  { img: banner3, title: 'Видеоигры', link: VIDEO_GAMES_ROUTE },
-  { img: banner4, title: 'Фото и видео техника', link: PHOTO_VIDEO_ROUTE },
-  { img: banner5, title: 'Спорт', link: SPORT_ROUTE },
-  { img: banner6, title: 'Телевизоры / Видео', link: TELEVISIONS_ROUTE },
+  { img: banner3, title: 'Видеоигры', link: '' },
+  { img: banner4, title: 'Фото и видео техника', link: '' },
+  { img: banner5, title: 'Спорт', link: '' },
+  { img: banner6, title: 'Телевизоры / Видео', link: '' },
 ];
 
 const BestCategories = () => {

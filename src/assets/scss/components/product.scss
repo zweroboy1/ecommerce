@@ -1,0 +1,212 @@
+.product {
+  &__images {
+    min-width: calc(100% - 550px);
+    width: calc(100% - 550px);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+    bottom: 20px;
+    max-width: 100%;
+    padding-right: 40px;
+    flex: auto;
+    max-width: none;
+    text-align: left;
+  }
+
+  &__details {
+    min-width: 550px;
+    width: 550px;
+    flex: 1 550px;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+    bottom: 20px;
+    margin: 0 0 20px 0;
+
+    h1 {
+      text-align: left;
+    }
+  }
+
+  &__form {
+    width: 100%;
+  }
+
+  &__sku,
+  &__brand,
+  &__feature {
+    @include flex($justify: flex-start);
+    font-size: 13px;
+    margin-top: 10px;
+
+    &-label {
+      margin-right: 3px;
+      color: #7b7b7b;
+      min-width: auto;
+      float: left;
+    }
+
+    &-item {
+      vertical-align: baseline;
+      display: inline-block;
+    }
+  }
+
+  &__price {
+    @include flex($justify: flex-start);
+    position: relative;
+    margin-top: 20px;
+  }
+
+  &__price-actual {
+    @include font($family: $font-family-title, $size: $font-size-24, $height: 1.1);
+    position: relative;
+    display: inline-block;
+    margin: 6px 0;
+    color: #2e2e2e;
+    white-space: nowrap;
+    padding-right: 10px;
+    letter-spacing: -0.025em;
+  }
+
+  &__price-old {
+    @include font($family: $font-family, $size: $font-size-16);
+    position: relative;
+    color: #595959;
+
+    .product__price-content {
+      position: relative;
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 40%;
+        left: 0;
+        border-top: 1px solid #595959;
+        width: 100%;
+        box-sizing: content-box;
+      }
+    }
+  }
+
+  &__profit {
+    @include font($family: $font-family-title, $size: $font-size-24, $height: 1.1);
+    @include flex($justify: flex-start);
+
+    &-content {
+      position: relative;
+      white-space: nowrap;
+      border: 1px solid #dd4b3926;
+      color: #dd4b39cc;
+      padding: 5px 7px;
+      margin-top: 5px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    .product__num {
+      padding-left: 5px;
+    }
+  }
+
+  &__num {
+    padding-right: 2px;
+  }
+
+  &__qnt-cart {
+    @include flex($justify: flex-start, $align: flex-end);
+    gap: 20px;
+  }
+
+  &__quantity {
+    position: relative;
+    margin-top: 20px;
+  }
+
+  &__changer1 {
+    @include flex();
+    height: 50px;
+    width: 90px;
+    padding: 0;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #d5d5d5;
+    box-shadow: inset 3px 3px 1px 0 rgba(0, 0, 0, 0.03);
+    border-radius: 25px;
+  }
+
+  &__decrease {
+    display: flex;
+    padding: 0;
+    width: 30px;
+    height: 50px;
+    position: relative;
+    border: 1px solid #c8c8c8;
+    line-height: 13px;
+    cursor: pointer;
+    background: #fff;
+    user-select: none;
+    align-items: center;
+    justify-content: center;
+    border-width: 0;
+    font-size: 20px;
+    font-family: monospace;
+    border-radius: 0;
+    background: none;
+    color: #00000080;
+    transition: $transition;
+  }
+
+  &__amount[type=text] {
+    width: 27px;
+    color: #000;
+    font-size: 14px;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none !important;
+    padding: 0;
+    height: 36px;
+    min-height: 36px;
+    text-align: center;
+
+    &:hover,
+    &:active,
+    &:focus {
+      border: none;
+    }
+  }
+
+  &__cart-button {
+    height: 50px;
+    position: relative;
+    min-width: 140px;
+    padding: 5px 5px 5px 20px;
+  }
+
+  &__icon-cart {
+    position: absolute;
+    height: 35px;
+    width: 35px;
+    margin: 0;
+    left: 4px;
+    top: 9px;
+    right: 0;
+    background: url(/src/assets/svg/cart-large.svg) no-repeat center center/cover;
+    transition: $transition;
+  }
+
+  &__buttons {
+    @include flex();
+    gap: 15px;
+  }
+
+  &__description {
+    @include flexColumn();
+    margin-top: 40px;
+
+    &-txt {
+      text-align: justify;
+    }
+  }
+}

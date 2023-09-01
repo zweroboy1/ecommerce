@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Top } from '../main/Top';
 import { Header } from '../main/Header';
 import { Footer } from '../main/Footer';
+// import Breadcrumbs from '../../components/Breadcrumbs';
 import { LeftMenu } from './LeftMenu';
 import { Filters } from './Filters';
 import { Sorting } from './Sorting';
@@ -10,6 +11,7 @@ import { Loader } from './Loader';
 import { Pagination } from './Pagination';
 
 const Phones = () => {
+  const pageTitle = 'Телефоны';
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 2;
   const [currentSort, setCurrentSort] = useState('default');
@@ -36,7 +38,8 @@ const Phones = () => {
       <Header />
       <main className="main content">
         <div className="row">
-          <h1>Телефоны</h1>
+          <h1>{pageTitle}</h1>
+          {/* <Breadcrumbs /> */}
         </div>
         <div className="row catalog">
           <div className="left">

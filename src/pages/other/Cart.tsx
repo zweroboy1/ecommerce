@@ -1,6 +1,6 @@
-import { Top } from './main/Top';
-import { Header } from './main/Header';
-import { Footer } from './main/Footer';
+import { Top } from '../main/Top';
+import { Header } from '../main/Header';
+import { Footer } from '../main/Footer';
 
 const Cart = () => {
   return (
