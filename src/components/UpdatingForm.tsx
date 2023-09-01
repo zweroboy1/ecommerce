@@ -47,11 +47,6 @@ const UpdatingForm = observer(() => {
   };
 
   const [isChangeUserSettingsForm, setIsChangeUserSettingsForm] = useState({ email: false });
-  // const [isValidPersonalDataFields, setIsValidPersonalDataFields] = useState({
-  //   firstName: true,
-  //   lastName: true,
-  //   dateOfBirth: true,
-  // });
 
   const isValidPersonalData =
     isValidPersonalDataFields.firstName &&
@@ -357,7 +352,7 @@ const UpdatingForm = observer(() => {
 
   const savePersonalData = async (
     type: string,
-    values: Partial<Record<'firstName' | 'lastName' | 'dateOfBirth', string>>
+    values: Partial<Record<'firstName' | 'lastName' | 'dateOfBirth' | 'email', string>>
   ) => {
     if (type === 'firstName') {
       const data = preparePersonalDataForSave(values, {
@@ -439,6 +434,32 @@ const UpdatingForm = observer(() => {
         setIsChangePersonalDataForm({ ...isChangePersonalDataForm, dateOfBirth: false });
         setIsUpdatePersonalDataForm({ ...isUpdatePersonalDataForm, dateOfBirth: false });
         toast.success('Дата рождения успешно изменена!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+      } catch (error) {
+        toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+      }
+    }
+    if (type === 'email') {
+      const data = [{ action: 'changeEmail', email: values.email }];
+      try {
+        const userData = await updateUser(
+          data,
+          initialValues.id,
+          initialValues.bearerToken,
+          initialValues.version
+        );
+        const userToken = user?.user?.token;
+        if (userToken) {
+          user?.setUser({ user: userData, token: userToken });
+        }
+        setIsChangeUserSettingsForm({ ...isChangeUserSettingsForm, email: false });
+        setIsUpdateUserSettingsForm({ ...isUpdateUserSettingsForm, email: false });
+        toast.success('E-mail успешно изменен!', {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 3000,
         });
@@ -1757,36 +1778,15 @@ const UpdatingForm = observer(() => {
                   type="email"
                   touch={{ setFieldTouched }}
                   valid={{ validateField }}
-                  // setValid={async (value) => {
-                  //   try {
-                  //     await updatingPersonalDataValidationSchema.validate(
-                  //       {
-                  //         firstName: value,
-                  //         lastName: values.lastName,
-                  //         dateOfBirth: values.dateOfBirth,
-                  //       },
-                  //       { abortEarly: false }
-                  //     );
-                  //     setIsValidPersonalDataFields({
-                  //       ...isValidPersonalDataFields,
-                  //       firstName: true,
-                  //     });
-                  //   } catch (error) {
-                  //     setIsValidPersonalDataFields({
-                  //       ...isValidPersonalDataFields,
-                  //       firstName: false,
-                  //     });
-                  //   }
-                  // }}
                   isUpdateForm={isUpdateUserSettingsForm.email}
                   setIsUpdateFields={setIsUpdateFieldsOfUserSettingsForm}
                   initValue={initialValues.email}
                   setIsChangeFields={setIsChangeFieldsOfUserSettingsForm}
                   setFieldValue={setFieldValue}
                   isChangeField={isChangeUserSettingsForm.email}
-                  // onSave={async () => {
-                  //   await savePersonalData('firstName', { firstName: values.firstName });
-                  // }}
+                  onSave={async () => {
+                    await savePersonalData('email', { email: values.email });
+                  }}
                 />
 
                 {/* <UpdatingField
