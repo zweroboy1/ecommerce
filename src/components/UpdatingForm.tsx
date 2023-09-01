@@ -40,6 +40,18 @@ const UpdatingForm = observer(() => {
     lastName: true,
     dateOfBirth: true,
   });
+  const [isUpdateUserSettingsForm, setIsUpdateUserSettingsForm] = useState({ email: false });
+
+  const setIsUpdateFieldsOfUserSettingsForm = (name: string, value: boolean) => {
+    setIsUpdateUserSettingsForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const [isChangeUserSettingsForm, setIsChangeUserSettingsForm] = useState({ email: false });
+  // const [isValidPersonalDataFields, setIsValidPersonalDataFields] = useState({
+  //   firstName: true,
+  //   lastName: true,
+  //   dateOfBirth: true,
+  // });
 
   const isValidPersonalData =
     isValidPersonalDataFields.firstName &&
@@ -219,6 +231,10 @@ const UpdatingForm = observer(() => {
 
   const setIsChangeFieldsOfPersonalDataForm = (name: string, value: boolean) => {
     setIsChangePersonalDataForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const setIsChangeFieldsOfUserSettingsForm = (name: string, value: boolean) => {
+    setIsChangeUserSettingsForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const setIsChangeFieldOfShippingAddressesForm = (id: string, name: string, value: boolean) => {
@@ -1741,7 +1757,36 @@ const UpdatingForm = observer(() => {
                   type="email"
                   touch={{ setFieldTouched }}
                   valid={{ validateField }}
-                  // isUpdateForm={isUpdatePersonalDataForm}
+                  // setValid={async (value) => {
+                  //   try {
+                  //     await updatingPersonalDataValidationSchema.validate(
+                  //       {
+                  //         firstName: value,
+                  //         lastName: values.lastName,
+                  //         dateOfBirth: values.dateOfBirth,
+                  //       },
+                  //       { abortEarly: false }
+                  //     );
+                  //     setIsValidPersonalDataFields({
+                  //       ...isValidPersonalDataFields,
+                  //       firstName: true,
+                  //     });
+                  //   } catch (error) {
+                  //     setIsValidPersonalDataFields({
+                  //       ...isValidPersonalDataFields,
+                  //       firstName: false,
+                  //     });
+                  //   }
+                  // }}
+                  isUpdateForm={isUpdateUserSettingsForm.email}
+                  setIsUpdateFields={setIsUpdateFieldsOfUserSettingsForm}
+                  initValue={initialValues.email}
+                  setIsChangeFields={setIsChangeFieldsOfUserSettingsForm}
+                  setFieldValue={setFieldValue}
+                  isChangeField={isChangeUserSettingsForm.email}
+                  // onSave={async () => {
+                  //   await savePersonalData('firstName', { firstName: values.firstName });
+                  // }}
                 />
 
                 {/* <UpdatingField
