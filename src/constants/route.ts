@@ -7,11 +7,6 @@ const RETURN_ROUTE = '/return';
 const PICKUP_POINTS_ROUTE = '/pickup-points';
 const GIFT_CERTIFICATES_ROUTE = '/gift-certificates';
 const CONTACTS_ROUTE = '/contacts';
-const PHONES_ROUTE = '/phones';
-const ELECTRONICS_ROUTE = '/electronics';
-const VIDEO_GAMES_ROUTE = '/video-games';
-const PHOTO_VIDEO_ROUTE = '/photo-video';
-const TELEVISIONS_ROUTE = '/televisions';
 const SPORT_ROUTE = '/sport';
 const CART_ROUTE = '/cart';
 const ALL_ORDERS_ROUTE = '/all-orders';
@@ -25,6 +20,7 @@ const ABOUT_ROUTE = '/about';
 const PROMOTIONS_ROUTE = '/promotions';
 const CATALOG_ROUTE = '/catalog';
 const PRODUCT_ROUTE = '/product';
+const PHONES_ROUTE = '/phones';
 
 export {
   MAIN_ROUTE,
@@ -36,11 +32,6 @@ export {
   PICKUP_POINTS_ROUTE,
   GIFT_CERTIFICATES_ROUTE,
   CONTACTS_ROUTE,
-  PHONES_ROUTE,
-  ELECTRONICS_ROUTE,
-  VIDEO_GAMES_ROUTE,
-  PHOTO_VIDEO_ROUTE,
-  TELEVISIONS_ROUTE,
   SPORT_ROUTE,
   CART_ROUTE,
   ALL_ORDERS_ROUTE,
@@ -54,4 +45,5 @@ export {
   PROMOTIONS_ROUTE,
   CATALOG_ROUTE,
   PRODUCT_ROUTE,
+  PHONES_ROUTE,
 };

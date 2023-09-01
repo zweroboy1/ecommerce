@@ -188,4 +188,27 @@
   &__price-slider span {
     color: #000;
   }
+
+  &__price-inputs,
+  &__price-labels {
+    @include flex($justify: space-between);
+    margin: 10px 0 20px;
+  }
+
+  .rc-slider-track {
+    height: 5px;
+    background-color: #07c;
+  }
+
+  .rc-slider-handle { 
+    width: 24px;
+    height: 24px;
+    margin-top: -10px;
+    border: solid 5px #07c;
+  }
+
+  .rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-dragging {
+    border-color: #07c;
+    box-shadow: 0 0 0 5px #96dbfa;
+  }
 }

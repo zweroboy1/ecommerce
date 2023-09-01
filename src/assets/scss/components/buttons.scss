@@ -73,7 +73,7 @@
   height: 25px;
   right: 10px;
   top: 10px;
-  opacity: 0.75;
+  opacity: .75;
   color: #595959;
   cursor: pointer;
   transition: $transition;
@@ -117,7 +117,7 @@
   }
 
   &__icon {
-    content: '';
+    content: "";
     position: absolute;
     width: 15px;
     height: 15px;
@@ -128,4 +128,20 @@
     line-height: 100%;
     background: url(/src/assets/svg/reset.svg) no-repeat center center/cover;
   }
+}
+
+.compared-products__icon {
+  background: url(/src/assets/svg/stats.svg) no-repeat center center / cover;
+}
+
+.wishlist__icon {
+  background: url(/src/assets/svg/heart.svg) no-repeat center center / cover;
+}
+
+.my-account__icon {
+  background: url(/src/assets/svg/profile.svg) no-repeat center center / cover;
+}
+
+.cart__icon {
+  background: url(/src/assets/svg/cart.svg) no-repeat center center / cover;
 }

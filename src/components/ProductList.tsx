@@ -5,9 +5,9 @@ import { mapProduct } from '../utils/mapProduct';
 
 interface ProductListProps {
   category: string;
+  currentSort: string;
 }
 
-/*
 function shuffleArray<T>(array: T[]): T[] {
   const shuffledArray = [...array];
   for (let i = shuffledArray.length - 1; i > 0; i -= 1) {
@@ -16,7 +16,7 @@ function shuffleArray<T>(array: T[]): T[] {
   }
   return shuffledArray;
 }
-*/
+
 // Моковая функция getProducts
 /*
 function getProducts(): Product[] {
@@ -32,7 +32,31 @@ function getProducts(): Product[] {
   ];
 }
 */
-function ProductList({ category }: ProductListProps) {
+
+function sortProducts(products: Product[], sortOption: string): Product[] {
+  const sortedProducts = [...products];
+
+  switch (sortOption) {
+    case 'priceAsc':
+      sortedProducts.sort((a, b) => a.price - b.price);
+      break;
+    case 'priceDesc':
+      sortedProducts.sort((a, b) => b.price - a.price);
+      break;
+    case 'nameAsc':
+      sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case 'nameDesc':
+      sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
+      break;
+    default:
+      return shuffleArray(sortedProducts);
+  }
+
+  return sortedProducts;
+}
+
+function ProductList({ category, currentSort }: ProductListProps) {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -41,16 +65,15 @@ function ProductList({ category }: ProductListProps) {
         const response = await getProducts(category);
         // console.log(response);
         const fetchedProducts = response.map((el) => mapProduct(el));
+        const sortedProducts = sortProducts(fetchedProducts, currentSort);
 
-        // console.log(category, fetchedProducts);
-        // setProducts(shuffleArray(fetchedProducts));
-        setProducts(fetchedProducts);
+        setProducts(sortedProducts);
       } catch (error) {
-        // console.log(error);
+        // Обработка ошибок
       }
     }
     getProductsFromServer();
-  }, [category]);
+  }, [category, currentSort]);
 
   /*
   return (

@@ -187,6 +187,36 @@ type Product = {
   images: string[];
 };
 
+type FilterOption = string | number;
+
+type FilterData = {
+  id: number;
+  name: string;
+  options?: FilterOption[];
+  min?: number;
+  max?: number;
+};
+
+type FiltersProps = {
+  onFilterChange: (filterId: number, values: FilterOption[]) => void;
+};
+
+type ExpandedFilters = {
+  [key: number]: boolean;
+};
+
+type SelectedFilters = {
+  [key: number]: FilterOption[];
+};
+
+interface ProductImagesProps {
+  productImages: string[];
+}
+
+interface ProductDetailsProps {
+  newPrice: number;
+}
+
 export type {
   InputProps,
   ButtonProps,
@@ -203,4 +233,11 @@ export type {
   Category,
   Breadcrumb,
   ProductAllData,
+  FilterOption,
+  FilterData,
+  FiltersProps,
+  ExpandedFilters,
+  SelectedFilters,
+  ProductImagesProps,
+  ProductDetailsProps,
 };

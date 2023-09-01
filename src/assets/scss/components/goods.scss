@@ -1,5 +1,5 @@
 .goods {
-  @include flex($justify: stretch, $align: flex-start, $wrap: wrap);
+  @include flex($justify: stretch, $align: stretch, $wrap: wrap);
   width: 100%;
   gap: 20px;
 
@@ -23,12 +23,14 @@
     width: 100%;
     max-height: 290px;
     aspect-ratio: 240 / 294;
+    transition: $transition;
 
     a {
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
+      width: 240px;
       height: 100%;
       max-width: calc(50vw - 10px);
       overflow: hidden;
@@ -37,7 +39,10 @@
     img {
       max-height: initial;
       width: auto;
-      image-rendering: optimizeQuality;
+    }
+
+    &:hover {
+      transform: scale(1.1);
     }
   }
 

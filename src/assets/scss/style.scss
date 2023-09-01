@@ -10,25 +10,25 @@
 
 /* Components */
 //Повторно используемые компоненты пользовательского интерфейса
-@import 'components/buttons';
-@import 'components/navigation';
-@import 'components/notFound';
-@import 'components/banners';
-@import 'components/slider';
-@import 'components/bestCategories';
-@import 'components/promotions';
 @import 'components/aboutCompany';
-@import 'components/socialLinks';
 @import 'components/authorization';
+@import 'components/banners';
+@import 'components/bestCategories';
 @import 'components/breadcrumbs';
+@import 'components/buttons';
+@import 'components/carousel';
+@import 'components/catalogMenu';
 @import 'components/filters';
-@import 'components/leftMenu';
-@import 'components/sorting';
 @import 'components/goods';
 @import 'components/loader';
+@import 'components/navigation';
+@import 'components/notFound';
 @import 'components/pagination';
-@import 'components/catalogMenu';
-@import 'components/pagination';
+@import 'components/product';
+@import 'components/promotions';
+@import 'components/slider';
+@import 'components/socialLinks';
+@import 'components/sorting';
 
 /* Layout */
 //Макет сайта (стили для шапки сайта, футера и боковой панели)

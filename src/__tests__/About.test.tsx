@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { About } from '../pages/About';
+import { About } from '../pages/other/About';
 
 describe('About component', () => {
   it('renders main heading', () => {

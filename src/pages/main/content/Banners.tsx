@@ -1,6 +1,5 @@
 import Slider from 'react-slick';
 import { NavLink } from 'react-router-dom';
-import { ELECTRONICS_ROUTE, PHOTO_VIDEO_ROUTE } from '../../../constants/route';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import dji from '../../../assets/img/dji_mini3.png';
@@ -15,8 +14,8 @@ const Banners = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    // autoplay: true,
-    // autoplaySpeed: 3000,
+    autoplay: true,
+    autoplaySpeed: 3000,
   };
 
   const banners = [
@@ -27,7 +26,7 @@ const Banners = () => {
       subtitle: 'PRO',
       description1: 'Прямое управление телефоном с передачей',
       description2: 'или управление передатчиком с помощью смартфона.',
-      link: ELECTRONICS_ROUTE,
+      link: '',
     },
     {
       image: woman,
@@ -37,7 +36,7 @@ const Banners = () => {
       subtitle: 'СМОТРИТЕ ВСЕ',
       description1: 'Все, что вы можете сделать в реальной жизни,',
       description2: 'вы можете сделать лучше и безопаснее в виртуальном мире.',
-      link: PHOTO_VIDEO_ROUTE,
+      link: '',
     },
   ];
 

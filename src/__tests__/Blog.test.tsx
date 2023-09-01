@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { Blog } from '../pages/Blog';
+import { Blog } from '../pages/other/Blog';
 
 describe('Blog component', () => {
   it('renders main heading', () => {

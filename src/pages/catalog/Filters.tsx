@@ -1,49 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-
-type FilterOption = string | number;
-
-type FilterData = {
-  id: number;
-  name: string;
-  options?: FilterOption[];
-  min?: number;
-  max?: number;
-};
-
-type FiltersProps = {
-  onFilterChange: (filterId: number, values: FilterOption[]) => void;
-};
-
-type ExpandedFilters = {
-  [key: number]: boolean;
-};
-
-type SelectedFilters = {
-  [key: number]: FilterOption[];
-};
+import Slider from 'rc-slider';
+import { filterData } from '../../constants/filters';
+import { FiltersProps, SelectedFilters, ExpandedFilters, FilterOption } from '../../types';
+import 'rc-slider/assets/index.css';
 
 const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
-  const filterData: FilterData[] = [
-    {
-      id: 1,
-      name: 'Бренд',
-      options: ['Apple', 'Samsung', 'HTC', 'Nokia', 'Motorola'],
-    },
-    {
-      id: 2,
-      name: 'Цвет',
-      options: ['Черный', 'Темно-синий', 'Золото', 'Серебро'],
-    },
-    {
-      id: 3,
-      name: 'Цена',
-      min: 0,
-      max: 300,
-    },
-  ];
-
   const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({});
   const [expandedFilters, setExpandedFilters] = useState<ExpandedFilters>({});
+  const [minValue, setMinValue] = useState<number>(0);
+  const [maxValue, setMaxValue] = useState<number>(filterData[2]?.max || 100);
 
   const filtersRef = useRef<HTMLDivElement | null>(null);
 
@@ -68,11 +33,27 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
     onFilterChange(filterId, values);
   };
 
+  // const handleToggleFilter = (filterId: number) => {
+  //   setExpandedFilters((prevExpandedFilters) => ({
+  //     ...prevExpandedFilters,
+  //     [filterId]: !prevExpandedFilters[filterId],
+  //   }));
+  // };
+
   const handleToggleFilter = (filterId: number) => {
-    setExpandedFilters((prevExpandedFilters) => ({
-      ...prevExpandedFilters,
-      [filterId]: !prevExpandedFilters[filterId],
-    }));
+    setExpandedFilters((prevExpandedFilters) => {
+      const updatedExpandedFilters: ExpandedFilters = { ...prevExpandedFilters };
+      // Закрыть предыдущий открытый фильтр, если таковой есть
+      Object.keys(updatedExpandedFilters).forEach((key) => {
+        const parsedKey = parseInt(key, 10);
+        if (!Number.isNaN(parsedKey) && parsedKey !== filterId) {
+          updatedExpandedFilters[parsedKey] = false;
+        }
+      });
+      // Открыть/закрыть текущий фильтр
+      updatedExpandedFilters[filterId] = !updatedExpandedFilters[filterId];
+      return updatedExpandedFilters;
+    });
   };
 
   const handleRemoveSelectedFilter = (filterId: number) => {
@@ -106,6 +87,52 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   };
 
   const hasSelectedFilters = Object.keys(selectedFilters).length > 0;
+
+  const handlePriceFilterChange = (filterId: number, newMinValue: number, newMaxValue: number) => {
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterId]: [newMinValue, newMaxValue],
+    }));
+    onFilterChange(filterId, [newMinValue, newMaxValue]);
+  };
+
+  const handlePriceSliderChange = (newMinValue: number, newMaxValue: number) => {
+    setMinValue(newMinValue);
+    setMaxValue(newMaxValue);
+    handlePriceFilterChange(3, newMinValue, newMaxValue);
+  };
+
+  const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseInt(e.target.value, 10);
+    if (!Number.isNaN(newValue)) {
+      setMinValue(newValue);
+      handlePriceFilterChange(3, newValue, maxValue);
+    }
+  };
+
+  const handleMaxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseInt(e.target.value, 10);
+    if (!Number.isNaN(newValue)) {
+      setMaxValue(newValue);
+      handlePriceFilterChange(3, minValue, newValue);
+    }
+  };
+
+  // Функция для вывода информации о фильтрах и сортировке
+  const logFilterInfo = () => {
+    const filterInfo = {
+      brand: selectedFilters[1] || [],
+      color: selectedFilters[2] || [],
+      // sort: currentSort,
+      priceMin: minValue,
+      priceMax: maxValue,
+      // pageNumber: 2, // текущий номер страницы
+    };
+    // eslint-disable-next-line no-console
+    console.log(filterInfo);
+  };
+
+  logFilterInfo();
 
   const renderFilters = () => {
     return (
@@ -162,22 +189,50 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
                   ))}
                 </ul>
               ) : (
-                <div className="filters__price-slider">
-                  <input
-                    type="range"
-                    min={filter.min}
-                    max={filter.max}
-                    step={1}
-                    value={
-                      selectedFilters[filter.id]
-                        ? selectedFilters[filter.id].join(',')
-                        : String(filter.min)
-                    }
-                    onChange={(e) => handleFilterChange(filter.id, [parseInt(e.target.value, 10)])}
-                  />
-                  <span>От: {selectedFilters[filter.id] || filter.min}</span>
-                  <span>До: {filter.max}</span>
-                </div>
+                filter.min !== undefined &&
+                filter.max !== undefined && (
+                  <div className="filters__price-slider">
+                    <div className="filters__price-inputs">
+                      <bdi>
+                        <span className="filters__price-prefix">$</span>
+                        <input
+                          type="number"
+                          min={filter.min}
+                          max={filter.max}
+                          value={minValue}
+                          onChange={handleMinInputChange}
+                        />
+                      </bdi>
+                      <span>-</span>
+                      <bdi>
+                        <span className="filters__price-suffix">$</span>
+                        <input
+                          type="number"
+                          min={filter.min}
+                          max={filter.max}
+                          value={maxValue}
+                          onChange={handleMaxInputChange}
+                        />
+                      </bdi>
+                    </div>
+                    <Slider
+                      range
+                      min={filter.min}
+                      max={filter.max}
+                      value={[minValue, maxValue]}
+                      onChange={(values: number | number[]) => {
+                        if (Array.isArray(values)) {
+                          const [newMinValue, newMaxValue] = values;
+                          handlePriceSliderChange(newMinValue, newMaxValue);
+                        }
+                      }}
+                    />
+                    <div className="filters__price-labels">
+                      <span>${filter.min}</span>
+                      <span>${filter.max}</span>
+                    </div>
+                  </div>
+                )
               )}
               <div className="filters__reset-block">
                 <a className="filters__reset reset" onClick={() => handleResetFilters(filter.id)}>
@@ -205,10 +260,24 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
     return (
       <div className="filters__selected">
         <ul className="filters__selected-list">
-          {Object.entries(selectedFilters).map(([filterId, selectedOptions]) =>
-            selectedOptions.map((selectedOption) => (
-              <li className="filters__selected-item" key={`${filterId}_${selectedOption}`}>
-                {selectedOption}
+          {Object.entries(selectedFilters).map(([filterId, selectedOptions]) => {
+            const selectedFilter = filterData.find((filter) => filter.id === Number(filterId));
+            const filterName = selectedFilter ? selectedFilter.name : '';
+
+            let selectedValue = '';
+            if (
+              selectedFilter &&
+              selectedFilter.min !== undefined &&
+              selectedFilter.max !== undefined
+            ) {
+              selectedValue = `${selectedOptions[0]} - ${selectedOptions[1]}`;
+            } else {
+              selectedValue = selectedOptions.join(', ');
+            }
+
+            return (
+              <li className="filters__selected-item" key={`${filterId}_${selectedOptions}`}>
+                {filterName}: {selectedValue}
                 <div
                   className="filters__selected-close close"
                   onClick={() => handleRemoveSelectedFilter(Number(filterId))}
@@ -217,8 +286,8 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
                   <span></span>
                 </div>
               </li>
-            ))
-          )}
+            );
+          })}
         </ul>
         {hasSelectedFilters && (
           <a className="filters__selected-reset reset" onClick={handleResetAllFilters}>
