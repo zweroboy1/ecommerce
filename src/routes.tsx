@@ -9,12 +9,6 @@ import {
   PICKUP_POINTS_ROUTE,
   GIFT_CERTIFICATES_ROUTE,
   CONTACTS_ROUTE,
-  PHONES_ROUTE,
-  ELECTRONICS_ROUTE,
-  VIDEO_GAMES_ROUTE,
-  PHOTO_VIDEO_ROUTE,
-  TELEVISIONS_ROUTE,
-  SPORT_ROUTE,
   CART_ROUTE,
   ALL_ORDERS_ROUTE,
   ACCOUNT_ROUTE,
@@ -27,34 +21,30 @@ import {
   PROMOTIONS_ROUTE,
   CATALOG_ROUTE,
   PRODUCT_ROUTE,
+  PHONES_ROUTE,
 } from './constants/route';
 import { Auth } from './pages/Auth';
 import { Main } from './pages/Main';
-import { Payment } from './pages/Payment';
+import { Payment } from './pages/other/Payment';
 import { NotFound } from './pages/NotFound';
 import { Registration } from './pages/Registration';
-import { Return } from './pages/Return';
-import { PickupPoints } from './pages/PickupPoints';
-import { GiftCertificates } from './pages/GiftCertificates';
-import { Contacts } from './pages/Contacts';
-import { Phones } from './pages/catalog/Phones';
-import { Electronics } from './pages/Electronics';
-import { VideoGames } from './pages/VideoGames';
-import { PhotoVideo } from './pages/PhotoVideo';
-import { Televisions } from './pages/Televisions';
-import { Sport } from './pages/Sport';
-import { Cart } from './pages/Cart';
-import { AllOrders } from './pages/AllOrders';
+import { Return } from './pages/other/Return';
+import { PickupPoints } from './pages/other/PickupPoints';
+import { GiftCertificates } from './pages/other/GiftCertificates';
+import { Contacts } from './pages/other/Contacts';
+import { Cart } from './pages/other/Cart';
+import { AllOrders } from './pages/other/AllOrders';
 import { Account } from './pages/Account';
-import { Saved } from './pages/Saved';
-import { Compare } from './pages/Compare';
-import { Brands } from './pages/Brands';
-import { SiteMap } from './pages/SiteMap';
-import { Blog } from './pages/Blog';
-import { About } from './pages/About';
-import { PromotionsAll } from './pages/PromotionsAll';
+import { Saved } from './pages/other/Saved';
+import { Compare } from './pages/other/Compare';
+import { Brands } from './pages/other/Brands';
+import { SiteMap } from './pages/other/SiteMap';
+import { Blog } from './pages/other/Blog';
+import { About } from './pages/other/About';
+import { PromotionsAll } from './pages/other/PromotionsAll';
 import { Catalog } from './pages/Catalog';
-import { ProductPage } from './pages/ProductPage';
+import { ProductPage } from './pages/product/ProductPage';
+import { Phones } from './pages/catalog/Phones';
 
 const commonRoutes = [
   {
@@ -80,30 +70,6 @@ const commonRoutes = [
   {
     path: CONTACTS_ROUTE,
     Component: Contacts,
-  },
-  {
-    path: PHONES_ROUTE,
-    Component: Phones,
-  },
-  {
-    path: ELECTRONICS_ROUTE,
-    Component: Electronics,
-  },
-  {
-    path: VIDEO_GAMES_ROUTE,
-    Component: VideoGames,
-  },
-  {
-    path: PHOTO_VIDEO_ROUTE,
-    Component: PhotoVideo,
-  },
-  {
-    path: TELEVISIONS_ROUTE,
-    Component: Televisions,
-  },
-  {
-    path: SPORT_ROUTE,
-    Component: Sport,
   },
   {
     path: CART_ROUTE,
@@ -160,6 +126,10 @@ const commonRoutes = [
   {
     path: NOTFOUND_ROUTE,
     Component: NotFound,
+  },
+  {
+    path: PHONES_ROUTE,
+    Component: Phones,
   },
 ];
 

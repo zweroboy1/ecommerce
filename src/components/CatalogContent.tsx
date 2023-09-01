@@ -78,7 +78,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
         <div className="right">
           <Filters onFilterChange={(filterId, values) => handleFilterChange(filterId, values[0])} />
           <Sorting onSortChange={handleSortChange} />
-          <ProductList category={subcategory || category || 'catalog'} />
+          <ProductList category={subcategory || category || 'catalog'} currentSort={currentSort} />
           {/* пока оставил твои товары Goods, чтобы не править все остальные штуки, которые к ним привязаны
          потом надо удалить         
          */}

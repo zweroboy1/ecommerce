@@ -88,6 +88,10 @@ const Goods: React.FC<GoodsProps> = ({ currentSort, selectedFilters }) => {
     return true;
   });
 
+  // Функция для вывода информации о сортировке
+  // eslint-disable-next-line no-console
+  console.log(`Текущая сортировка: ${currentSort}`);
+
   return (
     <div className="goods">
       {filteredGoods.map((good, index) => (

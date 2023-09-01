@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { Compare } from '../pages/Compare';
+import { Compare } from '../pages/other/Compare';
 
 describe('Compare component', () => {
   it('renders main heading', () => {

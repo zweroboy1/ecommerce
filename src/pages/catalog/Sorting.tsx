@@ -1,18 +1,8 @@
-import { useState } from 'react';
-
-type SortingProps = {
-  onSortChange: (value: string) => void;
-};
+interface SortingProps {
+  onSortChange: (newSort: string) => void;
+}
 
 const Sorting: React.FC<SortingProps> = ({ onSortChange }) => {
-  const [selectedSort, setSelectedSort] = useState('default');
-
-  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = event.target;
-    setSelectedSort(value);
-    onSortChange(value);
-  };
-
   const sortOptions = [
     { value: 'default', label: 'По умолчанию' },
     { value: 'priceAsc', label: 'По цене (возрастающая)' },
@@ -21,15 +11,15 @@ const Sorting: React.FC<SortingProps> = ({ onSortChange }) => {
     { value: 'nameDesc', label: 'По имени (Z-A)' },
   ];
 
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const newSort = event.target.value;
+    onSortChange(newSort);
+  };
+
   return (
     <div className="sorting">
-      <label htmlFor="sortSelect">Сортировать по:</label>
-      <select
-        className="sorting__select"
-        id="sortSelect"
-        value={selectedSort}
-        onChange={handleSortChange}
-      >
+      <label htmlFor="sort">Сортировать по:</label>
+      <select id="sort" onChange={handleSortChange}>
         {sortOptions.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

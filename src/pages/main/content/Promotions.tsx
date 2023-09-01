@@ -93,7 +93,7 @@ const Promotions = () => {
               <button className="promotions__prev slider-prev" onClick={goToPrevSlide}></button>
               <button className="promotions__next slider-next" onClick={goToNextSlide}></button>
             </div>
-            <div className="promotions__scroller slider">
+            <div className="promotions__scroller slider-main">
               <div
                 className="promotions__scroller-list slider__scroll"
                 style={{ ...slideTransform, width: `${sliderWidth}px` }}
