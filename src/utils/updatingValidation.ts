@@ -10,6 +10,7 @@ import {
 import {
   cityValidation,
   dateOfBirthValidation,
+  emailValidation,
   streetValidation,
   stringValidation,
 } from './registrationValidation';
@@ -80,6 +81,7 @@ const updatingValidationSchema = yup.object().shape({
   firstName: stringValidation,
   lastName: stringValidation,
   dateOfBirth: dateOfBirthValidation,
+  email: emailValidation,
   shippingAddresses: addressesArray,
   billingAddresses: addressesArray,
   addresses: addressesArray,

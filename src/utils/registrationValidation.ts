@@ -196,4 +196,5 @@ export {
   streetValidation,
   cityValidation,
   stringValidation,
+  emailValidation,
 };
