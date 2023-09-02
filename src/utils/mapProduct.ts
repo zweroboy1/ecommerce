@@ -7,16 +7,9 @@ const mapProduct = (product: ProductAllData): Product => {
 
   return {
     id: product.id,
-    name:
-      product.masterData.current.name?.en ||
-      product.masterData.current.name['en-US'] ||
-      product.masterData.current.name?.ru ||
-      '',
-    description:
-      product.masterData.current.description?.en ||
-      product.masterData.current.description?.ru ||
-      '',
-    slug: product.masterData.current.slug?.en || product.masterData.current.slug['en-US'] || '',
+    name: product.masterData.current.name?.ru || '',
+    description: product.masterData.current.description?.ru || '',
+    slug: product.masterData.current.slug?.ru || '',
     price,
     images,
   };
