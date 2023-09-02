@@ -9,7 +9,6 @@ import { Breadcrumb } from '../types';
 import { buildBreadcrumbs } from '../utils/buildBreadcrumbs';
 import { Filters } from '../pages/catalog/Filters';
 import { Sorting } from '../pages/catalog/Sorting';
-import { Goods } from '../pages/catalog/Goods';
 
 const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
   category,
@@ -23,6 +22,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
   const [currentPage, setCurrentPage] = useState(page);
   const totalPages = 2;
   const [currentSort, setCurrentSort] = useState('default');
+
   const [selectedFilters, setSelectedFilters] = useState({});
   /*
   const handlePageChange = (page: number) => {
@@ -53,7 +53,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
     if (currentCategory?.ruName) {
       setPageTitle(currentCategory?.ruName);
     }
-  }, [subcategory, category, currentCategoryUrl]);
+  }, [subcategory, category, currentCategoryUrl, selectedFilters]);
   // Получение параметров из query string
   /*
   const sort = searchParams.get('sort');
@@ -79,10 +79,6 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
           <Filters onFilterChange={(filterId, values) => handleFilterChange(filterId, values[0])} />
           <Sorting onSortChange={handleSortChange} />
           <ProductList category={subcategory || category || 'catalog'} currentSort={currentSort} />
-          {/* пока оставил твои товары Goods, чтобы не править все остальные штуки, которые к ним привязаны
-         потом надо удалить         
-         */}
-          <Goods currentSort={currentSort} selectedFilters={selectedFilters} />
 
           <ReactPaginate
             pageCount={totalPages} // Общее количество страниц

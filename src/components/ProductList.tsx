@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { Product } from '../types';
 import { getProducts } from '../services/commercetoolsApi';
 import { mapProduct } from '../utils/mapProduct';
@@ -63,8 +64,9 @@ function ProductList({ category, currentSort }: ProductListProps) {
     async function getProductsFromServer() {
       try {
         const response = await getProducts(category);
-        // console.log(response);
+
         const fetchedProducts = response.map((el) => mapProduct(el));
+        // console.log(fetchedProducts);
         const sortedProducts = sortProducts(fetchedProducts, currentSort);
 
         setProducts(sortedProducts);
@@ -75,46 +77,35 @@ function ProductList({ category, currentSort }: ProductListProps) {
     getProductsFromServer();
   }, [category, currentSort]);
 
-  /*
-  return (
-    <div>
-      <h2>Products in {category}</h2>
-      <ul>
-        {products.map((product) => (
-          <li key={product.id}>
-            {product.name} - ${product.price}
-            ${product.images[0]}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-*/
-
   return (
     <div className="goods">
       {products.map((product) => (
         <div key={product.id} className="goods__card">
           <div className="goods__image">
-            <a href="#">
+            <NavLink to={`/product/${product.slug}`}>
               <img src={product.images[0]} alt={product.name} />
-            </a>
+            </NavLink>
           </div>
           <div className="goods__info">
             <h2 className="goods__name">
-              <a className="goods__title" href="#">
+              <NavLink className="goods__title" to={`/product/${product.slug}`}>
                 {product.name}
-              </a>
+              </NavLink>
             </h2>
             <div className="goods__prices">
               <div className="goods__price-block">
-                <span className="goods__discounted-price">$ {product.price}</span>
-                <span className="goods__old-price">$ {product.price + 100}</span>
+                <span className="goods__discounted-price">
+                  UAH {(product.price / 100).toFixed(2)}
+                </span>
+                <span className="goods__old-price">
+                  UAH {(product.price / 100 + 100).toFixed(2)}
+                </span>
               </div>
               <div className="goods__control">
                 <i className="goods__control-icon cart__icon header-icon"></i>
               </div>
             </div>
+            <div>{product.description}</div>
           </div>
         </div>
       ))}
