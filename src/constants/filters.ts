@@ -4,7 +4,7 @@ const filterData: FilterData[] = [
   {
     id: 1,
     name: 'Бренд',
-    options: ['Apple', 'Samsung', 'HTC', 'Nokia', 'Motorola'],
+    options: ['Apple', 'Samsung', 'Xiaomi', 'Sony', 'JBL'],
   },
   {
     id: 2,

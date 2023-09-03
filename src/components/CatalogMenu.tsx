@@ -25,8 +25,6 @@ const CatalogMenu = ({ categories }: { categories: Category[] }) => {
   };
 
   return (
-    // <div className="menu">
-    //   <div className={`menu__categories`}>
     <ul className="catalog-menu">
       {categories
         .filter((cat) => cat.parentId === null || !categoriesFirstLevel.includes(cat.parentId))
@@ -43,9 +41,7 @@ const CatalogMenu = ({ categories }: { categories: Category[] }) => {
           </li>
         ))}
     </ul>
-    //   </div>
-    // </div>
   );
 };
 
-export default CatalogMenu;
+export { CatalogMenu };
