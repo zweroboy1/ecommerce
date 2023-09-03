@@ -40,13 +40,19 @@ const UpdatingForm = observer(() => {
     lastName: true,
     dateOfBirth: true,
   });
-  const [isUpdateUserSettingsForm, setIsUpdateUserSettingsForm] = useState({ email: false });
+  const [isUpdateUserSettingsForm, setIsUpdateUserSettingsForm] = useState({
+    email: false,
+    password: false,
+  });
 
   const setIsUpdateFieldsOfUserSettingsForm = (name: string, value: boolean) => {
     setIsUpdateUserSettingsForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const [isChangeUserSettingsForm, setIsChangeUserSettingsForm] = useState({ email: false });
+  const [isChangeUserSettingsForm, setIsChangeUserSettingsForm] = useState({
+    email: false,
+    password: false,
+  });
 
   const isValidPersonalData =
     isValidPersonalDataFields.firstName &&
@@ -1789,14 +1795,71 @@ const UpdatingForm = observer(() => {
                   }}
                 />
 
-                {/* <UpdatingField
-                  label="Пароль"
-                  name="password"
-                  placeholder="Введите пароль"
-                  type="password"
-                  touch={{ setFieldTouched }}
-                  valid={{ validateField }}
-                /> */}
+                {!isUpdateUserSettingsForm.password && (
+                  <>
+                    <Button
+                      className="button"
+                      type="button"
+                      onClick={() => {
+                        setIsUpdateUserSettingsForm({
+                          ...isUpdateUserSettingsForm,
+                          password: true,
+                        });
+                      }}
+                    >
+                      Изменить пароль
+                    </Button>
+                  </>
+                )}
+                {isUpdateUserSettingsForm.password && (
+                  <>
+                    <h3>Изменение пароля</h3>
+                    <UpdatingField
+                      label="Введите текущий пароль"
+                      name="password"
+                      placeholder="Введите текущий пароль"
+                      type="password"
+                      touch={{ setFieldTouched }}
+                      valid={{ validateField }}
+                      isUpdateForm={isUpdateUserSettingsForm.password}
+                    />
+                    <UpdatingField
+                      label="Введите новый пароль"
+                      name="passwordNew"
+                      placeholder="Введите новый пароль"
+                      type="password"
+                      touch={{ setFieldTouched }}
+                      valid={{ validateField }}
+                      isUpdateForm={isUpdateUserSettingsForm.password}
+                    />
+                    <UpdatingField
+                      label="Подтвердите новый пароль"
+                      name="passwordNewRepeat"
+                      placeholder="Подтвердите новый пароль"
+                      type="password"
+                      touch={{ setFieldTouched }}
+                      valid={{ validateField }}
+                      isUpdateForm={isUpdateUserSettingsForm.password}
+                    />
+                    <div className="button-wrapper">
+                      <Button className="button" type="button" onClick={() => {}}>
+                        Сохранить пароль
+                      </Button>
+                      <Button
+                        className="button"
+                        type="button"
+                        onClick={() =>
+                          setIsUpdateUserSettingsForm({
+                            ...isUpdateUserSettingsForm,
+                            password: false,
+                          })
+                        }
+                      >
+                        Отмена
+                      </Button>
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </Form>
