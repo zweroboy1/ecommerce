@@ -16,9 +16,10 @@ import {
   RegisterUser,
   TokenResponse,
   ProductAllData,
+  ProductApiResponse,
 } from '../types';
 
-import { PRODUCTS_ON_PAGE } from '../constants';
+import { PRODUCTS_ON_PAGE, MAX_PRICE_FILTER } from '../constants';
 import { getCategoryCtIds } from '../utils/getCategoryCtIds';
 
 const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
@@ -161,7 +162,6 @@ async function createCustomer(
       body: JSON.stringify(userRegisterData),
     });
     const responseData = await response.json();
-    // console.log(responseData);
     if (responseData.message) {
       throw new Error(responseData.message);
     }
@@ -271,24 +271,46 @@ export async function registerUser(userRegisterData: RegisterUser): Promise<Cust
 
 export async function getProducts(
   category: string = '',
-  page: number = 1
-): Promise<ProductAllData[]> {
+  page: number = 0,
+  sort: string = 'price asc',
+  brands: string[] = [],
+  colors: string[] = [],
+  minPrice: number = 0,
+  maxPrice: number = MAX_PRICE_FILTER,
+  text: string = ''
+): Promise<ProductApiResponse> {
   const ctIds = getCategoryCtIds(category);
-  const cateroriesWhere =
-    ctIds.length === 0
-      ? ''
-      : `masterData(current(categories(${ctIds.map((id) => `id="${id}"`).join(' or ')})))`;
-
-  const queryString = createQueryString({
-    where: cateroriesWhere,
-    // это по имени sort: 'masterData.current.name.en-US asc',
+  const categoriesFilter = ctIds.map((cat) => `"${cat}"`).join(',');
+  let queryString = createQueryString({
+    filter: categoriesFilter ? `categories.id:${categoriesFilter}` : '',
     limit: PRODUCTS_ON_PAGE,
-    offset: (page - 1) * PRODUCTS_ON_PAGE,
+    offset: page * PRODUCTS_ON_PAGE,
+    sort,
   });
 
-  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/products?${queryString}`;
+  if (brands.length) {
+    queryString += `&filter=variants.attributes.brand.key%3A${brands
+      .map((brand) => `%22${brand}%22`)
+      .join('%2C')}`;
+  }
 
-  // const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/product-projections?${queryString}`;
+  if (colors.length) {
+    queryString += `&filter=variants.attributes.color.key%3A${colors
+      .map((color) => `%22${color}%22`)
+      .join('%2C')}`;
+  }
+
+  if (minPrice !== 0 || maxPrice !== MAX_PRICE_FILTER) {
+    queryString += `&filter=variants.price.centAmount%3Arange%20(${minPrice * 100}%20to%20${
+      maxPrice * 100
+    })`;
+  }
+
+  if (text) {
+    queryString += `&text.ru=${encodeURIComponent(text)}`;
+  }
+
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/product-projections/search?${queryString}`;
 
   const bearerToken = await fetchBearerToken();
   if (bearerToken === null) {
@@ -303,12 +325,17 @@ export async function getProducts(
         Authorization: `Bearer ${bearerToken}`,
       },
     });
-    const responseData = await response.json();
 
     if (!response.ok) {
       throw new Error('Oooops!!! We have a problem!!!');
     }
-    return responseData.results[0] === undefined ? [] : responseData.results;
+
+    const responseData = await response.json();
+    // console.log(responseData.total);
+    // console.log(responseData.results);
+    return responseData.results[0] === undefined
+      ? { total: 0, results: [] }
+      : { total: responseData.total, results: responseData.results };
   } catch (error) {
     throw new Error('Oooops!!! We have a problem2!!!');
   }
@@ -316,9 +343,10 @@ export async function getProducts(
 
 export async function getProduct(productId: string): Promise<ProductAllData | null> {
   const queryString = createQueryString({
-    where: `masterData(current(slug(ru="${productId}")))`,
+    filter: `slug.ru:"${productId}"`,
   });
-  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/products?${queryString}`;
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/product-projections/search?${queryString}`;
+
   const bearerToken = await fetchBearerToken();
   if (bearerToken === null) {
     throw new Error(CT_ERROR);
