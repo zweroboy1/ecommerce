@@ -8,7 +8,7 @@ const Account = () => {
     <div className="tygh">
       <Top />
       <Header />
-      <main className="main">
+      <main className="main my-profile">
         <h1>Мой профиль</h1>
         <UpdatingForm />
       </main>
