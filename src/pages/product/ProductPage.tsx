@@ -62,7 +62,7 @@ const ProductPage = () => {
               <bdi>{product.name}</bdi>
             </span>
           </div>
-          <div className="row catalog product">
+          <div className="row product">
             <div className="left product__images">
               <ProductImages productImages={product.images} />
             </div>
