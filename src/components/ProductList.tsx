@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Product } from '../types';
 import { formatPrice } from '../utils/formatPrice';
 
+
 function ProductList({ products }: { products: Product[] }) {
   const [isHoveredMap, setIsHoveredMap] = useState<{ [key: string]: boolean }>({});
   const [expandedDescription, setExpandedDescription] = useState<string | null>(null);

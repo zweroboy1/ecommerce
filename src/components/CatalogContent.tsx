@@ -141,6 +141,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
             />
           )}
                   </div>
+
       </div>
     </>
   );
