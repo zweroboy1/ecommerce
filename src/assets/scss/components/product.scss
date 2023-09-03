@@ -1,27 +1,46 @@
 .product {
   &__images {
-    min-width: calc(100% - 550px);
-    width: calc(100% - 550px);
+    max-width: calc(100% - 550px);
+    min-width: 50%;
     height: fit-content;
-    position: sticky;
+    position: relative;
     top: 20px;
     bottom: 20px;
-    max-width: 100%;
     padding-right: 40px;
     flex: auto;
-    max-width: none;
     text-align: left;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    @include media('l') {
+      min-width: 40%;
+      padding-right: 30px;
+    }
+
+    @include media('m') {
+      min-width: 100%;
+      max-width: 100%;
+      top: 0;
+      bottom: 0;
+      padding-right: 0;
+    }
+
   }
 
   &__details {
-    min-width: 550px;
-    width: 550px;
-    flex: 1 550px;
+    flex: 1;
     height: fit-content;
-    position: sticky;
+    position: relative;
     top: 20px;
     bottom: 20px;
     margin: 0 0 20px 0;
+
+    @include media('m') {
+      margin-bottom: 40px;
+      padding: 0 10px;
+    }
 
     h1 {
       text-align: left;
@@ -116,6 +135,10 @@
   &__qnt-cart {
     @include flex($justify: flex-start, $align: flex-end);
     gap: 20px;
+
+    @include media('xs') {
+      flex-wrap: wrap;
+    }
   }
 
   &__quantity {

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ProductDetailsProps } from '../../types';
+import { formatPrice } from '../../utils/formatPrice';
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ newPrice }) => {
   const [quantity, setQuantity] = useState(1);
@@ -8,12 +9,23 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ newPrice }) => {
     setQuantity(Number(event.target.value));
   };
 
-  const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
   };
 
-  const oldPrice = 1489;
-  const savings = oldPrice - newPrice;
+  const handleIncrease = () => {
+    setQuantity(quantity + 1);
+  };
+
+  const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault(); // логика добавления товара в корзину
+  };
+
+  const randomDiscount = Math.floor(Math.random() * 5) + 1;
+  const oldPrice = Math.round(newPrice + (newPrice * randomDiscount) / 100);
+  const savings = Math.round(oldPrice - newPrice);
 
   return (
     <form action="" method="post" name="product_form" className="product__form">
@@ -36,8 +48,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ newPrice }) => {
         <div className="product__price-actual">
           <span className="product__price-content">
             <bdi>
-              <span className="product__num">$</span>
-              <span className="product__discount">{newPrice}</span>
+              <span className="product__num">UAH </span>
+              <span className="product__discount">{formatPrice(newPrice)}</span>
             </bdi>
           </span>
         </div>
@@ -45,8 +57,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ newPrice }) => {
         <div className="product__price-old">
           <span className="product__price-content">
             <bdi>
-              <span className="product__num">$</span>
-              <span className="product__original-price">{oldPrice}</span>
+              <span className="product__num">UAH </span>
+              <span className="product__original-price">{formatPrice(oldPrice)}</span>
             </bdi>
           </span>
         </div>
@@ -56,8 +68,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ newPrice }) => {
         <span className="product__profit-content">
           Экономия:
           <bdi>
-            <span className="product__num">$</span>
-            <span className="product__discount">{savings}</span>
+            <span className="product__num">UAH </span>
+            <span className="product__discount">{formatPrice(savings)}</span>
           </bdi>
         </span>
       </div>
@@ -69,10 +81,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ newPrice }) => {
             <input type="hidden" name="appearance[capture_options_vs_qty]" value="" />
             <div className="product__changer">
               <div className="product__changer1">
-                <button
-                  className="product__decrease"
-                  onClick={() => setQuantity(Math.max(quantity - 1, 1))}
-                >
+                <button className="product__decrease" onClick={handleDecrease}>
                   −
                 </button>
                 <input
@@ -81,7 +90,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ newPrice }) => {
                   value={quantity}
                   onChange={handleQuantityChange}
                 />
-                <button className="product__decrease" onClick={() => setQuantity(quantity + 1)}>
+                <button className="product__decrease" onClick={handleIncrease}>
                   +
                 </button>
               </div>

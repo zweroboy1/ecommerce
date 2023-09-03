@@ -87,6 +87,8 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
             initialPage={initialPage} // Текущая страница
             onPageChange={(selectedPage) => setCurrentPage(selectedPage.selected + 1)} // Обработчик изменения страницы
             containerClassName="pagination" // Класс контейнера пагинации (добавьте стили)
+            previousLabel="Назад"
+            nextLabel="Вперед"
             activeClassName="active" // Класс для активной страницы (добавьте стили)
             disabledClassName="disabled" // Класс для неактивной страницы (добавьте стили)
           />
