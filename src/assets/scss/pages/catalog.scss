@@ -5,6 +5,10 @@
     max-width: 1400px;
     min-width: 280px;
     margin: 0 auto;
+
+    @include media('xs') {
+      padding: 0 5px;
+    }
   }
 
   .catalog {
@@ -30,7 +34,7 @@
     }
 
     .right {
-      @include flexColumn();
+      @include flexColumn($align: start);
     }
   }
 }

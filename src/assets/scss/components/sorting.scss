@@ -10,4 +10,16 @@
   &__select {
     margin-left: 10px;
   }
+
+  label {
+    margin-right: 10px;
+
+    @include media('s') {
+      font-size: 13px;
+    }
+
+    @include media('xxs') {
+      font-size: 11px;
+    }
+  }
 }

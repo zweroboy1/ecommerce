@@ -1,13 +1,47 @@
+.catalog .left {
+  width: 25%;
+  min-width: 250px;
+  margin: 0 30px 20px 0;
+
+  @include media('l') {
+    min-width: 200px;
+    margin-right: 20px;
+  }
+
+  @include media('s') {
+    min-width: 150px;
+    margin-right: 10px;
+  }
+
+  @include media('xs') {
+    display: none;
+  }
+}
+
 .goods {
-  @include flex($justify: stretch, $align: stretch, $wrap: wrap);
+  display: grid;
+  grid-auto-flow: row dense;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   width: 100%;
   gap: 20px;
+
+  @include media('xxl') {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include media('l') {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include media('s') {
+    @include flex($justify: stretch, $align: stretch, $wrap: wrap);
+  }
 
   &__card {
     display: flex;
     flex-direction: column;
     position: relative;
-    width: calc(33% - 20px);
+    // width: calc(33% - 20px);
     padding: 15px 15px 20px;
     background: #fff;
     margin: 0;
@@ -47,7 +81,7 @@
     }
 
     &:hover {
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
   }
 
@@ -78,25 +112,22 @@
   }
 
   &__title {
+    display: flex;
+    height: 40px;
     color: #000;
     font-size: 14px;
     line-height: 1.2;
     margin-bottom: 5px;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    display: flex;
-    display: -ms-flexbox;
-    display: -webkit-box;
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word;
     max-height: 2.4em;
     word-wrap: break-word;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -o-hyphens: auto;
     hyphens: auto;
+
+    &:hover {
+      color: $links;
+    }
   }
 
   &__features {
@@ -133,16 +164,20 @@
     min-height: 36px;
   }
 
+  &__price-block {
+    @include flexColumn();
+  }
+
   &__discounted-price {
+    @include font($family: $font-family-title, $size: 18px, $spacing: -0.025em);
     display: inline-block;
     padding-right: 7px;
     max-width: 100%;
-    line-height: 1;
-    font-size: 13px;
-    font-size: max(14px, 18px);
     line-height: normal;
-    font-weight: bold;
-    letter-spacing: -0.025em;
+
+    @include media('xl') {
+      font-size: 16px;
+    }
   }
 
   &__old-price {
@@ -168,5 +203,17 @@
   &__control-icon {
     top: 0;
     background: url(/src/assets/svg/cart-large.svg) no-repeat center center/cover;
+  }
+
+  &__description {
+    margin-top: 20px;
+    @include flexColumn();
+    text-align: left;
+  }
+
+  &__expand-description {
+    @include flex();
+    margin-top: 10px;
+    background-color: lighten($button-second, 15%);
   }
 }
