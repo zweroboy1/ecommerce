@@ -53,7 +53,7 @@ const UpdatingField = observer(
           {isUpdateForm ? (
             <div className="input-wrapper">
               <input {...field} {...props} id={field.name} onChange={handleChange} />
-              {!field.name.includes('Address') && (
+              {!field.name.includes('Address') && !field.name.includes('password') && (
                 <Button
                   className="save-icon"
                   onClick={() => {
@@ -64,7 +64,7 @@ const UpdatingField = observer(
                   save
                 </Button>
               )}
-              {!field.name.includes('Address') && (
+              {!field.name.includes('Address') && !field.name.includes('password') && (
                 <Button
                   className="cancel-icon"
                   onClick={() => {
@@ -84,7 +84,7 @@ const UpdatingField = observer(
           ) : (
             <div className="text-wrapper">
               <span className="text">{value}</span>
-              {!field.name.includes('Address') && (
+              {!field.name.includes('Address') && !field.name.includes('password') && (
                 <Button
                   className="edit-icon"
                   onClick={() => {
