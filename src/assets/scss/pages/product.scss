@@ -1,0 +1,11 @@
+.main {
+  .row {
+    .product {
+      flex-direction: row;
+
+      @include media('m') {
+        @include flexColumn();
+      }
+    }
+  }
+}

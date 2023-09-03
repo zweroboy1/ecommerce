@@ -21,6 +21,7 @@
 @import 'components/filters';
 @import 'components/goods';
 @import 'components/loader';
+@import 'components/modal';
 @import 'components/navigation';
 @import 'components/notFound';
 @import 'components/pagination';
@@ -40,3 +41,4 @@
 //Стили, специфичные для каждой страницы
 @import 'pages/main';
 @import 'pages/catalog';
+@import 'pages/product';

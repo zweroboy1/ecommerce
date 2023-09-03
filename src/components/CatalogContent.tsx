@@ -134,11 +134,13 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
               initialPage={currentPage}
               onPageChange={handlePageChange}
               containerClassName="pagination"
+              previousLabel="Назад"
+              nextLabel="Вперед"
               activeClassName="active"
               disabledClassName="disabled"
             />
           )}
-        </div>
+                  </div>
       </div>
     </>
   );

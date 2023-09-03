@@ -23,12 +23,12 @@
   align-items: $align;
 }
 
-@mixin font($family: $font-family, $size: $font-size-14, $height: 1) {
+@mixin font($family: $font-family, $size: $font-size-14, $height: 1, $spacing: normal) {
   font-family: $family;
   font-size: $size;
   font-weight: normal;
   line-height: $height;
-  letter-spacing: normal;
+  letter-spacing: $spacing;
   color: $text-color;
 }
 
@@ -42,7 +42,9 @@
 }
 
 @mixin media($media) {
-  @each $size, $resolution in $sizes {
+
+  @each $size,
+  $resolution in $sizes {
     @if $media ==$size {
       @media (max-width: $resolution) {
         @content;
