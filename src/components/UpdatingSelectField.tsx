@@ -72,7 +72,7 @@ const UpdatingSelectField = observer(
               )}
               {!field.name.includes('Address') && (
                 <Button
-                  className="save-icon"
+                  className="cancel-icon"
                   onClick={() => {
                     if (setIsUpdateFields) {
                       setIsUpdateFields(field.name, false);

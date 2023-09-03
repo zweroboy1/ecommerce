@@ -10,9 +10,22 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 999;
+
+  .carousel-status {
+    padding-right: 50px;
+
+    @include media('s') {
+      padding-right: 15px;
+    }
+  }
+
+  .thumbs-wrapper .thumbs {
+    @include flex();
+  }
 }
 
 .modal-content {
+  max-width: 80%;
   background-color: #fff;
   padding: 20px;
   border-radius: 5px;
