@@ -1,0 +1,148 @@
+.my-profile {
+  padding: 0 20px;
+
+  .button-wrapper {
+    @include flex($justify: space-evenly, $wrap: wrap);
+    padding: 20px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    gap: 10px;
+
+    @include media('xs') {
+      flex-direction: column;
+    }
+  }
+
+  .user-info {
+    text-align: left;
+
+    .button:not(.edit-icon, .save-icon) {
+      margin: 20px 20px 20px 0;
+    }
+  }
+
+  h2 {
+    @include font($family: $font-family-title, $size: $font-size-19);
+    padding: 30px 0;
+    text-align: left;
+  }
+
+  .field {
+    @include flex($justify: flex-start);
+    text-align: left;
+    margin: 10px 0;
+
+    >span:first-child {
+      min-width: 120px;
+    }
+
+    .text-wrapper,
+    .input-wrapper {
+      @include flex();
+      gap: 15px;
+    }
+
+    .text {
+      @include flex($justify: flex-start);
+      min-width: 150px;
+      padding: 10.75px 8px;
+      border-color: #d5d5d5;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid #eee;
+      font-style: normal;
+      font-weight: normal;
+      box-sizing: border-box;
+      margin: 0;
+
+      @include media('xxs') {
+        min-width: 120px;
+      }
+    }
+
+    input {
+      min-width: 150px;
+
+      @include media('xxs') {
+        min-width: 120px;
+      }
+    }
+  }
+
+  .edit-icon,
+  .save-icon,
+  .cancel-icon {
+    display: block;
+    position: relative;
+    height: 35px;
+    width: 35px;
+    min-width: 35px;
+    margin: 0;
+    left: 0;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+      filter: brightness(1.2);
+    }
+
+    span {
+      display: none;
+    }
+  }
+
+  .edit-icon {
+    background: url(/src/assets/svg/edit.svg) no-repeat center center/cover;
+  }
+
+  .save-icon {
+    background: url(/src/assets/svg/save.svg) no-repeat center center/cover;
+  }
+
+  .cancel-icon {
+    background: url(/src/assets/svg/cancel.svg) no-repeat center center/cover;
+  }
+
+  .address-row {
+    text-align: left;
+
+    h2 {
+      padding: 20px 0 0;
+    }
+
+    .address>span {
+      margin-top: 15px;
+      @include font($family: $font-family-title);
+    }
+  }
+
+  .address .button-wrapper {
+    justify-content: flex-start;
+  }
+
+  .personal-data {
+    margin-bottom: 25px;
+
+    .field span {
+      @include media('xxs') {
+        min-width: 60px;
+      }
+    }
+  }
+
+  @include media('s') {
+    button span {
+      font-size: 13px;
+    }
+  }
+
+  .button-wrapp {
+    margin-bottom: 25px;
+  }
+
+  form {
+    text-align: left;
+  }
+}

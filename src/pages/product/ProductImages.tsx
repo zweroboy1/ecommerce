@@ -6,15 +6,14 @@ import { ModalImage } from './ModalImage';
 
 const ProductImages: React.FC<ProductImagesProps> = ({ productImages }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Индекс выбранной картинки
 
-  const openModal = (image: string) => {
-    setSelectedImage(image);
+  const openModal = (index: number) => {
+    setSelectedImageIndex(index);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setSelectedImage('');
     setIsModalOpen(false);
   };
 
@@ -22,12 +21,18 @@ const ProductImages: React.FC<ProductImagesProps> = ({ productImages }) => {
     <div>
       <Carousel>
         {productImages.map((image, index) => (
-          <div key={index} className="product__image" onClick={() => openModal(image)}>
+          <div key={index} className="product__image" onClick={() => openModal(index)}>
             <img key={index} src={image} alt={`Product ${index}`} />
           </div>
         ))}
       </Carousel>
-      {isModalOpen && <ModalImage imageUrl={selectedImage} onClose={closeModal} />}
+      {isModalOpen && (
+        <ModalImage
+          images={productImages}
+          selectedImageIndex={selectedImageIndex}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 };
