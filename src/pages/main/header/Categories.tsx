@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import CatalogMenu from '../../../components/CatalogMenu';
+import { CatalogMenu } from '../../../components/CatalogMenu';
 import { CATEGORIES } from '../../../constants/categories';
 
 const Categories = () => {

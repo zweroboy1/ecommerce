@@ -151,7 +151,7 @@ type Breadcrumb = {
   name: string;
   url: string;
 };
-
+/*
 type ProductAllData = {
   id: string;
   masterData: {
@@ -176,6 +176,48 @@ type ProductAllData = {
       };
     };
   };
+}; */
+
+type ProductAllData = {
+  id: string;
+  name: {
+    ru: string;
+  };
+  description: {
+    ru: string;
+  };
+  categories: {
+    id: string;
+  }[];
+  slug: {
+    ru: string;
+  };
+  masterVariant: {
+    attributes: {
+      name: string;
+      value: {
+        key: string;
+      };
+    }[];
+    images: {
+      url: string;
+      dimensions: {
+        w: number;
+        h: number;
+      };
+    }[];
+    prices: {
+      value: {
+        centAmount: number;
+      };
+      country?: string;
+    }[];
+  };
+};
+
+type ProductApiResponse = {
+  total: number;
+  results: ProductAllData[];
 };
 
 type Product = {
@@ -187,7 +229,7 @@ type Product = {
   images: string[];
 };
 
-type FilterOption = string | number;
+type FilterOption = string;
 
 type FilterData = {
   id: number;
@@ -197,8 +239,10 @@ type FilterData = {
   max?: number;
 };
 
+type AllFilters = { brand: string[]; color: string[]; priceMin: number; priceMax: number };
+
 type FiltersProps = {
-  onFilterChange: (filterId: number, values: FilterOption[]) => void;
+  onFilterChange: (allFilters: AllFilters) => void;
 };
 
 type ExpandedFilters = {
@@ -206,7 +250,7 @@ type ExpandedFilters = {
 };
 
 type SelectedFilters = {
-  [key: number]: FilterOption[];
+  [key: number]: string;
 };
 
 interface ProductImagesProps {
@@ -233,8 +277,10 @@ export type {
   Category,
   Breadcrumb,
   ProductAllData,
+  ProductApiResponse,
   FilterOption,
   FilterData,
+  AllFilters,
   FiltersProps,
   ExpandedFilters,
   SelectedFilters,
