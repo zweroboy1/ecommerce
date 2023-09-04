@@ -72,6 +72,7 @@ const UpdatingField = observer(
                       setIsUpdateFields(field.name, false);
                       setIsChangeFields?.(field.name, false);
                       if (initValue) setFieldValue?.(field.name, initValue);
+                      setValid?.(initValue || '');
                     } else if (isUpdate) {
                       setIsUpdate(false);
                     }
@@ -100,7 +101,7 @@ const UpdatingField = observer(
               )}
             </div>
           )}
-          {!field.name.includes('password') && meta.touched && meta.error ? (
+          {!field.name.includes('password') && isChangeField && meta.touched && meta.error ? (
             <div className="error-message">{meta.error}</div>
           ) : null}
           {field.name.includes('password') && isChangeField && meta.touched && meta.error ? (
