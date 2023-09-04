@@ -26,7 +26,7 @@ const UpdatingField = observer(
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       field.onChange(e);
-      if (initValue && initValue !== e.target.value && setIsChangeFields) {
+      if (typeof initValue === 'string' && initValue !== e.target.value && setIsChangeFields) {
         setIsChangeFields(field.name, true);
       } else if (setIsChangeFields) {
         setIsChangeFields(field.name, false);
@@ -100,7 +100,12 @@ const UpdatingField = observer(
               )}
             </div>
           )}
-          {meta.touched && meta.error ? <div className="error-message">{meta.error}</div> : null}
+          {!field.name.includes('password') && meta.touched && meta.error ? (
+            <div className="error-message">{meta.error}</div>
+          ) : null}
+          {field.name.includes('password') && isChangeField && meta.touched && meta.error ? (
+            <div className="error-message">{meta.error}</div>
+          ) : null}
         </div>
       </div>
     );

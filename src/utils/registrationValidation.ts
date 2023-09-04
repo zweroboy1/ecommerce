@@ -20,6 +20,7 @@ import {
   REQUIRED_FILL,
   CONTAIN_AT,
   CONTAIN_DOMAIN_NAME,
+  NOT_CONFIRM,
 } from '../constants/errorMessages';
 // eslint-disable-next-line
 export const emailRegex = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\.\-]+$/;
@@ -54,6 +55,19 @@ const passwordValidation = yup
   .test('no-leading-trailing-spaces', NOT_LEADING, (value) => {
     return !value || value.trim() === value;
   });
+
+const passwordConfirmValidation = yup
+  .string()
+  .required(REQUIRED_FILL)
+  .min(8, MIN_8_LENGTH)
+  .matches(/[a-z]/, ONE_LOWERCASE_LETTER)
+  .matches(/[A-Z]/, ONE_UPPERCASE_LETTER)
+  .matches(/[0-9]/, ONE_NUMBER)
+  .matches(/\W/, ONE_SPECIAL_CHARACTER)
+  .test('no-leading-trailing-spaces', NOT_LEADING, (value) => {
+    return !value || value.trim() === value;
+  })
+  .oneOf([yup.ref('passwordNew')], NOT_CONFIRM);
 
 const stringValidation = yup
   .string()
@@ -197,4 +211,6 @@ export {
   cityValidation,
   stringValidation,
   emailValidation,
+  passwordValidation,
+  passwordConfirmValidation,
 };

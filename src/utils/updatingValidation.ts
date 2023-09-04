@@ -11,6 +11,8 @@ import {
   cityValidation,
   dateOfBirthValidation,
   emailValidation,
+  passwordConfirmValidation,
+  passwordValidation,
   streetValidation,
   stringValidation,
 } from './registrationValidation';
@@ -85,6 +87,9 @@ const updatingValidationSchema = yup.object().shape({
   shippingAddresses: addressesArray,
   billingAddresses: addressesArray,
   addresses: addressesArray,
+  password: passwordValidation,
+  passwordNew: passwordValidation,
+  passwordConfirm: passwordConfirmValidation,
 });
 
 const updatingPersonalDataValidationSchema = yup.object().shape({
@@ -93,10 +98,17 @@ const updatingPersonalDataValidationSchema = yup.object().shape({
   dateOfBirth: dateOfBirthValidation,
 });
 
+const updatingPasswordValidationSchema = yup.object().shape({
+  password: passwordValidation,
+  passwordNew: passwordValidation,
+  passwordConfirm: passwordConfirmValidation,
+});
+
 const updatingAddressValidationSchema = addressValidation;
 
 export {
   updatingValidationSchema,
   updatingPersonalDataValidationSchema,
   updatingAddressValidationSchema,
+  updatingPasswordValidationSchema,
 };
