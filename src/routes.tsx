@@ -21,7 +21,6 @@ import {
   PROMOTIONS_ROUTE,
   CATALOG_ROUTE,
   PRODUCT_ROUTE,
-  PHONES_ROUTE,
 } from './constants/route';
 import { Auth } from './pages/Auth';
 import { Main } from './pages/Main';
@@ -44,7 +43,6 @@ import { About } from './pages/other/About';
 import { PromotionsAll } from './pages/other/PromotionsAll';
 import { Catalog } from './pages/Catalog';
 import { ProductPage } from './pages/product/ProductPage';
-import { Phones } from './pages/catalog/Phones';
 
 const commonRoutes = [
   {
@@ -126,10 +124,6 @@ const commonRoutes = [
   {
     path: NOTFOUND_ROUTE,
     Component: NotFound,
-  },
-  {
-    path: PHONES_ROUTE,
-    Component: Phones,
   },
 ];
 

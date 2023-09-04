@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import { PHONES_ROUTE } from '../../../constants/route';
 import banner1 from '../../../assets/img/banner1.png';
 import banner2 from '../../../assets/img/banner2.png';
 import banner3 from '../../../assets/img/banner3.png';
@@ -8,12 +7,12 @@ import banner5 from '../../../assets/img/banner5.png';
 import banner6 from '../../../assets/img/banner6.png';
 
 const bannersData = [
-  { img: banner1, title: 'Электроника', link: '' },
-  { img: banner2, title: 'Телефоны', link: PHONES_ROUTE },
-  { img: banner3, title: 'Видеоигры', link: '' },
-  { img: banner4, title: 'Фото и видео техника', link: '' },
-  { img: banner5, title: 'Спорт', link: '' },
-  { img: banner6, title: 'Телевизоры / Видео', link: '' },
+  { img: banner1, title: 'Ноутбуки', link: '/catalog/notebooks' },
+  { img: banner2, title: 'Телефоны', link: '/catalog/phones' },
+  { img: banner3, title: 'Пылесосы', link: '/catalog/home-appliances/vacuum-cleaners' },
+  { img: banner4, title: 'Аудио и видео техника', link: '/catalog/audio-video' },
+  { img: banner5, title: 'Бытовая техника', link: '/catalog/home-appliances' },
+  { img: banner6, title: 'Телевизоры', link: '/catalog/audio-video/televisions' },
 ];
 
 const BestCategories = () => {

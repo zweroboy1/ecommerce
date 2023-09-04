@@ -28,7 +28,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ newPrice }) => {
   const savings = Math.round(oldPrice - newPrice);
 
   return (
-    <form action="" method="post" name="product_form" className="product__form">
+    <div className="product__form">
       <div className="product__sku">
         <label className="product__sku-label">КОД:</label>
         <span className="product__sku-item">MQ0G3RX/A</span>
@@ -130,7 +130,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ newPrice }) => {
           </div>
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 
