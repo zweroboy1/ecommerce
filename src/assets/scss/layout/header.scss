@@ -142,7 +142,12 @@
       }
 
       .catalog-menu__category-list:first-child {
-        display: none;
+        padding: 4px 0px 0;
+
+        // display: none;
+        a {
+          font-size: 18px;
+        }
       }
     }
 
