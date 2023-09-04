@@ -6,9 +6,14 @@ import { Button } from './Button';
 import { Address } from '../types';
 import { UpdatingField } from './UpdatingField';
 import {
+  dateOfBirthValidationSchema,
+  firstNameValidationSchema,
+  lastNameValidationSchema,
+  newCityValidation,
+  newPostalCodeValidation,
+  newStreetNameValidation,
   updatingAddressValidationSchema,
   updatingPasswordValidationSchema,
-  updatingPersonalDataValidationSchema,
   updatingValidationSchema,
 } from '../utils/updatingValidation';
 import { UpdatingSelectField } from './UpdatingSelectField';
@@ -16,8 +21,8 @@ import { changePassword, updateUser } from '../services/commercetoolsApi';
 import { Context } from '../store/Context';
 import { prepareCustomerUpdating } from '../utils/prepareCustomerUpdating';
 import 'react-toastify/dist/ReactToastify.css';
-import { Input } from './Input';
-import { country } from '../constants/country';
+import { UpdatingInput } from './UpdatingInput';
+import { UpdatingSelectInput } from './UpdatingSelectInput';
 
 const UpdatingForm = observer(() => {
   const { user } = useContext(Context);
@@ -37,6 +42,8 @@ const UpdatingForm = observer(() => {
     newCountry: '',
     newPostalCode: '',
     newStreetName: '',
+    isShippingAddress: false,
+    isBillingAddress: false,
   };
 
   const [showedPage, setShowedPage] = useState('userInfo');
@@ -55,6 +62,31 @@ const UpdatingForm = observer(() => {
     lastName: true,
     dateOfBirth: true,
   });
+  const [isChangeNewAddressForm, setIsChangeNewAddressForm] = useState({
+    newCountry: false,
+    newCity: false,
+    newStreetName: false,
+    newPostalCode: false,
+  });
+  const [isValidNewAddressFields, setIsValidNewAddressFields] = useState({
+    newCountry: true,
+    newCity: true,
+    newStreetName: true,
+    newPostalCode: true,
+  });
+  const [isShippingAddress, setIsShippingAddress] = useState(initialValues.isShippingAddress);
+  const [isBillingAddress, setIsBillingAddress] = useState(initialValues.isBillingAddress);
+  const isChangeNewAddress =
+    isChangeNewAddressForm.newCountry &&
+    isChangeNewAddressForm.newCity &&
+    isChangeNewAddressForm.newStreetName &&
+    isChangeNewAddressForm.newPostalCode;
+  const isValidNewAddress =
+    isValidNewAddressFields.newCountry &&
+    isValidNewAddressFields.newCity &&
+    isValidNewAddressFields.newStreetName &&
+    isValidNewAddressFields.newPostalCode;
+
   const [isUpdateUserSettingsForm, setIsUpdateUserSettingsForm] = useState({
     email: false,
     password: false,
@@ -605,15 +637,7 @@ const UpdatingForm = observer(() => {
         onSubmit={() => {}}
         validationSchema={updatingValidationSchema}
       >
-        {({
-          values,
-          setFieldTouched,
-          validateField,
-          setFieldValue,
-          setValues,
-          touched,
-          errors,
-        }) => (
+        {({ values, setFieldTouched, validateField, setFieldValue, setValues }) => (
           <Form>
             {showedPage === 'userInfo' && (
               <div className="user-info">
@@ -628,11 +652,9 @@ const UpdatingForm = observer(() => {
                   valid={{ validateField }}
                   setValid={async (value) => {
                     try {
-                      await updatingPersonalDataValidationSchema.validate(
+                      await firstNameValidationSchema.validate(
                         {
                           firstName: value,
-                          lastName: values.lastName,
-                          dateOfBirth: values.dateOfBirth,
                         },
                         { abortEarly: false }
                       );
@@ -667,11 +689,9 @@ const UpdatingForm = observer(() => {
                   valid={{ validateField }}
                   setValid={async (value) => {
                     try {
-                      await updatingPersonalDataValidationSchema.validate(
+                      await lastNameValidationSchema.validate(
                         {
-                          firstName: values.firstName,
                           lastName: value,
-                          dateOfBirth: values.dateOfBirth,
                         },
                         { abortEarly: false }
                       );
@@ -705,10 +725,8 @@ const UpdatingForm = observer(() => {
                   valid={{ validateField }}
                   setValid={async (value) => {
                     try {
-                      await updatingPersonalDataValidationSchema.validate(
+                      await dateOfBirthValidationSchema.validate(
                         {
-                          firstName: values.firstName,
-                          lastName: values.lastName,
                           dateOfBirth: value,
                         },
                         { abortEarly: false }
@@ -813,59 +831,189 @@ const UpdatingForm = observer(() => {
                   <div className="address-row">
                     <h2>Новый адрес</h2>
 
-                    <Input
+                    <UpdatingInput
                       label="Город"
                       name="newCity"
                       placeholder="Введите город"
                       type="text"
                       touch={{ setFieldTouched }}
                       valid={{ validateField }}
+                      initValue={initialValues.newCity}
+                      setIsChangeFields={(name: string, value: boolean) => {
+                        setIsChangeNewAddressForm({ ...isChangeNewAddressForm, [name]: value });
+                      }}
+                      setValid={async (value) => {
+                        try {
+                          await newCityValidation.validate(
+                            {
+                              newCity: value,
+                            },
+                            { abortEarly: false }
+                          );
+                          setIsValidNewAddressFields({
+                            ...isValidNewAddressFields,
+                            newCity: true,
+                          });
+                        } catch (error) {
+                          setIsValidNewAddressFields({
+                            ...isValidNewAddressFields,
+                            newCity: false,
+                          });
+                        }
+                      }}
+                      isChangeField={isChangeNewAddressForm.newCity}
+                    />
+                    <UpdatingSelectInput
+                      label="Страна"
+                      name="newCountry"
+                      placeholder="Введите страну"
+                      type="text"
+                      touch={{ setFieldTouched }}
+                      valid={{ validateField }}
+                      refFieldName={'newPostalCode'}
+                      initValue={initialValues.newCountry}
+                      setIsChangeFields={(name: string, value: boolean) => {
+                        setIsChangeNewAddressForm({
+                          ...isChangeNewAddressForm,
+                          [name]: value,
+                        });
+                      }}
+                      setValid={async (value) => {
+                        if (!isChangeNewAddressForm.newPostalCode) {
+                          setIsValidNewAddressFields({
+                            ...isValidNewAddressFields,
+                            newCountry: true,
+                          });
+                          return;
+                        }
+                        try {
+                          await newPostalCodeValidation.validate(
+                            {
+                              newCountry: value,
+                              newPostalCode: values.newPostalCode,
+                            },
+                            { abortEarly: false }
+                          );
+                          setIsValidNewAddressFields({
+                            ...isValidNewAddressFields,
+                            newPostalCode: true,
+                            newCountry: true,
+                          });
+                        } catch (error) {
+                          setIsValidNewAddressFields({
+                            ...isValidNewAddressFields,
+                            newCountry: true,
+                            newPostalCode: false,
+                          });
+                        }
+                      }}
+                      isChangeField={isChangeNewAddressForm.newCountry}
                     />
 
-                    <label
-                      className={`label ${touched.newCountry && errors.newCountry ? 'error' : ''}`}
-                    >
-                      <span>Страна</span>
-                      <Field name="newCountry" as="select">
-                        {Object.keys(country).map((key, i) => (
-                          <option key={key} value={country[key]} disabled={i === 0}>
-                            {key}
-                          </option>
-                        ))}
-                      </Field>
-                      {touched.newCountry && errors.newCountry && (
-                        <div className="error-message">{errors.newCountry}</div>
-                      )}
-                    </label>
-
-                    <Input
+                    <UpdatingInput
                       label="Улица"
                       name="newStreetName"
                       placeholder="Введите улицу"
                       type="text"
                       touch={{ setFieldTouched }}
                       valid={{ validateField }}
+                      initValue={initialValues.newStreetName}
+                      setIsChangeFields={(name: string, value: boolean) => {
+                        setIsChangeNewAddressForm({ ...isChangeNewAddressForm, [name]: value });
+                      }}
+                      setValid={async (value) => {
+                        try {
+                          await newStreetNameValidation.validate(
+                            {
+                              newStreetName: value,
+                            },
+                            { abortEarly: false }
+                          );
+                          setIsValidNewAddressFields({
+                            ...isValidNewAddressFields,
+                            newStreetName: true,
+                          });
+                        } catch (error) {
+                          setIsValidNewAddressFields({
+                            ...isValidNewAddressFields,
+                            newStreetName: false,
+                          });
+                        }
+                      }}
+                      isChangeField={isChangeNewAddressForm.newStreetName}
                     />
 
-                    <Input
+                    <UpdatingInput
                       label="Индекс"
                       name="newPostalCode"
                       placeholder="Введите индекс"
                       type="text"
+                      initValue={initialValues.newPostalCode}
+                      setIsChangeFields={(name: string, value: boolean) => {
+                        setIsChangeNewAddressForm({ ...isChangeNewAddressForm, [name]: value });
+                      }}
+                      setValid={async (value) => {
+                        if (!isChangeNewAddressForm.newCountry) {
+                          setIsValidNewAddressFields({
+                            ...isValidNewAddressFields,
+                            newPostalCode: true,
+                          });
+                          return;
+                        }
+                        try {
+                          await newPostalCodeValidation.validate(
+                            {
+                              newCountry: values.newCountry,
+                              newPostalCode: value,
+                            },
+                            { abortEarly: false }
+                          );
+                          setIsValidNewAddressFields({
+                            ...isValidNewAddressFields,
+                            newPostalCode: true,
+                            newCountry: true,
+                          });
+                        } catch (error) {
+                          setIsValidNewAddressFields({
+                            ...isValidNewAddressFields,
+                            newPostalCode: false,
+                          });
+                        }
+                      }}
+                      isChangeField={isChangeNewAddressForm.newPostalCode}
                     />
 
                     <label className="label-check">
-                      <Field type="checkbox" name="isShippingAddress" />
+                      <Field
+                        type="checkbox"
+                        name="isShippingAddress"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          setFieldValue('isShippingAddress', e.target.checked, false);
+                          setIsShippingAddress(e.target.checked);
+                        }}
+                      />
                       <span>Сделать адресом доставки</span>
                     </label>
 
                     <label className="label-check">
-                      <Field type="checkbox" name="isBillingAddress" />
+                      <Field
+                        type="checkbox"
+                        name="isBillingAddress"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          setFieldValue('isBillingAddress', e.target.checked, false);
+                          setIsBillingAddress(e.target.checked);
+                        }}
+                      />
                       <span>Сделать адресом оплаты</span>
                     </label>
 
                     <div className="button-wrapper">
-                      <Button className="button" type="button" onClick={() => {}}>
+                      <Button
+                        className="button"
+                        type="button"
+                        onClick={() => {}}
+                        disabled={!isChangeNewAddress || !isValidNewAddress}
+                      >
                         Добавить адрес
                       </Button>
 
@@ -874,6 +1022,20 @@ const UpdatingForm = observer(() => {
                         type="button"
                         onClick={() => {
                           setIsAddedAddressForm(false);
+                          setIsChangeNewAddressForm({
+                            newCity: false,
+                            newCountry: false,
+                            newStreetName: false,
+                            newPostalCode: false,
+                          });
+                          setFieldValue('newCity', initialValues.newCity, false);
+                          setFieldValue('newCountry', initialValues.newCountry, false);
+                          setFieldValue('newStreetName', initialValues.newStreetName, false);
+                          setFieldValue('newPostalCode', initialValues.newPostalCode, false);
+                          setFieldValue('isShippingAddress', false, false);
+                          setFieldValue('isBillingAddress', false, false);
+                          if (isBillingAddress) setIsBillingAddress(false);
+                          if (isShippingAddress) setIsShippingAddress(false);
                         }}
                       >
                         Отмена
@@ -2112,7 +2274,7 @@ const UpdatingForm = observer(() => {
                         type="button"
                         onClick={() => {
                           setIsUpdateUserSettingsForm({
-                            ...isChangeUserSettingsForm,
+                            ...isUpdateUserSettingsForm,
                             password: false,
                             passwordNew: false,
                             passwordConfirm: false,
