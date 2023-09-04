@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { FieldArray, Form, Formik } from 'formik';
+import { Field, FieldArray, Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import { ToastContainer, toast } from 'react-toastify';
 import { Button } from './Button';
@@ -16,6 +16,8 @@ import { changePassword, updateUser } from '../services/commercetoolsApi';
 import { Context } from '../store/Context';
 import { prepareCustomerUpdating } from '../utils/prepareCustomerUpdating';
 import 'react-toastify/dist/ReactToastify.css';
+import { Input } from './Input';
+import { country } from '../constants/country';
 
 const UpdatingForm = observer(() => {
   const { user } = useContext(Context);
@@ -31,6 +33,10 @@ const UpdatingForm = observer(() => {
     password: '',
     passwordNew: '',
     passwordConfirm: '',
+    newCity: '',
+    newCountry: '',
+    newPostalCode: '',
+    newStreetName: '',
   };
 
   const [showedPage, setShowedPage] = useState('userInfo');
@@ -71,6 +77,8 @@ const UpdatingForm = observer(() => {
     passwordNew: false,
     passwordConfirm: false,
   });
+
+  const [isAddedAddressForm, setIsAddedAddressForm] = useState(false);
 
   const isChangePasswords =
     isChangeUserSettingsForm.password &&
@@ -597,7 +605,15 @@ const UpdatingForm = observer(() => {
         onSubmit={() => {}}
         validationSchema={updatingValidationSchema}
       >
-        {({ values, setFieldTouched, validateField, setFieldValue, setValues }) => (
+        {({
+          values,
+          setFieldTouched,
+          validateField,
+          setFieldValue,
+          setValues,
+          touched,
+          errors,
+        }) => (
           <Form>
             {showedPage === 'userInfo' && (
               <div className="user-info">
@@ -780,6 +796,91 @@ const UpdatingForm = observer(() => {
             )}
             {showedPage === 'address' && (
               <>
+                {!isAddedAddressForm && (
+                  <div className="button-wrapper">
+                    <Button
+                      className="button"
+                      type="button"
+                      onClick={() => {
+                        setIsAddedAddressForm(true);
+                      }}
+                    >
+                      Добавить новый адрес
+                    </Button>
+                  </div>
+                )}
+                {isAddedAddressForm && (
+                  <div className="address-row">
+                    <h2>Новый адрес</h2>
+
+                    <Input
+                      label="Город"
+                      name="newCity"
+                      placeholder="Введите город"
+                      type="text"
+                      touch={{ setFieldTouched }}
+                      valid={{ validateField }}
+                    />
+
+                    <label
+                      className={`label ${touched.newCountry && errors.newCountry ? 'error' : ''}`}
+                    >
+                      <span>Страна</span>
+                      <Field name="newCountry" as="select">
+                        {Object.keys(country).map((key, i) => (
+                          <option key={key} value={country[key]} disabled={i === 0}>
+                            {key}
+                          </option>
+                        ))}
+                      </Field>
+                      {touched.newCountry && errors.newCountry && (
+                        <div className="error-message">{errors.newCountry}</div>
+                      )}
+                    </label>
+
+                    <Input
+                      label="Улица"
+                      name="newStreetName"
+                      placeholder="Введите улицу"
+                      type="text"
+                      touch={{ setFieldTouched }}
+                      valid={{ validateField }}
+                    />
+
+                    <Input
+                      label="Индекс"
+                      name="newPostalCode"
+                      placeholder="Введите индекс"
+                      type="text"
+                    />
+
+                    <label className="label-check">
+                      <Field type="checkbox" name="isShippingAddress" />
+                      <span>Сделать адресом доставки</span>
+                    </label>
+
+                    <label className="label-check">
+                      <Field type="checkbox" name="isBillingAddress" />
+                      <span>Сделать адресом оплаты</span>
+                    </label>
+
+                    <div className="button-wrapper">
+                      <Button className="button" type="button" onClick={() => {}}>
+                        Добавить адрес
+                      </Button>
+
+                      <Button
+                        className="button"
+                        type="button"
+                        onClick={() => {
+                          setIsAddedAddressForm(false);
+                        }}
+                      >
+                        Отмена
+                      </Button>
+                    </div>
+                  </div>
+                )}
                 <div className="address-row">
                   <h2>Адреса доставки</h2>
                   <FieldArray
