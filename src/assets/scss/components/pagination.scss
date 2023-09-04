@@ -8,7 +8,7 @@
 
   li {
     background: none;
-    box-shadow: inset 0 0 0 2px #07c, 0 5px 15px 0 rgba(0, 119, 204, 0.2);
+    border: 1px solid #eee;
     color: #000;
     font-weight: bold;
     padding: 0 10px;
@@ -24,6 +24,10 @@
     text-transform: uppercase;
     cursor: pointer;
 
+    &.active {
+      box-shadow: inset 0 0 0 2px #07c, 0 5px 15px 0 rgba(0, 119, 204, 0.2);
+    }
+
     a {
       @include font();
     }
@@ -31,7 +35,6 @@
 
   .previous,
   .next {
-    color: #595959;
     padding: 0 15px;
     margin: 5px;
     min-width: $button-size-40;
@@ -46,12 +49,20 @@
     text-decoration: none;
     text-transform: uppercase;
     background-color: #fff;
-    color: $links;
 
-    &[disabled],
-    &[disabled]:hover {
-      background-color: #fff;
-      color: #595959;
+    a {
+      color: $links;
+    }
+
+    &.disabled,
+    &.disabled:hover {
+      background-color: #bababa;
+      background-color: #ccc;
+      cursor: not-allowed;
+
+      a {
+        color: #999;
+      }
     }
   }
 }
