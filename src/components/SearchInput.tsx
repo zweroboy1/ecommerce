@@ -22,7 +22,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
   };
 
   return (
-    <div>
+    <div className="search-directory">
       <input
         type="text"
         placeholder="Поиск..."

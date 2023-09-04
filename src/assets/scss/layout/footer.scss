@@ -3,7 +3,7 @@
 .footer {
   border-top: 1px solid #e1e1e1;
   flex-shrink: 0;
-      margin-top: 30px;
+  margin-top: 30px;
 
   .row {
     @include flex($justify: space-between, $align: start, $wrap: wrap);
