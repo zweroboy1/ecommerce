@@ -9,22 +9,22 @@ import promotion4 from '../../../assets/img/promotion4.png';
 const promotionsData = [
   {
     image: promotion1,
-    endDate: new Date('2023-08-30'),
+    endDate: new Date('2023-09-10'),
     description: 'Бесплатная доставка на заказ от 1000 грн.',
   },
   {
     image: promotion2,
-    endDate: new Date('2023-09-05'),
+    endDate: new Date('2023-09-15'),
     description: 'Гоночный картинг + двухлетняя лицензия на гонки K1',
   },
   {
     image: promotion3,
-    endDate: new Date('2023-09-10'),
+    endDate: new Date('2023-09-20'),
     description: 'Весь месяц черная пятница',
   },
   {
     image: promotion4,
-    endDate: new Date('2023-09-20'),
+    endDate: new Date('2023-09-30'),
     description: 'Купите фотоаппарат известного бренда со скидкой - 20%',
   },
 ];

@@ -54,6 +54,11 @@
             padding: 0;
             margin-right: 15px;
             position: relative;
+            transition: $transition;
+
+            &:hover {
+              transform: scale(1.05);
+            }
 
             .text-links__a {
               color: #595959;
