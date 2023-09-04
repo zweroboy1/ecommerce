@@ -68,7 +68,13 @@ const ProductPage = () => {
             </div>
             <div className="right product__details">
               <h1>{product.name}</h1>
-              <ProductDetails newPrice={product.price / 100} />
+              <ProductDetails
+                price={product.price}
+                discountedPrice={product.discountedPrice}
+                brand={product.brand}
+                color={product.color}
+                sku={product.sku}
+              />
               <ProductDescription description={product.description} />
             </div>
           </div>
