@@ -8,7 +8,17 @@ const Account = () => {
     <div className="tygh">
       <Top />
       <Header />
-      <main className="main my-profile">
+      <main className="main my-profile container">
+        <div className="breadcrumbs">
+          <a href="/" className="breadcrumbs__link">
+            <bdi>Главная</bdi>
+          </a>
+          <span className="breadcrumbs__slash">/</span>
+          <a href="/account" className="breadcrumbs__link">
+            <bdi>Мой профиль</bdi>
+          </a>
+          <span className="breadcrumbs__slash">/</span>
+        </div>
         <h1>Мой профиль</h1>
         <UpdatingForm />
       </main>

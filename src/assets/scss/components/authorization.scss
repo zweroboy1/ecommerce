@@ -18,6 +18,7 @@
   }
 
   &__container {
+
     .form-fields,
     .label {
       @include flexColumn($align: start);
@@ -123,40 +124,6 @@
     }
   }
 
-  .error-message,
-  .email__error,
-  .password__error {
-    position: absolute;
-    top: 70px;
-    color: $important;
-    font-size: $font-size-12;
-
-    @include media('xxs') {
-      font-size: 10px;
-    }
-  }
-
-  .error input,
-  .error select,
-  .error input:focus,
-  .error select:focus,
-  .error input:hover,
-  .error select:hover,
-  .input__error:focus,
-  .input__error:hover,
-  .input__error {
-    color: $important;
-    border-color: $important;
-    box-shadow: 0 0 0 2px rgb(244 67 54 / 8%);
-  }
-
-  .service__error {
-    @include font($family: $font-family-title, $size: $font-size-24);
-    color: $error;
-    text-align: center;
-    margin-top: 25px;
-  }
-
   .button {
     margin-top: 15px;
   }
@@ -165,4 +132,43 @@
     margin-top: 15px;
     @include font($family: $font-family-title, $size: $font-size-14);
   }
+
+  .error-message,
+  .email__error,
+  .password__error {
+    top: 70px;
+  }
+}
+
+.error-message,
+.email__error,
+.password__error {
+  position: absolute;
+  color: $important;
+  font-size: $font-size-12;
+
+  @include media('xxs') {
+    font-size: 10px;
+  }
+}
+
+.error input,
+.error select,
+.error input:focus,
+.error select:focus,
+.error input:hover,
+.error select:hover,
+.input__error:focus,
+.input__error:hover,
+.input__error {
+  color: $important;
+  border-color: $important;
+  box-shadow: 0 0 0 2px rgb(244 67 54 / 8%);
+}
+
+.service__error {
+  @include font($family: $font-family-title, $size: $font-size-24);
+  color: $error;
+  text-align: center;
+  margin-top: 25px;
 }

@@ -16,7 +16,7 @@
   .user-info {
     text-align: left;
 
-    .button:not(.edit-icon, .save-icon) {
+    .button:not(.edit-icon, .save-icon, .cancel-icon) {
       margin: 20px 20px 20px 0;
     }
   }
@@ -30,10 +30,18 @@
   .field {
     @include flex($justify: flex-start);
     text-align: left;
-    margin: 10px 0;
+    margin: 35px 0;
+
+    &-wrapper {
+      position: relative;
+    }
 
     >span:first-child {
       min-width: 120px;
+
+      @include media('xxs') {
+        min-width: 50px;
+      }
     }
 
     .text-wrapper,
@@ -44,7 +52,7 @@
 
     .text {
       @include flex($justify: flex-start);
-      min-width: 150px;
+      min-width: 250px;
       padding: 10.75px 8px;
       border-color: #d5d5d5;
       border-radius: 8px;
@@ -55,13 +63,22 @@
       box-sizing: border-box;
       margin: 0;
 
+      @include media('xs') {
+        min-width: 150px;
+      }
+
       @include media('xxs') {
         min-width: 120px;
       }
     }
 
-    input {
-      min-width: 150px;
+    input,
+    select {
+      min-width: 250px;
+
+      @include media('xs') {
+        min-width: 150px;
+      }
 
       @include media('xxs') {
         min-width: 120px;
@@ -82,11 +99,9 @@
     top: 0;
     right: 0;
     cursor: pointer;
-    transition: $transition;
-
-    &:hover {
-      filter: brightness(1.2);
-    }
+    // transition: $transition;
+    filter: hue-rotate(0deg);
+    transition: filter 0.3s ease;
 
     span {
       display: none;
@@ -103,23 +118,63 @@
 
   .cancel-icon {
     background: url(/src/assets/svg/cancel.svg) no-repeat center center/cover;
+    filter: invert(100%) hue-rotate(8deg) brightness(162%);
   }
 
-  .address-row {
-    text-align: left;
+  .edit-icon:hover,
+  .save-icon:hover {
+    // filter: hue-rotate(185deg) brightness(212%);
+    filter: invert(100%) hue-rotate(8deg) brightness(162%);
+  }
 
-    h2 {
-      padding: 20px 0 0;
+  .field.error .save-icon {
+    filter: hue-rotate(162deg);
+  }
+
+  .cancel-icon:hover {
+    filter: none;
+  }
+
+  .error-message {
+    margin-top: 3px;
+    max-width: 250px;
+
+    @include media('xs') {
+      max-width: 150px;
     }
 
-    .address>span {
-      margin-top: 15px;
-      @include font($family: $font-family-title);
+    @include media('xxs') {
+      max-width: 120px;
     }
   }
 
-  .address .button-wrapper {
-    justify-content: flex-start;
+  .address {
+    padding: 0 20px 20px 20px;
+
+    &.default {
+      background: #f6f6f6;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .button-wrapper {
+      justify-content: flex-start;
+    }
+
+    &-row {
+      text-align: left;
+
+      h2 {
+        padding: 20px 0 0;
+      }
+
+      .address>span {
+        margin-top: 15px;
+        @include font($family: $font-family-title);
+      }
+    }
   }
 
   .personal-data {
@@ -140,6 +195,10 @@
 
   .button-wrapp {
     margin-bottom: 25px;
+
+    button {
+      margin-right: 10px;
+    }
   }
 
   form {

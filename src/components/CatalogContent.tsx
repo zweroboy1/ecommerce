@@ -167,7 +167,11 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
           </div>
           <SearchInput onSearch={(searchText: string) => handleSearchChange(searchText)} />
           <Sorting onSortChange={handleSortChange} />
-          {products.length === 0 ? <p>Продуктов нет</p> : <ProductList products={products} />}
+          {products.length === 0 ? (
+            <p className="no-product">Нет продуктов, удовлетворяющих заданным условиям</p>
+          ) : (
+            <ProductList products={products} />
+          )}
           {totalPages > 1 && (
             <ReactPaginate
               pageCount={totalPages}
