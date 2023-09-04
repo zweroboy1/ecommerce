@@ -1,18 +1,13 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import {
-  PAYMENT_ROUTE,
-  PICKUP_POINTS_ROUTE,
-  RETURN_ROUTE,
-  CONTACTS_ROUTE,
-} from '../../../constants/route';
+import { PAYMENT_ROUTE, RETURN_ROUTE, CONTACTS_ROUTE } from '../../../constants/route';
 
 const TopLinks = () => {
   const quickLinks = [
     { text: 'Доставка и оплата', link: PAYMENT_ROUTE },
     { text: 'Возврат', link: RETURN_ROUTE },
-    { text: 'Пункты самовывоза', link: PICKUP_POINTS_ROUTE },
     { text: 'Контакты', link: CONTACTS_ROUTE },
+    { text: 'Каталог', link: '/catalog' },
   ];
 
   const [menuVisible, setMenuVisible] = useState(false);

@@ -17,7 +17,6 @@ const Account = () => {
           <a href="/account" className="breadcrumbs__link">
             <bdi>Мой профиль</bdi>
           </a>
-          <span className="breadcrumbs__slash">/</span>
         </div>
         <h1>Мой профиль</h1>
         <UpdatingForm />
