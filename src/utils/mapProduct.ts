@@ -7,13 +7,26 @@ const mapProduct = (product: ProductAllData): Product => {
       ? product.masterVariant.prices[0].value.centAmount
       : 1000;
 
+  const discountedPrice = product.masterVariant.prices[0].discounted
+    ? product.masterVariant.prices[0].discounted.value.centAmount
+    : false;
+
+  const brand =
+    product.masterVariant.attributes.find((attr) => attr.name === 'brand')?.value.key || '';
+  const color =
+    product.masterVariant.attributes.find((attr) => attr.name === 'color')?.value.key || '';
+  const sku = product.masterVariant.sku || '';
   return {
     id: product.id,
     name: product.name?.ru || '',
     description: product.description?.ru || '',
     slug: product.slug?.ru || '',
     price,
+    ...(discountedPrice ? { discountedPrice } : {}),
     images,
+    brand,
+    color,
+    sku,
   };
 };
 

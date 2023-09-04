@@ -69,7 +69,6 @@ const PriceRangeFilter: React.FC<{
         <div className="filters__price-slider">
           <div className="filters__price-inputs">
             <bdi>
-              <span className="filters__price-prefix">UAH</span>
               <input
                 type="number"
                 min={0}
@@ -77,10 +76,10 @@ const PriceRangeFilter: React.FC<{
                 value={minPrice}
                 onChange={handleMinInputChange}
               />
+              <span className="filters__price-prefix">₴</span>
             </bdi>
             <span>-</span>
             <bdi>
-              <span className="filters__price-suffix">UAH</span>
               <input
                 type="number"
                 min={0}
@@ -88,6 +87,7 @@ const PriceRangeFilter: React.FC<{
                 value={maxPrice}
                 onChange={handleMaxInputChange}
               />
+              <span className="filters__price-suffix">₴</span>
             </bdi>
           </div>
           <Slider
@@ -104,8 +104,8 @@ const PriceRangeFilter: React.FC<{
             }}
           />
           <div className="filters__price-labels">
-            <span>UAH {minPrice}</span>
-            <span>UAH {maxPrice}</span>
+            <span>{minPrice} ₴</span>
+            <span>{maxPrice} ₴</span>
           </div>
         </div>
         <div className="filters__reset-block">
