@@ -53,7 +53,7 @@ const SelectedFilters: React.FC<SelectedFiltersProps> = ({
           </div>
         </div>
       ) : null}
-      {(selectedFilters.length > 0 || (minPrice !== 0 && maxPrice !== MAX_PRICE_FILTER)) && (
+      {(selectedFilters.length > 0 || minPrice !== 0 || maxPrice !== MAX_PRICE_FILTER) && (
         <a className="filters__selected-reset reset" onClick={handleResetAll}>
           Сбросить все
           <i className="reset__icon"></i>
