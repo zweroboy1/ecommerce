@@ -97,7 +97,7 @@
       position: relative;
 
       &:after {
-        content: "";
+        content: '';
         position: absolute;
         top: 40%;
         left: 0;
@@ -180,7 +180,7 @@
     transition: $transition;
   }
 
-  &__amount[type=text] {
+  &__amount[type='text'] {
     width: 27px;
     color: #000;
     font-size: 14px;
