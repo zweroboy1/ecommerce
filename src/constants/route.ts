@@ -20,7 +20,6 @@ const ABOUT_ROUTE = '/about';
 const PROMOTIONS_ROUTE = '/promotions';
 const CATALOG_ROUTE = '/catalog';
 const PRODUCT_ROUTE = '/product';
-const PHONES_ROUTE = '/phones';
 
 export {
   MAIN_ROUTE,
@@ -45,5 +44,4 @@ export {
   PROMOTIONS_ROUTE,
   CATALOG_ROUTE,
   PRODUCT_ROUTE,
-  PHONES_ROUTE,
 };

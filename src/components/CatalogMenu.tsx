@@ -1,7 +1,12 @@
 import { NavLink } from 'react-router-dom';
 import { Category } from '../types';
 
-const CatalogMenu = ({ categories }: { categories: Category[] }) => {
+interface CatalogMenuProps {
+  categories: Category[];
+  closeMenu?: () => void;
+}
+
+const CatalogMenu = ({ categories, closeMenu }: CatalogMenuProps) => {
   const categoriesFirstLevel = categories
     .filter((category) => {
       const parentCategory = categories.find((c) => c.id === category.parentId);
@@ -29,7 +34,15 @@ const CatalogMenu = ({ categories }: { categories: Category[] }) => {
       {categories
         .filter((cat) => cat.parentId === null || !categoriesFirstLevel.includes(cat.parentId))
         .map((category) => (
-          <li key={category.id} className="catalog-menu__category-list">
+          <li
+            key={category.id}
+            className="catalog-menu__category-list"
+            onClick={() => {
+              if (closeMenu) {
+                closeMenu(); // Закрыть меню, если closeMenu определена
+              }
+            }}
+          >
             <NavLink className="catalog-menu__category" to={`/catalog/${category.url}`}>
               {category.ruName}
             </NavLink>
