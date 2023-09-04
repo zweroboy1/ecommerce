@@ -6,10 +6,9 @@ import { MAX_PRICE_FILTER } from '../constants';
 
 const PriceRangeFilter: React.FC<{
   onPriceChange: (minPrice: number, maxPrice: number) => void;
-}> = ({ onPriceChange }) => {
-  const [minPrice, setMinPrice] = useState<number>(0);
-  const [maxPrice, setMaxPrice] = useState<number>(MAX_PRICE_FILTER);
-
+  minPrice: number;
+  maxPrice: number;
+}> = ({ onPriceChange, minPrice, maxPrice }) => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [expanded, setExpanded] = useState(false);
   const filtersRef = useRef<HTMLDivElement | null>(null);
@@ -33,35 +32,30 @@ const PriceRangeFilter: React.FC<{
   }, []);
 
   const handleSliderChange = (values: number[]) => {
-    setMinPrice(values[0]);
-    setMaxPrice(values[1]);
-
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
     timeoutRef.current = setTimeout(() => {
       onPriceChange(values[0], values[1]);
       timeoutRef.current = null;
-    }, 300);
+    }, 100);
   };
 
   const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseInt(e.target.value, 10);
     if (!Number.isNaN(newValue)) {
-      setMinPrice(newValue);
+      onPriceChange(newValue, maxPrice);
     }
   };
 
   const handleMaxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseInt(e.target.value, 10);
     if (!Number.isNaN(newValue)) {
-      setMaxPrice(newValue);
+      onPriceChange(minPrice, newValue);
     }
   };
 
   const handleResetFilter = () => {
-    setMinPrice(0);
-    setMaxPrice(MAX_PRICE_FILTER);
     onPriceChange(0, MAX_PRICE_FILTER);
   };
 

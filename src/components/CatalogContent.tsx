@@ -62,6 +62,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
     setSelectedColors([]);
     setMinPrice(0);
     setMaxPrice(MAX_PRICE_FILTER);
+    // handlePriceChange(0, MAX_PRICE_FILTER);
   };
 
   useEffect(() => {
@@ -140,11 +141,17 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
                   handleColorChange(colors);
                 }}
               />
-              <PriceRangeFilter onPriceChange={(min, max) => handlePriceChange(min, max)} />
+              <PriceRangeFilter
+                onPriceChange={handlePriceChange}
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+              />
             </div>
 
             <SelectedFilters
               selectedFilters={[...selectedBrands, ...selectedColors]}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
               onOptionChange={(selectedOption) => {
                 if (selectedBrands.includes(selectedOption)) {
                   const updatedBrands = selectedBrands.filter((brand) => brand !== selectedOption);
@@ -152,14 +159,10 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
                 } else if (selectedColors.includes(selectedOption)) {
                   const updatedColors = selectedColors.filter((color) => color !== selectedOption);
                   setSelectedColors(updatedColors);
-                } else if (selectedOption === 'Цена') {
-                  handlePriceChange(0, MAX_PRICE_FILTER);
                 }
               }}
-              onResetSelectedFilters={handleResetFilters}
-              minPrice={minPrice}
-              maxPrice={maxPrice}
               onPriceChange={handlePriceChange}
+              onResetSelectedFilters={handleResetFilters}
             />
           </div>
           <SearchInput onSearch={(searchText: string) => handleSearchChange(searchText)} />
