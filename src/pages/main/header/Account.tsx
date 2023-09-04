@@ -5,7 +5,7 @@ const Account = () => {
   return (
     <div className="my-account">
       <div className="my-account__title">
-        <NavLink to={ACCOUNT_ROUTE} title="">
+        <NavLink to={ACCOUNT_ROUTE} title="Мой профиль" className={'my-account__link'}>
           <i className="my-account__icon header-icon"></i>
         </NavLink>
       </div>
