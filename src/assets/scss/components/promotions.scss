@@ -25,6 +25,7 @@
   &__scroller-list {
     @include flex($justify: flex-start);
     opacity: 1;
+    transition: $transition;
   }
 
   &__item-wrapper {
