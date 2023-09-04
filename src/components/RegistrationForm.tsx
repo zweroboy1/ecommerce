@@ -31,20 +31,20 @@ const RegistrationForm = observer(({ ...initialValues }: PropsWithoutRef<Registe
   ) => {
     try {
       await registerUser(values);
-      setSubmitting(false);
-      resetForm();
       setRegistrationInfo(SUCCESS_REGISTRATION_MEGGAGE);
       const credentials: Credentials = { email: values.email, password: values.password };
 
+      try {
+        const customerWithToken = await getUser(credentials);
+        user?.setIsAuth(true);
+        user?.setUser(customerWithToken);
+        history('/');
+      } catch (error) {
+        setRegistrationInfo(SOMETHING_WRONG);
+      }
       setTimeout(async () => {
-        try {
-          const customerWithToken = await getUser(credentials);
-          user?.setIsAuth(true);
-          user?.setUser(customerWithToken);
-          history('/');
-        } catch (error) {
-          setRegistrationInfo(SOMETHING_WRONG);
-        }
+        setSubmitting(false);
+        resetForm();
       }, 3000);
     } catch (error) {
       if (error instanceof Error && error.message === CT_EXISTING_CUSTOMER_ERROR) {
