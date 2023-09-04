@@ -7,6 +7,7 @@ import { Address } from '../types';
 import { UpdatingField } from './UpdatingField';
 import {
   updatingAddressValidationSchema,
+  updatingPasswordValidationSchema,
   updatingPersonalDataValidationSchema,
   updatingValidationSchema,
 } from '../utils/updatingValidation';
@@ -23,7 +24,14 @@ const UpdatingForm = observer(() => {
     user!.user!.token.access_token
   );
 
-  const initialValues = { ...customerUpdating, bearerToken: user!.user!.token.access_token };
+  const initialValues = {
+    ...customerUpdating,
+    bearerToken: user!.user!.token.access_token,
+    password: '',
+    passwordNew: '',
+    passwordConfirm: '',
+  };
+
   const [showedPage, setShowedPage] = useState('userInfo');
   const [isUpdatePersonalDataForm, setIsUpdatePersonalDataForm] = useState({
     firstName: false,
@@ -43,6 +51,13 @@ const UpdatingForm = observer(() => {
   const [isUpdateUserSettingsForm, setIsUpdateUserSettingsForm] = useState({
     email: false,
     password: false,
+    passwordNew: false,
+    passwordConfirm: false,
+  });
+  const [isValidPasswordFields, setIsValidPasswordFields] = useState({
+    password: true,
+    passwordNew: true,
+    passwordConfirm: true,
   });
 
   const setIsUpdateFieldsOfUserSettingsForm = (name: string, value: boolean) => {
@@ -52,7 +67,19 @@ const UpdatingForm = observer(() => {
   const [isChangeUserSettingsForm, setIsChangeUserSettingsForm] = useState({
     email: false,
     password: false,
+    passwordNew: false,
+    passwordConfirm: false,
   });
+
+  const isChangePasswords =
+    isChangeUserSettingsForm.password &&
+    isChangeUserSettingsForm.passwordNew &&
+    isChangeUserSettingsForm.passwordConfirm;
+
+  const isValidPasswords =
+    isValidPasswordFields.password &&
+    isValidPasswordFields.passwordNew &&
+    isValidPasswordFields.passwordConfirm;
 
   const isValidPersonalData =
     isValidPersonalDataFields.firstName &&
@@ -1804,6 +1831,8 @@ const UpdatingForm = observer(() => {
                         setIsUpdateUserSettingsForm({
                           ...isUpdateUserSettingsForm,
                           password: true,
+                          passwordNew: true,
+                          passwordConfirm: true,
                         });
                       }}
                     >
@@ -1821,7 +1850,34 @@ const UpdatingForm = observer(() => {
                       type="password"
                       touch={{ setFieldTouched }}
                       valid={{ validateField }}
+                      setValid={async (value) => {
+                        try {
+                          await updatingPasswordValidationSchema.validate(
+                            {
+                              password: value,
+                              passwordNew: values.passwordNew,
+                              passwordConfirm: values.passwordConfirm,
+                            },
+                            { abortEarly: false }
+                          );
+                          setIsValidPasswordFields({
+                            ...isValidPasswordFields,
+                            password: true,
+                            passwordNew: true,
+                            passwordConfirm: true,
+                          });
+                        } catch (error) {
+                          setIsValidPasswordFields({
+                            ...isValidPasswordFields,
+                            password: false,
+                          });
+                        }
+                      }}
                       isUpdateForm={isUpdateUserSettingsForm.password}
+                      initValue={initialValues.password}
+                      setIsChangeFields={setIsChangeFieldsOfUserSettingsForm}
+                      setFieldValue={setFieldValue}
+                      isChangeField={isChangeUserSettingsForm.password}
                     />
                     <UpdatingField
                       label="Введите новый пароль"
@@ -1830,30 +1886,105 @@ const UpdatingForm = observer(() => {
                       type="password"
                       touch={{ setFieldTouched }}
                       valid={{ validateField }}
-                      isUpdateForm={isUpdateUserSettingsForm.password}
+                      setValid={async (value) => {
+                        try {
+                          await updatingPasswordValidationSchema.validate(
+                            {
+                              password: values.password,
+                              passwordNew: value,
+                              passwordConfirm: values.passwordConfirm,
+                            },
+                            { abortEarly: false }
+                          );
+                          setIsValidPasswordFields({
+                            ...isValidPasswordFields,
+                            password: true,
+                            passwordNew: true,
+                            passwordConfirm: true,
+                          });
+                        } catch (error) {
+                          setIsValidPasswordFields({
+                            ...isValidPasswordFields,
+                            passwordNew: false,
+                          });
+                        }
+                      }}
+                      isUpdateForm={isUpdateUserSettingsForm.passwordNew}
+                      initValue={initialValues.passwordNew}
+                      setIsChangeFields={setIsChangeFieldsOfUserSettingsForm}
+                      setFieldValue={setFieldValue}
+                      isChangeField={isChangeUserSettingsForm.passwordNew}
                     />
                     <UpdatingField
                       label="Подтвердите новый пароль"
-                      name="passwordNewRepeat"
+                      name="passwordConfirm"
                       placeholder="Подтвердите новый пароль"
                       type="password"
                       touch={{ setFieldTouched }}
                       valid={{ validateField }}
-                      isUpdateForm={isUpdateUserSettingsForm.password}
+                      setValid={async (value) => {
+                        try {
+                          await updatingPasswordValidationSchema.validate(
+                            {
+                              password: values.password,
+                              passwordNew: values.passwordNew,
+                              passwordConfirm: value,
+                            },
+                            { abortEarly: false }
+                          );
+                          setIsValidPasswordFields({
+                            ...isValidPasswordFields,
+                            password: true,
+                            passwordNew: true,
+                            passwordConfirm: true,
+                          });
+                        } catch (error) {
+                          setIsValidPasswordFields({
+                            ...isValidPasswordFields,
+                            passwordConfirm: false,
+                          });
+                        }
+                      }}
+                      isUpdateForm={isUpdateUserSettingsForm.passwordConfirm}
+                      initValue={initialValues.passwordConfirm}
+                      setIsChangeFields={setIsChangeFieldsOfUserSettingsForm}
+                      setFieldValue={setFieldValue}
+                      isChangeField={isChangeUserSettingsForm.passwordConfirm}
                     />
                     <div className="button-wrapper">
-                      <Button className="button" type="button" onClick={() => {}}>
+                      <Button
+                        className="button"
+                        type="button"
+                        onClick={() => {}}
+                        disabled={!isValidPasswords || !isChangePasswords}
+                      >
                         Сохранить пароль
                       </Button>
                       <Button
                         className="button"
                         type="button"
-                        onClick={() =>
+                        onClick={() => {
                           setIsUpdateUserSettingsForm({
-                            ...isUpdateUserSettingsForm,
+                            ...isChangeUserSettingsForm,
                             password: false,
-                          })
-                        }
+                            passwordNew: false,
+                            passwordConfirm: false,
+                          });
+                          setIsChangeUserSettingsForm({
+                            ...isChangeUserSettingsForm,
+                            password: false,
+                            passwordNew: false,
+                            passwordConfirm: false,
+                          });
+                          setIsValidPasswordFields({
+                            password: true,
+                            passwordNew: true,
+                            passwordConfirm: true,
+                          });
+                          setFieldValue('password', initialValues.password, false);
+                          setFieldValue('passwordNew', initialValues.passwordNew, false);
+                          setFieldValue('passwordConfirm', initialValues.passwordConfirm, false);
+                        }}
                       >
                         Отмена
                       </Button>

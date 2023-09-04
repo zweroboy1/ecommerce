@@ -24,6 +24,7 @@ const USER_ALREADY_EXISTS = 'Пользователь с таким адресо
 const SOMETHING_WRONG = 'Что-то пошло не так. Попробуйте зайти позже.';
 const SUCCESS_REGISTRATION_MEGGAGE = 'Поздравляем! Вы успешно зарегистрировались!';
 const NO_CORRECT_POST_CODE = 'Некорректный почтовый индекс для выбранной страны: ';
+const NOT_CONFIRM = 'Пароль не совпадает с полем "Введите новый пароль"';
 
 export {
   REQUIRED_FILL,
@@ -50,4 +51,5 @@ export {
   MIN_7_LENGTH,
   MIN_4_LENGTH,
   MIN_6_LENGTH,
+  NOT_CONFIRM,
 };

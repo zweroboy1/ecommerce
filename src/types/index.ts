@@ -112,6 +112,8 @@ type CustomerUpdating = {
   version: number;
   email: string;
   password?: string;
+  passwordNew?: string;
+  passwordConfirm?: string;
   firstName: string;
   lastName: string;
   dateOfBirth: string;

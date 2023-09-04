@@ -73,7 +73,7 @@
   height: 25px;
   right: 10px;
   top: 10px;
-  opacity: .75;
+  opacity: 0.75;
   color: #595959;
   cursor: pointer;
   transition: $transition;
@@ -117,7 +117,7 @@
   }
 
   &__icon {
-    content: "";
+    content: '';
     position: absolute;
     width: 15px;
     height: 15px;
