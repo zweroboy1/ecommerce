@@ -140,6 +140,11 @@
 
 .my-account__icon {
   background: url(/src/assets/svg/profile.svg) no-repeat center center / cover;
+
+  &:hover {
+    filter: invert(100%) hue-rotate(8deg) brightness(162%);
+
+  }
 }
 
 .cart__icon {
