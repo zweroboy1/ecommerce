@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import { ProductDetailsProps } from '../../types';
 import { formatPrice } from '../../utils/formatPrice';
+import { COLORS } from '../../constants';
 
-const ProductDetails: React.FC<ProductDetailsProps> = ({ newPrice }) => {
+const ProductDetails: React.FC<ProductDetailsProps> = ({
+  price,
+  discountedPrice,
+  brand,
+  color,
+  sku,
+}) => {
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,56 +30,60 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ newPrice }) => {
     event.preventDefault(); // логика добавления товара в корзину
   };
 
-  const randomDiscount = Math.floor(Math.random() * 5) + 1;
-  const oldPrice = Math.round(newPrice + (newPrice * randomDiscount) / 100);
-  const savings = Math.round(oldPrice - newPrice);
-
+  const savings = discountedPrice ? (price - discountedPrice) / 100 : 0;
   return (
     <div className="product__form">
       <div className="product__sku">
         <label className="product__sku-label">КОД:</label>
-        <span className="product__sku-item">MQ0G3RX/A</span>
+        <span className="product__sku-item">{sku}</span>
       </div>
 
       <div className="product__brand">
         <label className="product__brand-label">Бренд:</label>
-        <span className="product__brand-item">Apple</span>
+        <span className="product__brand-item">{brand}</span>
       </div>
 
       <div className="product__feature">
         <label className="product__feature-label">Цвет:</label>
-        <span className="product__feature-item">Черный</span>
+        <span className="product__feature-item">{COLORS[color]}</span>
       </div>
 
       <div className="product__price">
         <div className="product__price-actual">
           <span className="product__price-content">
             <bdi>
-              <span className="product__num">UAH </span>
-              <span className="product__discount">{formatPrice(newPrice)}</span>
+              {discountedPrice ? (
+                <span className="product__discount">{formatPrice(discountedPrice / 100)}</span>
+              ) : (
+                <span className="product__original-price">{formatPrice(price / 100)}</span>
+              )}
+              <span className="product__num">₴</span>
             </bdi>
           </span>
         </div>
+        {discountedPrice && (
+          <div className="product__price-old">
+            <span className="product__price-content">
+              <bdi>
+                <span className="product__original-price">{formatPrice(price / 100)}</span>
+                <span className="product__num">₴</span>
+              </bdi>
+            </span>
+          </div>
+        )}
+      </div>
 
-        <div className="product__price-old">
-          <span className="product__price-content">
+      {discountedPrice && (
+        <div className="product__profit">
+          <span className="product__profit-content">
+            Экономия:
             <bdi>
-              <span className="product__num">UAH </span>
-              <span className="product__original-price">{formatPrice(oldPrice)}</span>
+              <span className="product__discount">{formatPrice(savings)}</span>
+              <span className="product__num">₴</span>
             </bdi>
           </span>
         </div>
-      </div>
-
-      <div className="product__profit">
-        <span className="product__profit-content">
-          Экономия:
-          <bdi>
-            <span className="product__num">UAH </span>
-            <span className="product__discount">{formatPrice(savings)}</span>
-          </bdi>
-        </span>
-      </div>
+      )}
 
       <div className="product__qnt-cart">
         <div className="product__quantity">

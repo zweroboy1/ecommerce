@@ -153,32 +153,6 @@ type Breadcrumb = {
   name: string;
   url: string;
 };
-/*
-type ProductAllData = {
-  id: string;
-  masterData: {
-    current: {
-      name: Record<string, string>;
-      description: Record<string, string>;
-      slug: Record<string, string>;
-      masterVariant: {
-        images: {
-          url: string;
-          dimensions: {
-            w: number;
-            h: number;
-          };
-        }[];
-        prices: {
-          value: {
-            centAmount: number;
-          };
-          country?: string;
-        }[];
-      };
-    };
-  };
-}; */
 
 type ProductAllData = {
   id: string;
@@ -201,6 +175,7 @@ type ProductAllData = {
         key: string;
       };
     }[];
+    sku: string;
     images: {
       url: string;
       dimensions: {
@@ -212,7 +187,13 @@ type ProductAllData = {
       value: {
         centAmount: number;
       };
-      country?: string;
+      discounted: {
+        value: {
+          type: string;
+          currencyCode: string;
+          centAmount: number;
+        };
+      };
     }[];
   };
 };
@@ -228,7 +209,11 @@ type Product = {
   description: string;
   slug: string;
   price: number;
+  discountedPrice?: number;
   images: string[];
+  brand: string;
+  color: string;
+  sku: string;
 };
 
 type FilterOption = string;
@@ -260,7 +245,11 @@ interface ProductImagesProps {
 }
 
 interface ProductDetailsProps {
-  newPrice: number;
+  price: number;
+  discountedPrice?: number;
+  brand: string;
+  color: string;
+  sku: string;
 }
 
 export type {

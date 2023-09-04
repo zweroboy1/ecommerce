@@ -35,12 +35,17 @@ function ProductList({ products }: { products: Product[] }) {
             </h2>
             <div className="goods__prices">
               <div className="goods__price-block">
-                <span className="goods__discounted-price">
-                  UAH {formatPrice(product.price / 100)}
-                </span>
-                <span className="goods__old-price">
-                  UAH {formatPrice(product.price / 100 + 100)}
-                </span>
+                {product.discountedPrice ? (
+                  <>
+                    <span className="goods__old-price">{formatPrice(product.price / 100)} ₴</span>
+
+                    <span className="goods__discounted-price">
+                      {formatPrice(product.discountedPrice / 100)} ₴
+                    </span>
+                  </>
+                ) : (
+                  <span className="goods__price">{formatPrice(product.price / 100)} ₴</span>
+                )}
               </div>
               <div className="goods__control">
                 <i className="goods__control-icon cart__icon header-icon"></i>
