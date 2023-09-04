@@ -12,13 +12,14 @@ import {
   updatingValidationSchema,
 } from '../utils/updatingValidation';
 import { UpdatingSelectField } from './UpdatingSelectField';
-import { updateUser } from '../services/commercetoolsApi';
+import { changePassword, updateUser } from '../services/commercetoolsApi';
 import { Context } from '../store/Context';
 import { prepareCustomerUpdating } from '../utils/prepareCustomerUpdating';
 import 'react-toastify/dist/ReactToastify.css';
 
 const UpdatingForm = observer(() => {
   const { user } = useContext(Context);
+
   const customerUpdating = prepareCustomerUpdating(
     user!.user!.user,
     user!.user!.token.access_token
@@ -536,6 +537,44 @@ const UpdatingForm = observer(() => {
           autoClose: 3000,
         });
       }
+    }
+  };
+
+  const savePassword = async (values: Record<'password' | 'passwordNew', string>) => {
+    const data = { password: values.password, passwordNew: values.passwordNew };
+    try {
+      const userData = await changePassword(
+        data,
+        initialValues.id,
+        initialValues.bearerToken,
+        initialValues.version
+      );
+
+      const userToken = user?.user?.token;
+      if (userToken) {
+        user?.setUser({ user: userData, token: userToken });
+      }
+      setIsChangeUserSettingsForm({
+        ...isChangeUserSettingsForm,
+        password: false,
+        passwordNew: false,
+        passwordConfirm: false,
+      });
+      setIsUpdateUserSettingsForm({
+        ...isChangeUserSettingsForm,
+        password: false,
+        passwordNew: false,
+        passwordConfirm: false,
+      });
+      toast.success('Имя успешно изменено!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    } catch (error) {
+      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
     }
   };
 
@@ -1955,7 +1994,14 @@ const UpdatingForm = observer(() => {
                       <Button
                         className="button"
                         type="button"
-                        onClick={() => {}}
+                        onClick={async () => {
+                          if (isChangePasswords && isValidPasswords) {
+                            await savePassword({
+                              password: values.password,
+                              passwordNew: values.passwordNew,
+                            });
+                          }
+                        }}
                         disabled={!isValidPasswords || !isChangePasswords}
                       >
                         Сохранить пароль
