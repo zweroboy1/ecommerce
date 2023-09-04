@@ -1,41 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Filter } from './Filter';
 import { COLORS } from '../constants';
 
 const ColorFilter: React.FC<{
+  selectedColors: string[];
   onColorChange: (colors: string[]) => void;
-}> = ({ onColorChange }) => {
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);
-
-  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const englishColor = event.target.value;
-    const isChecked = event.target.checked;
-
-    const updatedSelectedColors = isChecked
-      ? [...selectedColors, englishColor]
-      : selectedColors.filter((selectedColor) => selectedColor !== englishColor);
-
-    setSelectedColors(updatedSelectedColors);
-
-    onColorChange(updatedSelectedColors);
+  onReset?: () => void;
+}> = ({ selectedColors, onColorChange, onReset }) => {
+  const handleReset = () => {
+    onColorChange([]);
+    if (onReset) {
+      onReset();
+    }
   };
 
   return (
-    <div>
-      <label>Выберите цвета:</label>
-      <div>
-        {Object.keys(COLORS).map((englishColor, index) => (
-          <label key={index}>
-            <input
-              type="checkbox"
-              value={englishColor}
-              checked={selectedColors.includes(englishColor)}
-              onChange={handleColorChange}
-            />
-            {COLORS[englishColor]}
-          </label>
-        ))}
-      </div>
-    </div>
+    <Filter
+      title="Цвет"
+      options={Object.keys(COLORS)}
+      optionsLabel={Object.values(COLORS)}
+      selectedOptions={selectedColors}
+      onOptionsChange={onColorChange}
+      onReset={handleReset}
+    />
   );
 };
 

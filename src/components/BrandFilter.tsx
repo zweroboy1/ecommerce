@@ -1,41 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Filter } from './Filter';
 import { BRANDS } from '../constants';
 
 const BrandFilter: React.FC<{
+  selectedBrands: string[];
   onBrandChange: (brands: string[]) => void;
-}> = ({ onBrandChange }) => {
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-
-  const handleBrandChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const brand = event.target.value;
-    const isChecked = event.target.checked;
-
-    const updatedSelectedBrands = isChecked
-      ? [...selectedBrands, brand]
-      : selectedBrands.filter((selectedBrand) => selectedBrand !== brand);
-
-    setSelectedBrands(updatedSelectedBrands);
-
-    onBrandChange(updatedSelectedBrands);
+  onReset?: () => void;
+}> = ({ selectedBrands, onBrandChange, onReset }) => {
+  const handleReset = () => {
+    onBrandChange([]);
+    if (onReset) {
+      onReset();
+    }
   };
 
   return (
-    <div>
-      <label>Выберите бренды:</label>
-      <div>
-        {BRANDS.map((brand, index) => (
-          <label key={index}>
-            <input
-              type="checkbox"
-              value={brand}
-              checked={selectedBrands.includes(brand)}
-              onChange={handleBrandChange}
-            />
-            {brand}
-          </label>
-        ))}
-      </div>
-    </div>
+    <Filter
+      title="Бренд"
+      options={BRANDS}
+      selectedOptions={selectedBrands}
+      onOptionsChange={onBrandChange}
+      onReset={handleReset}
+    />
   );
 };
 

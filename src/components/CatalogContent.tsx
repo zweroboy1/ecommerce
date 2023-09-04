@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { CATEGORIES } from '../constants/categories';
-import { PRODUCTS_ON_PAGE, SORT_OPTIONS } from '../constants';
+import { PRODUCTS_ON_PAGE, SORT_OPTIONS, MAX_PRICE_FILTER } from '../constants';
 import { ProductList } from './ProductList';
 import { Breadcrumbs } from './Breadcrumbs';
 import { CatalogMenu } from './CatalogMenu';
@@ -14,6 +14,7 @@ import { SearchInput } from './SearchInput';
 import { Sorting } from '../pages/catalog/Sorting';
 import { getProducts } from '../services/commercetoolsApi';
 import { mapProduct } from '../utils/mapProduct';
+import SelectedFilters from './SelectedFilters';
 
 const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
   category,
@@ -26,7 +27,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(10000000);
+  const [maxPrice, setMaxPrice] = useState(MAX_PRICE_FILTER);
   const [textQuery, setTextQuery] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
 
@@ -55,6 +56,13 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
 
   const currentCategoryUrl = subcategory || category || '';
   const categoryBreadcrumbs: Breadcrumb[] = buildBreadcrumbs(currentCategoryUrl);
+
+  const handleResetFilters = () => {
+    setSelectedBrands([]);
+    setSelectedColors([]);
+    setMinPrice(0);
+    setMaxPrice(MAX_PRICE_FILTER);
+  };
 
   useEffect(() => {
     setCurrentPage(0);
@@ -118,11 +126,42 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
           <CatalogMenu categories={CATEGORIES} />
         </div>
         <div className="right">
-          <BrandFilter onBrandChange={(brands) => handleBrandChange(brands)} />
-          <hr />
-          <ColorFilter onColorChange={(colors) => handleColorChange(colors)} />
+          <div className="filters">
+            <div className="filters__container">
+              <BrandFilter
+                selectedBrands={selectedBrands}
+                onBrandChange={(brands) => {
+                  handleBrandChange(brands);
+                }}
+              />
+              <ColorFilter
+                selectedColors={selectedColors}
+                onColorChange={(colors) => {
+                  handleColorChange(colors);
+                }}
+              />
+              <PriceRangeFilter onPriceChange={(min, max) => handlePriceChange(min, max)} />
+            </div>
 
-          <PriceRangeFilter onPriceChange={(min, max) => handlePriceChange(min, max)} />
+            <SelectedFilters
+              selectedFilters={[...selectedBrands, ...selectedColors]}
+              onOptionChange={(selectedOption) => {
+                if (selectedBrands.includes(selectedOption)) {
+                  const updatedBrands = selectedBrands.filter((brand) => brand !== selectedOption);
+                  setSelectedBrands(updatedBrands);
+                } else if (selectedColors.includes(selectedOption)) {
+                  const updatedColors = selectedColors.filter((color) => color !== selectedOption);
+                  setSelectedColors(updatedColors);
+                } else if (selectedOption === 'Цена') {
+                  handlePriceChange(0, MAX_PRICE_FILTER);
+                }
+              }}
+              onResetSelectedFilters={handleResetFilters}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              onPriceChange={handlePriceChange}
+            />
+          </div>
           <SearchInput onSearch={(searchText: string) => handleSearchChange(searchText)} />
           <Sorting onSortChange={handleSortChange} />
           {products.length === 0 ? <p>Продуктов нет</p> : <ProductList products={products} />}
@@ -140,8 +179,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
               disabledClassName="disabled"
             />
           )}
-                  </div>
-
+        </div>
       </div>
     </>
   );
