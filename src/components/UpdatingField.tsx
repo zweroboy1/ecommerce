@@ -53,52 +53,58 @@ const UpdatingField = observer(
           {isUpdateForm ? (
             <div className="input-wrapper">
               <input {...field} {...props} id={field.name} onChange={handleChange} />
-              {!field.name.includes('Address') && !field.name.includes('password') && (
-                <Button
-                  className="save-icon"
-                  onClick={() => {
-                    if (onSave) onSave();
-                  }}
-                  disabled={!isChangeField || !!meta.error}
-                >
-                  save
-                </Button>
-              )}
-              {!field.name.includes('Address') && !field.name.includes('password') && (
-                <Button
-                  className="cancel-icon"
-                  onClick={() => {
-                    if (setIsUpdateFields) {
-                      setIsUpdateFields(field.name, false);
-                      setIsChangeFields?.(field.name, false);
-                      if (initValue) setFieldValue?.(field.name, initValue);
-                      setValid?.(initValue || '');
-                    } else if (isUpdate) {
-                      setIsUpdate(false);
-                    }
-                  }}
-                >
-                  cansel
-                </Button>
-              )}
+              {!field.name.includes('Address') &&
+                !field.name.includes('address') &&
+                !field.name.includes('password') && (
+                  <Button
+                    className="save-icon"
+                    onClick={() => {
+                      if (onSave) onSave();
+                    }}
+                    disabled={!isChangeField || !!meta.error}
+                  >
+                    save
+                  </Button>
+                )}
+              {!field.name.includes('Address') &&
+                !field.name.includes('address') &&
+                !field.name.includes('password') && (
+                  <Button
+                    className="cancel-icon"
+                    onClick={() => {
+                      if (setIsUpdateFields) {
+                        setIsUpdateFields(field.name, false);
+                        setIsChangeFields?.(field.name, false);
+                        if (initValue) setFieldValue?.(field.name, initValue);
+                        setValid?.(initValue || '');
+                      } else if (isUpdate) {
+                        setIsUpdate(false);
+                      }
+                    }}
+                  >
+                    cansel
+                  </Button>
+                )}
             </div>
           ) : (
             <div className="text-wrapper">
               <span className="text">{value}</span>
-              {!field.name.includes('Address') && !field.name.includes('password') && (
-                <Button
-                  className="edit-icon"
-                  onClick={() => {
-                    if (setIsUpdateFields) {
-                      setIsUpdateFields(field.name, true);
-                    } else if (isUpdate) {
-                      setIsUpdate(false);
-                    }
-                  }}
-                >
-                  edit
-                </Button>
-              )}
+              {!field.name.includes('Address') &&
+                !field.name.includes('address') &&
+                !field.name.includes('password') && (
+                  <Button
+                    className="edit-icon"
+                    onClick={() => {
+                      if (setIsUpdateFields) {
+                        setIsUpdateFields(field.name, true);
+                      } else if (isUpdate) {
+                        setIsUpdate(false);
+                      }
+                    }}
+                  >
+                    edit
+                  </Button>
+                )}
             </div>
           )}
           {!field.name.includes('password') && isChangeField && meta.touched && meta.error ? (

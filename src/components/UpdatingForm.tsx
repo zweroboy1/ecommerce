@@ -17,7 +17,7 @@ import {
   updatingValidationSchema,
 } from '../utils/updatingValidation';
 import { UpdatingSelectField } from './UpdatingSelectField';
-import { changePassword, updateUser } from '../services/commercetoolsApi';
+import { addAddress, changePassword, updateUser } from '../services/commercetoolsApi';
 import { Context } from '../store/Context';
 import { prepareCustomerUpdating } from '../utils/prepareCustomerUpdating';
 import 'react-toastify/dist/ReactToastify.css';
@@ -31,7 +31,6 @@ const UpdatingForm = observer(() => {
     user!.user!.user,
     user!.user!.token.access_token
   );
-
   const initialValues = {
     ...customerUpdating,
     bearerToken: user!.user!.token.access_token,
@@ -222,13 +221,13 @@ const UpdatingForm = observer(() => {
     });
     return objOfAddressesFields;
   };
-  const initialValidAddressesObject = () => {
+  const initialValidAddressesObject = (initialData: typeof initialValues) => {
     const objOfAddressesFields: { [key: string]: { [key: string]: { [key: string]: boolean } } } = {
       shippingAddresses: {},
       billingAddresses: {},
       addresses: {},
     };
-    initialValues.shippingAddresses.forEach((address) => {
+    initialData.shippingAddresses.forEach((address) => {
       if (address.id) {
         objOfAddressesFields.shippingAddresses[address.id] = {
           country: true,
@@ -238,7 +237,7 @@ const UpdatingForm = observer(() => {
         };
       }
     });
-    initialValues.billingAddresses.forEach((address) => {
+    initialData.billingAddresses.forEach((address) => {
       if (address.id) {
         objOfAddressesFields.billingAddresses[address.id] = {
           country: true,
@@ -248,7 +247,7 @@ const UpdatingForm = observer(() => {
         };
       }
     });
-    initialValues.addresses.forEach((address) => {
+    initialData.addresses.forEach((address) => {
       if (address.id) {
         objOfAddressesFields.addresses[address.id] = {
           country: true,
@@ -263,8 +262,10 @@ const UpdatingForm = observer(() => {
 
   const [isUpdateAddressesForm, setIsUpdateAddressesForm] = useState(updatingAddressObject({}));
 
-  const [isChangeAddressesForm, setIsChangeAddressesForm] = useState(initialAddressesObject);
-  const [isValidAddressesFields, setIsValidAddressesFields] = useState(initialValidAddressesObject);
+  const [isChangeAddressesForm, setIsChangeAddressesForm] = useState(initialAddressesObject());
+  const [isValidAddressesFields, setIsValidAddressesFields] = useState(
+    initialValidAddressesObject(initialValues)
+  );
 
   const isValidAddress = (type: string, id: string) => {
     return Object.values(isValidAddressesFields[type][id]).every((value) => value === true);
@@ -411,7 +412,7 @@ const UpdatingForm = observer(() => {
         user?.setUser({ user: userData, token: userToken });
       }
       setIsUpdateAddressesForm(updatingAddressObject({}));
-      setIsChangeAddressesForm(initialAddressesObject);
+      setIsChangeAddressesForm(initialAddressesObject());
       toast.success('Изменения успешно сохранены!', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
@@ -601,12 +602,52 @@ const UpdatingForm = observer(() => {
         passwordConfirm: false,
       });
       setIsUpdateUserSettingsForm({
-        ...isChangeUserSettingsForm,
+        ...isUpdateUserSettingsForm,
         password: false,
         passwordNew: false,
         passwordConfirm: false,
       });
       toast.success('Имя успешно изменено!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    } catch (error) {
+      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const addNewAddress = async (data: Address) => {
+    try {
+      const userData = await addAddress(
+        data,
+        initialValues.id,
+        initialValues.bearerToken,
+        initialValues.version
+      );
+
+      const userToken = user?.user?.token;
+      if (userToken) {
+        // user?.setUser({ user: userData, token: userToken });
+        // eslint-disable-next-line no-console
+        console.log(userData);
+      }
+      setIsChangeNewAddressForm({
+        newCountry: false,
+        newCity: false,
+        newPostalCode: false,
+        newStreetName: false,
+      });
+      setIsValidNewAddressFields({
+        newCountry: true,
+        newCity: true,
+        newPostalCode: true,
+        newStreetName: true,
+      });
+      setIsAddedAddressForm(false);
+      toast.success('Адрес успешно добавлен!', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
       });
@@ -1011,7 +1052,14 @@ const UpdatingForm = observer(() => {
                       <Button
                         className="button"
                         type="button"
-                        onClick={() => {}}
+                        onClick={async () => {
+                          await addNewAddress({
+                            city: values.newCity,
+                            country: values.newCountry,
+                            streetName: values.newStreetName,
+                            postalCode: values.newPostalCode,
+                          });
+                        }}
                         disabled={!isChangeNewAddress || !isValidNewAddress}
                       >
                         Добавить адрес
@@ -2092,7 +2140,7 @@ const UpdatingForm = observer(() => {
                       type="button"
                       onClick={() => {
                         setIsUpdateAddressesForm(updatingAddressObject({}));
-                        setIsChangeAddressesForm(initialAddressesObject);
+                        setIsChangeAddressesForm(initialAddressesObject());
                         setValues(initialValues, false);
                       }}
                     >
