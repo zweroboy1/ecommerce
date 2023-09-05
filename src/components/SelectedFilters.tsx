@@ -1,5 +1,5 @@
 import React from 'react';
-import { MAX_PRICE_FILTER } from '../constants';
+import { COLORS, MAX_PRICE_FILTER } from '../constants';
 
 type SelectedFiltersProps = {
   selectedFilters: string[];
@@ -28,7 +28,7 @@ const SelectedFilters: React.FC<SelectedFiltersProps> = ({
       <ul className="filters__selected-list">
         {selectedFilters.map((selectedOption, index) => (
           <li key={index} className="filters__selected-item">
-            {selectedOption}
+            {COLORS[selectedOption] || selectedOption}
             <div
               className="filters__selected-close close"
               onClick={() => onOptionChange(selectedOption)}
