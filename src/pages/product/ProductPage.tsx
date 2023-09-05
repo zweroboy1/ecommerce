@@ -6,8 +6,9 @@ import { Header } from '../main/Header';
 import { Footer } from '../main/Footer';
 import { getProduct } from '../../services/commercetoolsApi';
 import { mapProduct } from '../../utils/mapProduct';
-import { Product } from '../../types';
+import { Product, Category } from '../../types';
 import { NotFound } from '../NotFound';
+import { Loader } from '../Loader';
 import { ProductDescription } from './ProductDescription';
 import { ProductImages } from './ProductImages';
 import { ProductDetails } from './ProductDetails';
@@ -19,16 +20,23 @@ const ProductPage = () => {
   const { productId = '' } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isNotfound, setIsNotfound] = useState(false);
+  const [subcategory, setSubcategory] = useState<Category | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
 
   useEffect(() => {
     async function getProductsFromServer() {
       try {
+        setLoading(true);
         const fetchedProduct = await getProduct(productId);
         if (fetchedProduct) {
           const mappedProduct = mapProduct(fetchedProduct);
           setProduct(mappedProduct);
+          setSubcategory(CATEGORIES.filter((cat) => cat.ctId === mappedProduct.categories[0])[0]);
+          setCategory(CATEGORIES.filter((cat) => cat.ctId === mappedProduct.categories[1])[0]);
         } else {
           setProduct(null);
+          setIsNotfound(true);
         }
       } catch (error) {
         if (error instanceof Error) {
@@ -38,82 +46,78 @@ const ProductPage = () => {
           });
         }
       } finally {
-        setLoading(false); // Устанавливаем loading в false в любом случае
+        setLoading(false);
       }
     }
     getProductsFromServer();
   }, [productId]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (product === null) {
-    return <NotFound />;
-  }
-
-  const subcategory = CATEGORIES.filter((cat) => cat.ctId === product.categories[0])[0];
-  const category = CATEGORIES.filter((cat) => cat.ctId === product.categories[1])[0];
-  return (
+  return isNotfound ? (
+    <NotFound />
+  ) : (
     <div className="tygh">
       <Top />
       <Header />
-      <main className="main content">
-        <ToastContainer />
-        <div className="row">
-          <div className="breadcrumbs">
-            <NavLink className="breadcrumbs__link" to={MAIN_ROUTE}>
-              Главная
-            </NavLink>
-            <span className="breadcrumbs__slash">/</span>
-            <NavLink className="breadcrumbs__link" to="/catalog">
-              Каталог
-            </NavLink>
-            <span className="breadcrumbs__slash">/</span>
+      <ToastContainer />
+      {loading && <Loader />}
+      {product && (
+        <main className="main content">
+          <div className="row">
+            <div className="breadcrumbs">
+              <NavLink className="breadcrumbs__link" to={MAIN_ROUTE}>
+                Главная
+              </NavLink>
+              <span className="breadcrumbs__slash">/</span>
+              <NavLink className="breadcrumbs__link" to="/catalog">
+                Каталог
+              </NavLink>
+              <span className="breadcrumbs__slash">/</span>
 
-            {category ? (
-              <>
-                <NavLink className="breadcrumbs__link" to={`/catalog/${category.url}`}>
-                  {category.ruName}
-                </NavLink>
-                <span className="breadcrumbs__slash">/</span>
-                <NavLink
-                  className="breadcrumbs__link"
-                  to={`/catalog/${category.url}/${subcategory.url}`}
-                >
+              {category && subcategory && (
+                <>
+                  <NavLink className="breadcrumbs__link" to={`/catalog/${category.url}`}>
+                    {category.ruName}
+                  </NavLink>
+                  <span className="breadcrumbs__slash">/</span>
+                  <NavLink
+                    className="breadcrumbs__link"
+                    to={`/catalog/${category.url}/${subcategory.url}`}
+                  >
+                    {subcategory.ruName}
+                  </NavLink>
+                </>
+              )}
+              {!category && subcategory && (
+                <NavLink className="breadcrumbs__link" to={`/catalog/${subcategory.url}`}>
                   {subcategory.ruName}
                 </NavLink>
-              </>
-            ) : (
-              <NavLink className="breadcrumbs__link" to={`/catalog/${subcategory.url}`}>
-                {subcategory.ruName}
+              )}
+
+              <span className="breadcrumbs__slash">/</span>
+
+              <NavLink className="breadcrumbs__current" to=".">
+                {product.name}
               </NavLink>
-            )}
-
-            <span className="breadcrumbs__slash">/</span>
-
-            <NavLink className="breadcrumbs__current" to=".">
-              {product.name}
-            </NavLink>
-          </div>
-          <div className="row product">
-            <div className="left product__images">
-              <ProductImages productImages={product.images} />
             </div>
-            <div className="right product__details">
-              <h1>{product.name}</h1>
-              <ProductDetails
-                price={product.price}
-                discountedPrice={product.discountedPrice}
-                brand={product.brand}
-                color={product.color}
-                sku={product.sku}
-              />
-              <ProductDescription description={product.description} />
+            <div className="row product">
+              <div className="left product__images">
+                <ProductImages productImages={product.images} />
+              </div>
+              <div className="right product__details">
+                <h1>{product.name}</h1>
+                <ProductDetails
+                  price={product.price}
+                  discountedPrice={product.discountedPrice}
+                  brand={product.brand}
+                  color={product.color}
+                  sku={product.sku}
+                />
+                <ProductDescription description={product.description} />
+              </div>
             </div>
           </div>
-        </div>
-      </main>
+        </main>
+      )}
       <Footer />
     </div>
   );
