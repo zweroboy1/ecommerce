@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, NavLink } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 import { Top } from '../main/Top';
 import { Header } from '../main/Header';
 import { Footer } from '../main/Footer';
@@ -12,6 +13,7 @@ import { ProductImages } from './ProductImages';
 import { ProductDetails } from './ProductDetails';
 import { MAIN_ROUTE } from '../../constants/route';
 import { CATEGORIES } from '../../constants/categories';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductPage = () => {
   const { productId = '' } = useParams();
@@ -29,7 +31,12 @@ const ProductPage = () => {
           setProduct(null);
         }
       } catch (error) {
-        // Обработка ошибок при запросе продукта
+        if (error instanceof Error) {
+          toast.error(error.message, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+        }
       } finally {
         setLoading(false); // Устанавливаем loading в false в любом случае
       }
@@ -52,6 +59,7 @@ const ProductPage = () => {
       <Top />
       <Header />
       <main className="main content">
+        <ToastContainer />
         <div className="row">
           <div className="breadcrumbs">
             <NavLink className="breadcrumbs__link" to={MAIN_ROUTE}>
