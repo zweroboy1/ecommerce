@@ -11,6 +11,7 @@ const mapProduct = (product: ProductAllData): Product => {
     ? product.masterVariant.prices[0].discounted.value.centAmount
     : false;
 
+  const categories = product.categories.map((cat) => cat.id) || [];
   const brand =
     product.masterVariant.attributes.find((attr) => attr.name === 'brand')?.value.key || '';
   const color =
@@ -27,6 +28,7 @@ const mapProduct = (product: ProductAllData): Product => {
     brand,
     color,
     sku,
+    categories,
   };
 };
 
