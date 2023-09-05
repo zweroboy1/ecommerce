@@ -15,6 +15,7 @@ import { SearchInput } from './SearchInput';
 import { Sorting } from '../pages/catalog/Sorting';
 import { getProducts } from '../services/commercetoolsApi';
 import { mapProduct } from '../utils/mapProduct';
+import { Loader } from '../pages/Loader';
 import SelectedFilters from './SelectedFilters';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -33,6 +34,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
   const [maxPrice, setMaxPrice] = useState(MAX_PRICE_FILTER);
   const [textQuery, setTextQuery] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const handleSortChange = (newSort: string) => {
     setCurrentSort(newSort);
@@ -79,6 +81,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
 
     const getProductsFromServer = async () => {
       try {
+        setLoading(true);
         let fetchedProducts: Product[] = [];
         const sortCtParam = SORT_OPTIONS.filter(
           (el: Record<string, string>) => el.value === currentSort
@@ -109,6 +112,8 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
             autoClose: 3000,
           });
         }
+      } finally {
+        setLoading(false);
       }
     };
     getProductsFromServer();
@@ -175,24 +180,30 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
           </div>
           <SearchInput onSearch={(searchText: string) => handleSearchChange(searchText)} />
           <Sorting onSortChange={handleSortChange} />
-          {products.length === 0 ? (
-            <p className="no-product">Нет продуктов, удовлетворяющих заданным условиям</p>
+          {loading ? (
+            <Loader />
           ) : (
-            <ProductList products={products} />
-          )}
-          {totalPages > 1 && (
-            <ReactPaginate
-              pageCount={totalPages}
-              pageRangeDisplayed={5}
-              marginPagesDisplayed={2}
-              initialPage={currentPage}
-              onPageChange={handlePageChange}
-              containerClassName="pagination"
-              previousLabel="Назад"
-              nextLabel="Вперед"
-              activeClassName="active"
-              disabledClassName="disabled"
-            />
+            <>
+              {products.length === 0 ? (
+                <p className="no-product">Нет продуктов, удовлетворяющих заданным условиям</p>
+              ) : (
+                <ProductList products={products} />
+              )}
+              {totalPages > 1 && (
+                <ReactPaginate
+                  pageCount={totalPages}
+                  pageRangeDisplayed={5}
+                  marginPagesDisplayed={2}
+                  initialPage={currentPage}
+                  onPageChange={handlePageChange}
+                  containerClassName="pagination"
+                  previousLabel="Назад"
+                  nextLabel="Вперед"
+                  activeClassName="active"
+                  disabledClassName="disabled"
+                />
+              )}
+            </>
           )}
         </div>
       </div>
