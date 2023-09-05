@@ -49,7 +49,7 @@ const Promotions = () => {
     const updateSlider = () => {
       const screenWidth = window.innerWidth;
 
-      let newSlideCount = Math.floor(screenWidth / (slideWidth + slideMargin));
+      let newSlideCount = Math.floor(screenWidth / (slideWidth + slideMargin + 20));
       newSlideCount = Math.min(newSlideCount, 4);
 
       const newSliderWidth = newSlideCount * (slideWidth + slideMargin) + slideMargin;
