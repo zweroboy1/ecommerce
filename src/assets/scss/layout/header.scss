@@ -156,6 +156,7 @@
       background-color: $background;
       position: relative;
       min-width: 50px;
+      visibility: hidden;
 
       @include media('m') {
         width: 50px;
