@@ -62,7 +62,6 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
     setSelectedColors([]);
     setMinPrice(0);
     setMaxPrice(MAX_PRICE_FILTER);
-    // handlePriceChange(0, MAX_PRICE_FILTER);
   };
 
   useEffect(() => {

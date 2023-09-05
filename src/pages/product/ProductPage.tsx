@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, NavLink } from 'react-router-dom';
 import { Top } from '../main/Top';
 import { Header } from '../main/Header';
 import { Footer } from '../main/Footer';
@@ -10,6 +10,8 @@ import { NotFound } from '../NotFound';
 import { ProductDescription } from './ProductDescription';
 import { ProductImages } from './ProductImages';
 import { ProductDetails } from './ProductDetails';
+import { MAIN_ROUTE } from '../../constants/route';
+import { CATEGORIES } from '../../constants/categories';
 
 const ProductPage = () => {
   const { productId = '' } = useParams();
@@ -24,7 +26,7 @@ const ProductPage = () => {
           const mappedProduct = mapProduct(fetchedProduct);
           setProduct(mappedProduct);
         } else {
-          setProduct(null); // Устанавливаем продукт в null, если не найден
+          setProduct(null);
         }
       } catch (error) {
         // Обработка ошибок при запросе продукта
@@ -36,13 +38,15 @@ const ProductPage = () => {
   }, [productId]);
 
   if (loading) {
-    return <div>Loading...</div>; // Нужен ли нам лоадер? в каталоге я не делал, а тут подумал, что может надо?
+    return <div>Loading...</div>;
   }
 
   if (product === null) {
     return <NotFound />;
   }
 
+  const subcategory = CATEGORIES.filter((cat) => cat.ctId === product.categories[0])[0];
+  const category = CATEGORIES.filter((cat) => cat.ctId === product.categories[1])[0];
   return (
     <div className="tygh">
       <Top />
@@ -50,17 +54,39 @@ const ProductPage = () => {
       <main className="main content">
         <div className="row">
           <div className="breadcrumbs">
-            <a href="/" className="breadcrumbs__link">
-              <bdi>Главная</bdi>
-            </a>
+            <NavLink className="breadcrumbs__link" to={MAIN_ROUTE}>
+              Главная
+            </NavLink>
             <span className="breadcrumbs__slash">/</span>
-            <a href="" className="breadcrumbs__link">
-              <bdi>Категория</bdi>
-            </a>
+            <NavLink className="breadcrumbs__link" to="/catalog">
+              Каталог
+            </NavLink>
             <span className="breadcrumbs__slash">/</span>
-            <span className="breadcrumbs__current">
-              <bdi>{product.name}</bdi>
-            </span>
+
+            {category ? (
+              <>
+                <NavLink className="breadcrumbs__link" to={`/catalog/${category.url}`}>
+                  {category.ruName}
+                </NavLink>
+                <span className="breadcrumbs__slash">/</span>
+                <NavLink
+                  className="breadcrumbs__link"
+                  to={`/catalog/${category.url}/${subcategory.url}`}
+                >
+                  {subcategory.ruName}
+                </NavLink>
+              </>
+            ) : (
+              <NavLink className="breadcrumbs__link" to={`/catalog/${subcategory.url}`}>
+                {subcategory.ruName}
+              </NavLink>
+            )}
+
+            <span className="breadcrumbs__slash">/</span>
+
+            <NavLink className="breadcrumbs__current" to=".">
+              {product.name}
+            </NavLink>
           </div>
           <div className="row product">
             <div className="left product__images">
