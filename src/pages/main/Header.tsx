@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { Context } from '../../store/Context';
 import { Search } from './header/Search';
 import { Categories } from './header/Categories';
 import { Logo } from './header/Logo';
@@ -26,12 +28,17 @@ const TopSearch = () => {
 };
 
 const TopButtons = () => {
+  const { user } = useContext(Context);
   return (
     <div className="top-buttons">
-      <ComparedProducts />
-      <Wishlist />
-      <Account />
-      <Cart />
+      {user?.isAuth && (
+        <>
+          <ComparedProducts />
+          <Wishlist />
+          <Account />
+          <Cart />
+        </>
+      )}
     </div>
   );
 };
