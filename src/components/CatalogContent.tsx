@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
+import { ToastContainer, toast } from 'react-toastify';
 import { CATEGORIES } from '../constants/categories';
 import { PRODUCTS_ON_PAGE, SORT_OPTIONS, MAX_PRICE_FILTER } from '../constants';
 import { ProductList } from './ProductList';
@@ -15,6 +16,8 @@ import { Sorting } from '../pages/catalog/Sorting';
 import { getProducts } from '../services/commercetoolsApi';
 import { mapProduct } from '../utils/mapProduct';
 import SelectedFilters from './SelectedFilters';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
   category,
@@ -100,7 +103,12 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
         }
         setProducts(fetchedProducts);
       } catch (error) {
-        // console.log(error);
+        if (error instanceof Error) {
+          toast.error(error.message, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+        }
       }
     };
     getProductsFromServer();
@@ -126,6 +134,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
           <CatalogMenu categories={CATEGORIES} />
         </div>
         <div className="right">
+          <ToastContainer />
           <div className="filters">
             <div className="filters__container">
               <BrandFilter

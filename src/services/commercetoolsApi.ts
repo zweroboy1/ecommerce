@@ -5,6 +5,7 @@ import {
   CT_LOGIN_ERROR,
   CT_INVALID_JSON_ERROR,
   CT_EXISTING_CUSTOMER_ERROR,
+  CT_NETWORK_PROBLEM,
 } from '../constants/apiMessages';
 
 import {
@@ -378,7 +379,7 @@ export async function getProducts(
       ? { total: 0, results: [] }
       : { total: responseData.total, results: responseData.results };
   } catch (error) {
-    throw new Error('Oooops!!! We have a problem2!!!');
+    throw new Error(CT_NETWORK_PROBLEM);
   }
 }
 
@@ -408,7 +409,7 @@ export async function getProduct(productId: string): Promise<ProductAllData | nu
     }
     return responseData.results[0] === undefined ? null : responseData.results[0];
   } catch (error) {
-    throw new Error('Oooops!!! We have a problem2!!!');
+    throw new Error(CT_NETWORK_PROBLEM);
   }
 }
 
