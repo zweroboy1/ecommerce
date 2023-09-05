@@ -180,6 +180,7 @@
 
     .button-wrapper {
       justify-content: flex-start;
+      flex-direction: row;
     }
 
     &-row {
@@ -237,10 +238,11 @@
   }
 
   .button-wrapp {
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 
     button {
       margin-right: 10px;
+      margin-bottom: 10px;
     }
   }
 
