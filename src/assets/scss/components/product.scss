@@ -26,6 +26,110 @@
       bottom: 0;
       padding-right: 0;
     }
+
+    .carousel {
+
+      .product__image,
+      &-image {
+        @include flex();
+        height: 100%;
+      }
+
+      .control-arrow {
+        top: 0;
+        margin-top: 0;
+        font-size: 18px;
+        opacity: 1;
+        background: #d9d9d95e;
+        height: 100%;
+        padding: 0 2px;
+        border-radius: 2px;
+        transition: $transition;
+
+        &.control-next:before {
+          border-left: 8px solid #000;
+        }
+
+        &.control-prev:before {
+          border-right: 8px solid #000;
+        }
+
+        &:hover {
+          background: #c7c7c75e;
+          box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.5);
+        }
+      }
+
+      &.carousel-slider .control-arrow {
+        @include flex();
+        flex-direction: column;
+        position: absolute;
+        top: 50%;
+        right: 4px;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background-color: $button-second;
+        cursor: pointer;
+        // transform: translateY(-50%);
+        opacity: 1;
+        z-index: 10;
+
+        &.control-next:before {
+          border-left: 8px solid #ffffff;
+        }
+
+        &.control-prev:before {
+          border-right: 8px solid #ffffff;
+        }
+
+        &:hover {
+          background-color: darken($button-second, 20%);
+          box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        &.control-disabled,
+        &.control-disabled:hover {
+          background-color: #aeaeae;
+          box-shadow: none;
+          cursor: not-allowed;
+        }
+      }
+
+      .thumbs.animated {
+        @include flex($align: stretch, $justify: flex-start);
+
+        .thumb {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: nowrap;
+          flex-shrink: 0;
+        }
+      }
+
+      .control-dots {
+        .dot {
+          background: $links;
+          width: 12px;
+          height: 12px;
+        }
+
+        li:only-child {
+          display: none;
+        }
+      }
+
+      @include media('s') {
+        display: none;
+
+        &.carousel-slider {
+          display: block;
+        }
+      }
+    }
   }
 
   &__details {
