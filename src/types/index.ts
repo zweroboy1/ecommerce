@@ -214,6 +214,7 @@ type Product = {
   brand: string;
   color: string;
   sku: string;
+  categories: string[];
 };
 
 type FilterOption = string;
