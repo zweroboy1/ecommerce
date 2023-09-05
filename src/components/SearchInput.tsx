@@ -9,6 +9,9 @@ const SearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
+    if (!event.target.value.trim()) {
+      onSearch(event.target.value.trim());
+    }
   };
 
   const handleSearch = () => {
