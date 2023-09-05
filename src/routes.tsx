@@ -139,7 +139,7 @@ export const publicRoutes = [
   },
   {
     path: ACCOUNT_ROUTE,
-    Component: () => <Navigate to={REGISTRATION_ROUTE} replace />,
+    Component: () => <Navigate to={AUTH_ROUTE} replace />,
   },
 ];
 
