@@ -65,12 +65,12 @@ const UpdatingSelectField = observer(
                 ))}
               </Field>
 
-              {!field.name.includes('Address') && (
+              {!field.name.includes('Address') && !field.name.includes('address') && (
                 <Button className="save-icon" onClick={() => setIsUpdate((prev) => !prev)}>
                   save
                 </Button>
               )}
-              {!field.name.includes('Address') && (
+              {!field.name.includes('Address') && !field.name.includes('address') && (
                 <Button
                   className="cancel-icon"
                   onClick={() => {
@@ -88,7 +88,7 @@ const UpdatingSelectField = observer(
           ) : (
             <div className="text-wrapper">
               <span className="text">{value}</span>
-              {!field.name.includes('Address') && (
+              {!field.name.includes('Address') && !field.name.includes('address') && (
                 <Button
                   className="edit-icon"
                   onClick={() => {

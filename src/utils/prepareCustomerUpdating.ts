@@ -15,18 +15,21 @@ const prepareCustomerUpdating = (customer: Customer, bearerToken: string): Custo
     defaultBillingAddressId,
   } = customer;
 
-  const shippingAddresses = addresses.filter((address) =>
-    shippingAddressIds.includes(address.id || '')
-  );
-  const billingAddresses = addresses.filter((address) =>
-    billingAddressIds.includes(address.id || '')
-  );
+  const shippingAddresses = addresses
+    .filter((address) => shippingAddressIds.includes(address.id || ''))
+    .map((address) => ({ ...address }));
 
-  const restAddresses = addresses.filter(
-    (address) =>
-      !shippingAddressIds.includes(address.id || '') &&
-      !billingAddressIds.includes(address.id || '')
-  );
+  const billingAddresses = addresses
+    .filter((address) => billingAddressIds.includes(address.id || ''))
+    .map((address) => ({ ...address }));
+
+  const restAddresses = addresses
+    .filter(
+      (address) =>
+        !shippingAddressIds.includes(address.id || '') &&
+        !billingAddressIds.includes(address.id || '')
+    )
+    .map((address) => ({ ...address }));
 
   return {
     id,
