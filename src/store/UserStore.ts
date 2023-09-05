@@ -36,6 +36,10 @@ class UserStore {
     this.localStorageState.saveState();
   }
 
+  getUser() {
+    return this.shadowUser?.user;
+  }
+
   get isAuth() {
     return this.shadowIsAuth;
   }
