@@ -17,7 +17,12 @@ import {
   updatingValidationSchema,
 } from '../utils/updatingValidation';
 import { UpdatingSelectField } from './UpdatingSelectField';
-import { addAddress, changePassword, updateUser } from '../services/commercetoolsApi';
+import {
+  addAddress,
+  changePassword,
+  removeAddress,
+  updateUser,
+} from '../services/commercetoolsApi';
 import { Context } from '../store/Context';
 import { prepareCustomerUpdating } from '../utils/prepareCustomerUpdating';
 import 'react-toastify/dist/ReactToastify.css';
@@ -853,6 +858,103 @@ const UpdatingForm = observer(() => {
       });
     }
   };
+  const deleteAddress = async (addressId: string) => {
+    try {
+      const userData = await removeAddress(
+        addressId,
+        initialValues.id,
+        initialValues.bearerToken,
+        initialValues.version
+      );
+
+      const userToken = user?.user?.token;
+      if (userToken) {
+        user?.setUser({ user: userData, token: userToken });
+        setInitialValues({
+          ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
+          bearerToken: user!.user!.token.access_token,
+          password: '',
+          passwordNew: '',
+          passwordConfirm: '',
+          newCity: '',
+          newCountry: '',
+          newPostalCode: '',
+          newStreetName: '',
+          isShippingAddress: false,
+          isBillingAddress: false,
+        });
+        setIsValidAddressesFields({
+          addresses: initialValues.addresses.reduce<{ [key: string]: { [key: string]: boolean } }>(
+            (acc, address) => {
+              if (address.id) {
+                acc[address.id] = {
+                  country: true,
+                  city: true,
+                  street: true,
+                  postalCode: true,
+                };
+              }
+              return acc;
+            },
+            {}
+          ),
+          shippingAddresses: initialValues.shippingAddresses.reduce<{
+            [key: string]: { [key: string]: boolean };
+          }>((acc, address) => {
+            if (address.id) {
+              acc[address.id] = {
+                country: true,
+                city: true,
+                street: true,
+                postalCode: true,
+              };
+            }
+            return acc;
+          }, {}),
+          billingAddresses: initialValues.billingAddresses.reduce<{
+            [key: string]: { [key: string]: boolean };
+          }>((acc, address) => {
+            if (address.id) {
+              acc[address.id] = {
+                country: true,
+                city: true,
+                street: true,
+                postalCode: true,
+              };
+            }
+            return acc;
+          }, {}),
+        });
+        setIsValidAddresses(
+          isValidAddressesOfType('shippingAddresses') &&
+            isValidAddressesOfType('billingAddresses') &&
+            isValidAddressesOfType('addresses')
+        );
+      }
+      setIsChangeNewAddressForm({
+        newCountry: false,
+        newCity: false,
+        newPostalCode: false,
+        newStreetName: false,
+      });
+      setIsValidNewAddressFields({
+        newCountry: true,
+        newCity: true,
+        newPostalCode: true,
+        newStreetName: true,
+      });
+      setIsAddedAddressForm(false);
+      toast.success('Адрес успешно удален!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 2000,
+      });
+    } catch (error) {
+      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+  };
 
   return (
     <div className="form-wrapper">
@@ -1327,6 +1429,19 @@ const UpdatingForm = observer(() => {
                                           Редактировать этот адрес
                                         </Button>
                                       )}
+                                      {!isUpdateAddressesForm.shippingAddresses[
+                                        address.id || ''
+                                      ] && (
+                                        <Button
+                                          className="button"
+                                          type="button"
+                                          onClick={async () => {
+                                            await deleteAddress(address.id || '');
+                                          }}
+                                        >
+                                          Удалить этот адрес
+                                        </Button>
+                                      )}
 
                                       {isUpdateAddressesForm.shippingAddresses[
                                         address.id || ''
@@ -1697,6 +1812,17 @@ const UpdatingForm = observer(() => {
                                         Редактировать этот адрес
                                       </Button>
                                     )}
+                                    {!isUpdateAddressesForm.billingAddresses[address.id || ''] && (
+                                      <Button
+                                        className="button"
+                                        type="button"
+                                        onClick={async () => {
+                                          await deleteAddress(address.id || '');
+                                        }}
+                                      >
+                                        Удалить этот адрес
+                                      </Button>
+                                    )}
 
                                     {isUpdateAddressesForm.billingAddresses[address.id || ''] && (
                                       <Button
@@ -2044,6 +2170,17 @@ const UpdatingForm = observer(() => {
                                         }}
                                       >
                                         Редактировать этот адрес
+                                      </Button>
+                                    )}
+                                    {!isUpdateAddressesForm.addresses[address.id || ''] && (
+                                      <Button
+                                        className="button"
+                                        type="button"
+                                        onClick={async () => {
+                                          await deleteAddress(address.id || '');
+                                        }}
+                                      >
+                                        Удалить этот адрес
                                       </Button>
                                     )}
 
