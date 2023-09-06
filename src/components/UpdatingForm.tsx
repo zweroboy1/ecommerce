@@ -3,7 +3,7 @@ import { Field, FieldArray, Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import { ToastContainer, toast } from 'react-toastify';
 import { Button } from './Button';
-import { Address, UpdatingInitialValues } from '../types';
+import { Address, Customer, UpdatingInitialValues } from '../types';
 import { UpdatingField } from './UpdatingField';
 import {
   dateOfBirthValidationSchema,
@@ -19,6 +19,7 @@ import {
 import { UpdatingSelectField } from './UpdatingSelectField';
 import {
   addAddress,
+  addSpecialAddress,
   changePassword,
   removeAddress,
   updateUser,
@@ -95,16 +96,16 @@ const UpdatingForm = observer(() => {
     return Object.values(isValidAddressesFields[type][id]).every((value) => value === true);
   };
 
-  const isValidAddressesOfType = (type: 'shippingAddresses' | 'billingAddresses' | 'addresses') =>
-    Object.values(isValidAddressesFields[type]).every((address) => {
-      return Object.values(address).every((value) => value === true);
-    });
+  // const isValidAddressesOfType = (type: 'shippingAddresses' | 'billingAddresses' | 'addresses') =>
+  //   Object.values(isValidAddressesFields[type]).every((address) => {
+  //     return Object.values(address).every((value) => value === true);
+  //   });
 
-  const [isValidAddresses, setIsValidAddresses] = useState(
-    isValidAddressesOfType('shippingAddresses') &&
-      isValidAddressesOfType('billingAddresses') &&
-      isValidAddressesOfType('addresses')
-  );
+  // const [isValidAddresses, setIsValidAddresses] = useState(
+  //   isValidAddressesOfType('shippingAddresses') &&
+  //     isValidAddressesOfType('billingAddresses') &&
+  //     isValidAddressesOfType('addresses')
+  // );
 
   useEffect(() => {
     const newIsValidAddressesFields = {
@@ -243,6 +244,10 @@ const UpdatingForm = observer(() => {
     isChangePersonalDataForm.lastName ||
     isChangePersonalDataForm.dateOfBirth;
 
+  const [isCheckAsShippingAddress, setIsCheckAsShippingAddress] = useState<string[]>([]);
+
+  const [isCheckAsBillingAddress, setIsCheckAsBillingAddress] = useState<string[]>([]);
+
   const getAllAddressIds = (): { [key: string]: string[] } => {
     const addressIds: { [key: string]: string[] } = {
       shippingAddresses: [],
@@ -380,15 +385,15 @@ const UpdatingForm = observer(() => {
     return Object.values(isChangeAddressesForm[type][id]).some((value) => value === true);
   };
 
-  const isChangeAddressesOfType = (type: 'shippingAddresses' | 'billingAddresses' | 'addresses') =>
-    Object.values(isChangeAddressesForm[type]).some((address) => {
-      return Object.values(address).some((value) => value === true);
-    });
+  // const isChangeAddressesOfType = (type: 'shippingAddresses' | 'billingAddresses' | 'addresses') =>
+  //   Object.values(isChangeAddressesForm[type]).some((address) => {
+  //     return Object.values(address).some((value) => value === true);
+  //   });
 
-  const isChangeAddresses =
-    isChangeAddressesOfType('shippingAddresses') ||
-    isChangeAddressesOfType('billingAddresses') ||
-    isChangeAddressesOfType('addresses');
+  // const isChangeAddresses =
+  //   isChangeAddressesOfType('shippingAddresses') ||
+  //   isChangeAddressesOfType('billingAddresses') ||
+  //   isChangeAddressesOfType('addresses');
 
   useEffect(() => {
     const newIsChangeAddressesForm = {
@@ -494,11 +499,11 @@ const UpdatingForm = observer(() => {
     }));
   };
 
-  const isUpdateAddresForm = [
-    ...Object.values(isUpdateAddressesForm)
-      .map((addressesIds) => Object.values(addressesIds))
-      .flat(),
-  ].some((value) => value === true);
+  // const isUpdateAddresForm = [
+  //   ...Object.values(isUpdateAddressesForm)
+  //     .map((addressesIds) => Object.values(addressesIds))
+  //     .flat(),
+  // ].some((value) => value === true);
 
   const changePage = (namePage: string) => {
     if (showedPage !== namePage) {
@@ -536,22 +541,168 @@ const UpdatingForm = observer(() => {
     return [firstName, lastName, dateOfBirth].filter(({ action }) => action !== 'unset');
   };
 
-  const saveAddresses = async (addresses: Address[]) => {
-    const data = addresses.map((address) => ({
+  // const saveAddresses = async (
+  //   addresses: Address[],
+  //   isShipping: boolean,
+  //   isBilling: boolean,
+  //   isChanged: boolean
+  // ) => {
+  //   const data = addresses.map((address) => ({
+  //     action: 'changeAddress',
+  //     addressId: address.id,
+  //     address: { ...address },
+  //   }));
+  //   try {
+  //     const userData = await updateUser(
+  //       data,
+  //       initialValues.id,
+  //       initialValues.bearerToken,
+  //       initialValues.version
+  //     );
+  //     const userToken = user?.user?.token;
+  //     if (userToken) {
+  //       user?.setUser({ user: userData, token: userToken });
+  //     }
+  //     setIsUpdateAddressesForm(updatingAddressObject({}));
+  //     setIsChangeAddressesForm(initialAddressesObject());
+  //     toast.success('Изменения успешно сохранены!', {
+  //       position: toast.POSITION.TOP_RIGHT,
+  //       autoClose: 3000,
+  //     });
+  //   } catch (error) {
+  //     toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+  //       position: toast.POSITION.TOP_RIGHT,
+  //       autoClose: 3000,
+  //     });
+  //   }
+  // };
+
+  const saveAddress = async (
+    address: Address,
+    isShipping: boolean,
+    isBilling: boolean,
+    isChanged: boolean
+  ) => {
+    const data = {
       action: 'changeAddress',
       addressId: address.id,
       address: { ...address },
-    }));
+    };
     try {
-      const userData = await updateUser(
-        data,
-        initialValues.id,
-        initialValues.bearerToken,
-        initialValues.version
-      );
+      let userData: Customer;
+      if (isChanged) {
+        userData = await updateUser(
+          [data],
+          initialValues.id,
+          initialValues.bearerToken,
+          initialValues.version
+        );
+      }
+      if (isShipping) {
+        userData = await addSpecialAddress(
+          address.id || '',
+          'shipping',
+          isChanged ? userData!.id : initialValues.id,
+          initialValues.bearerToken,
+          isChanged ? userData!.version : initialValues.version
+        );
+      }
+      if (isBilling) {
+        if (isShipping) {
+          userData = await addAddress(
+            {
+              country: address.country,
+              city: address.city,
+              streetName: address.streetName,
+              postalCode: address.postalCode,
+            },
+            userData!.id,
+            initialValues.bearerToken,
+            userData!.version
+          );
+        }
+        userData = await addSpecialAddress(
+          isShipping
+            ? userData!.addresses[userData!.addresses.length - 1].id || ''
+            : address.id || '',
+          'billing',
+          isShipping || isChanged ? userData!.id : initialValues.id,
+          initialValues.bearerToken,
+          isShipping || isChanged ? userData!.version : initialValues.version
+        );
+      }
       const userToken = user?.user?.token;
       if (userToken) {
-        user?.setUser({ user: userData, token: userToken });
+        user?.setUser({ user: userData!, token: userToken });
+        setInitialValues({
+          ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
+          bearerToken: user!.user!.token.access_token,
+          password: '',
+          passwordNew: '',
+          passwordConfirm: '',
+          newCity: '',
+          newCountry: '',
+          newPostalCode: '',
+          newStreetName: '',
+          isShippingAddress: false,
+          isBillingAddress: false,
+        });
+        setIsValidAddressesFields({
+          addresses: initialValues.addresses.reduce<{ [key: string]: { [key: string]: boolean } }>(
+            (acc, addr) => {
+              if (addr.id) {
+                acc[addr.id] = {
+                  country: true,
+                  city: true,
+                  street: true,
+                  postalCode: true,
+                };
+              }
+              return acc;
+            },
+            {}
+          ),
+          shippingAddresses: initialValues.shippingAddresses.reduce<{
+            [key: string]: { [key: string]: boolean };
+          }>((acc, addr) => {
+            if (addr.id) {
+              acc[addr.id] = {
+                country: true,
+                city: true,
+                street: true,
+                postalCode: true,
+              };
+            }
+            return acc;
+          }, {}),
+          billingAddresses: initialValues.billingAddresses.reduce<{
+            [key: string]: { [key: string]: boolean };
+          }>((acc, addr) => {
+            if (addr.id) {
+              acc[addr.id] = {
+                country: true,
+                city: true,
+                street: true,
+                postalCode: true,
+              };
+            }
+            return acc;
+          }, {}),
+        });
+        // setIsValidAddresses(
+        //   isValidAddressesOfType('shippingAddresses') &&
+        //     isValidAddressesOfType('billingAddresses') &&
+        //     isValidAddressesOfType('addresses')
+        // );
+      }
+
+      if (address.id && isCheckAsBillingAddress.includes(address.id)) {
+        setIsCheckAsBillingAddress([...isCheckAsBillingAddress.filter((id) => id !== address.id)]);
+      }
+      if (address.id && isCheckAsShippingAddress.includes(address.id)) {
+        setIsCheckAsShippingAddress([
+          ...isCheckAsShippingAddress.filter((id) => id !== address.id),
+        ]);
       }
       setIsUpdateAddressesForm(updatingAddressObject({}));
       setIsChangeAddressesForm(initialAddressesObject());
@@ -761,14 +912,41 @@ const UpdatingForm = observer(() => {
     }
   };
 
-  const addNewAddress = async (data: Address) => {
+  const addNewAddress = async (data: Address, isShipping: boolean, isBilling: boolean) => {
     try {
-      const userData = await addAddress(
+      let userData = await addAddress(
         data,
         initialValues.id,
         initialValues.bearerToken,
         initialValues.version
       );
+      if (isShipping) {
+        userData = await addSpecialAddress(
+          userData.addresses[userData.addresses.length - 1].id || '',
+          'shipping',
+          userData.id,
+          initialValues.bearerToken,
+          userData.version
+        );
+      }
+
+      if (isBilling) {
+        if (isShipping) {
+          userData = await addAddress(
+            data,
+            userData.id,
+            initialValues.bearerToken,
+            userData.version
+          );
+        }
+        userData = await addSpecialAddress(
+          userData.addresses[userData.addresses.length - 1].id || '',
+          'billing',
+          userData.id,
+          initialValues.bearerToken,
+          userData.version
+        );
+      }
 
       const userToken = user?.user?.token;
       if (userToken) {
@@ -828,11 +1006,11 @@ const UpdatingForm = observer(() => {
             return acc;
           }, {}),
         });
-        setIsValidAddresses(
-          isValidAddressesOfType('shippingAddresses') &&
-            isValidAddressesOfType('billingAddresses') &&
-            isValidAddressesOfType('addresses')
-        );
+        // setIsValidAddresses(
+        //   isValidAddressesOfType('shippingAddresses') &&
+        //     isValidAddressesOfType('billingAddresses') &&
+        //     isValidAddressesOfType('addresses')
+        // );
       }
       setIsChangeNewAddressForm({
         newCountry: false,
@@ -925,11 +1103,11 @@ const UpdatingForm = observer(() => {
             return acc;
           }, {}),
         });
-        setIsValidAddresses(
-          isValidAddressesOfType('shippingAddresses') &&
-            isValidAddressesOfType('billingAddresses') &&
-            isValidAddressesOfType('addresses')
-        );
+        // setIsValidAddresses(
+        //   isValidAddressesOfType('shippingAddresses') &&
+        //     isValidAddressesOfType('billingAddresses') &&
+        //     isValidAddressesOfType('addresses')
+        // );
       }
       setIsChangeNewAddressForm({
         newCountry: false,
@@ -976,7 +1154,7 @@ const UpdatingForm = observer(() => {
         validationSchema={updatingValidationSchema}
         enableReinitialize={true}
       >
-        {({ values, setFieldTouched, validateField, setFieldValue, setValues }) => {
+        {({ values, setFieldTouched, validateField, setFieldValue }) => {
           return (
             <Form>
               {showedPage === 'userInfo' && (
@@ -1352,12 +1530,16 @@ const UpdatingForm = observer(() => {
                           className="button"
                           type="button"
                           onClick={async () => {
-                            await addNewAddress({
-                              city: values.newCity,
-                              country: values.newCountry,
-                              streetName: values.newStreetName,
-                              postalCode: values.newPostalCode,
-                            });
+                            await addNewAddress(
+                              {
+                                city: values.newCity,
+                                country: values.newCountry,
+                                streetName: values.newStreetName,
+                                postalCode: values.newPostalCode,
+                              },
+                              isShippingAddress,
+                              isBillingAddress
+                            );
                           }}
                           disabled={!isChangeNewAddress || !isValidNewAddress}
                         >
@@ -1450,11 +1632,14 @@ const UpdatingForm = observer(() => {
                                           className="button"
                                           type="button"
                                           onClick={async () => {
-                                            await saveAddresses([
+                                            await saveAddress(
                                               {
                                                 ...address,
                                               },
-                                            ]);
+                                              false,
+                                              false,
+                                              true
+                                            );
                                           }}
                                           disabled={
                                             !isChangeAddress(
@@ -1829,11 +2014,14 @@ const UpdatingForm = observer(() => {
                                         className="button"
                                         type="button"
                                         onClick={async () => {
-                                          await saveAddresses([
+                                          await saveAddress(
                                             {
                                               ...address,
                                             },
-                                          ]);
+                                            false,
+                                            false,
+                                            true
+                                          );
                                         }}
                                         disabled={
                                           !isChangeAddress('billingAddresses', address.id || '') ||
@@ -2178,6 +2366,26 @@ const UpdatingForm = observer(() => {
                                         type="button"
                                         onClick={async () => {
                                           await deleteAddress(address.id || '');
+                                          if (
+                                            address.id &&
+                                            isCheckAsBillingAddress.includes(address.id)
+                                          ) {
+                                            setIsCheckAsBillingAddress([
+                                              ...isCheckAsBillingAddress.filter(
+                                                (id) => id !== address.id
+                                              ),
+                                            ]);
+                                          }
+                                          if (
+                                            address.id &&
+                                            isCheckAsShippingAddress.includes(address.id)
+                                          ) {
+                                            setIsCheckAsShippingAddress([
+                                              ...isCheckAsShippingAddress.filter(
+                                                (id) => id !== address.id
+                                              ),
+                                            ]);
+                                          }
                                         }}
                                       >
                                         Удалить этот адрес
@@ -2189,15 +2397,23 @@ const UpdatingForm = observer(() => {
                                         className="button"
                                         type="button"
                                         onClick={async () => {
-                                          await saveAddresses([
-                                            {
-                                              ...address,
-                                            },
-                                          ]);
+                                          await saveAddress(
+                                            { ...address },
+                                            !!address.id &&
+                                              isCheckAsShippingAddress.includes(address.id),
+                                            !!address.id &&
+                                              isCheckAsBillingAddress.includes(address.id),
+                                            !!address.id && isChangeAddress('addresses', address.id)
+                                          );
                                         }}
                                         disabled={
-                                          !isChangeAddress('addresses', address.id || '') ||
-                                          !isValidAddress('addresses', address.id || '')
+                                          !(
+                                            (address.id &&
+                                              isCheckAsShippingAddress.includes(address.id)) ||
+                                            (address.id &&
+                                              isCheckAsBillingAddress.includes(address.id)) ||
+                                            isChangeAddress('addresses', address.id || '')
+                                          ) || !isValidAddress('addresses', address.id || '')
                                         }
                                       >
                                         Сохранить
@@ -2236,12 +2452,93 @@ const UpdatingForm = observer(() => {
                                             initialValues.addresses[index]?.postalCode,
                                             true
                                           );
+                                          if (
+                                            address.id &&
+                                            isCheckAsBillingAddress.includes(address.id)
+                                          ) {
+                                            setIsCheckAsBillingAddress([
+                                              ...isCheckAsBillingAddress.filter(
+                                                (id) => id !== address.id
+                                              ),
+                                            ]);
+                                          }
+                                          if (
+                                            address.id &&
+                                            isCheckAsShippingAddress.includes(address.id)
+                                          ) {
+                                            setIsCheckAsShippingAddress([
+                                              ...isCheckAsShippingAddress.filter(
+                                                (id) => id !== address.id
+                                              ),
+                                            ]);
+                                          }
                                         }}
                                       >
                                         Отменить
                                       </Button>
                                     )}
                                   </div>
+
+                                  {isUpdateAddressesForm.addresses[address.id || ''] && (
+                                    <div>
+                                      <label className="label-check">
+                                        <input
+                                          type="checkbox"
+                                          onChange={() => {
+                                            if (
+                                              address.id &&
+                                              !isCheckAsShippingAddress.includes(address.id)
+                                            ) {
+                                              setIsCheckAsShippingAddress([
+                                                ...isCheckAsShippingAddress,
+                                                address.id,
+                                              ]);
+                                            } else {
+                                              setIsCheckAsShippingAddress([
+                                                ...isCheckAsShippingAddress.filter(
+                                                  (item) => item !== address.id
+                                                ),
+                                              ]);
+                                            }
+                                          }}
+                                          checked={
+                                            !!address.id &&
+                                            isCheckAsShippingAddress.includes(address.id)
+                                          }
+                                        />
+                                        <span>Сделать адресом доставки</span>
+                                      </label>
+
+                                      <label className="label-check">
+                                        <input
+                                          type="checkbox"
+                                          onChange={() => {
+                                            if (
+                                              address.id &&
+                                              !isCheckAsBillingAddress.includes(address.id)
+                                            ) {
+                                              setIsCheckAsBillingAddress([
+                                                ...isCheckAsBillingAddress,
+                                                address.id,
+                                              ]);
+                                            } else {
+                                              setIsCheckAsBillingAddress([
+                                                ...isCheckAsBillingAddress.filter(
+                                                  (item) => item !== address.id
+                                                ),
+                                              ]);
+                                            }
+                                          }}
+                                          checked={
+                                            !!address.id &&
+                                            isCheckAsBillingAddress.includes(address.id)
+                                          }
+                                        />
+                                        <span>Сделать адресом оплаты</span>
+                                      </label>
+                                    </div>
+                                  )}
+
                                   <UpdatingSelectField
                                     label="Страна"
                                     name={`addresses.${index}.country`}
@@ -2452,18 +2749,21 @@ const UpdatingForm = observer(() => {
                       />
                     </div>
                   )}
-                  <div className="button-wrapp">
-                    {!isUpdateAddresForm && (
-                      <Button
-                        className="button"
-                        type="button"
-                        onClick={() => {
-                          setIsUpdateAddressesForm(updatingAddressObject(getAllAddressIds()));
-                        }}
-                      >
-                        Редактировать адреса
-                      </Button>
-                    )}
+                  {/* <div className="button-wrapp">
+                    {!isUpdateAddresForm &&
+                      ((values.shippingAddresses && values.shippingAddresses.length > 0) ||
+                        (values.billingAddresses && values.billingAddresses.length > 0) ||
+                        (values.addresses && values.addresses.length > 0)) && (
+                        <Button
+                          className="button"
+                          type="button"
+                          onClick={() => {
+                            setIsUpdateAddressesForm(updatingAddressObject(getAllAddressIds()));
+                          }}
+                        >
+                          Редактировать адреса
+                        </Button>
+                      )}
 
                     {isUpdateAddresForm && (
                       <Button
@@ -2500,7 +2800,7 @@ const UpdatingForm = observer(() => {
                         Отменить все изменения
                       </Button>
                     )}
-                  </div>
+                  </div> */}
                 </>
               )}
               {showedPage === 'personalData' && (
