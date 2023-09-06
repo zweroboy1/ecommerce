@@ -37,7 +37,7 @@ class UserStore {
   }
 
   getUser() {
-    return this.shadowUser?.user;
+    return this.shadowUser;
   }
 
   get isAuth() {
