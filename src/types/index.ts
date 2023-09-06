@@ -31,6 +31,19 @@ type InputProps = {
   setValid?: (val: string) => void;
 };
 
+type UpdatingInitialValues = CustomerUpdating & {
+  bearerToken: string;
+  password: string;
+  passwordNew: string;
+  passwordConfirm: string;
+  newCity: string;
+  newCountry: string;
+  newPostalCode: string;
+  newStreetName: string;
+  isShippingAddress: boolean;
+  isBillingAddress: boolean;
+};
+
 type Address = {
   readonly id?: string;
   streetName: string;
@@ -278,4 +291,5 @@ export type {
   SelectedFilters,
   ProductImagesProps,
   ProductDetailsProps,
+  UpdatingInitialValues,
 };
