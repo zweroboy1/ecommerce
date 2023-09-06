@@ -222,6 +222,52 @@ export async function changePassword(
   }
 }
 
+export async function addSpecialAddress(
+  addressId: string,
+  addressType: 'shipping' | 'billing',
+  id: string,
+  bearerToken: string,
+  version: number
+): Promise<Customer> {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/customers/${id}`;
+  const requestBody = {
+    version,
+    actions: [
+      {
+        action: addressType === 'shipping' ? 'addShippingAddressId' : 'addBillingAddressId',
+        addressId,
+      },
+    ],
+  };
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+    const responseData = await response.json();
+
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === CT_INVALID_JSON_ERROR) {
+        throw new Error(CT_ERROR);
+      }
+      if (error.message === CT_EXISTING_CUSTOMER_ERROR) {
+        throw new Error(CT_EXISTING_CUSTOMER_ERROR);
+      }
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
 export async function addAddress(
   data: Address,
   id: string,
@@ -249,7 +295,6 @@ export async function addAddress(
       body: JSON.stringify(requestBody),
     });
     const responseData = await response.json();
-
     if (responseData.message) {
       throw new Error(responseData.message);
     }
