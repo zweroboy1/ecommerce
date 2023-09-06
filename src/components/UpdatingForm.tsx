@@ -1133,6 +1133,111 @@ const UpdatingForm = observer(() => {
       });
     }
   };
+  const setDefaultAddress = async (addressId: string, type: string) => {
+    const data = {
+      action: type === 'billing' ? 'setDefaultBillingAddress' : 'setDefaultShippingAddress',
+      addressId,
+    };
+
+    try {
+      const userData = await updateUser(
+        [data],
+        initialValues.id,
+        initialValues.bearerToken,
+        initialValues.version
+      );
+
+      const userToken = user?.user?.token;
+      if (userToken) {
+        user?.setUser({ user: userData, token: userToken });
+        setInitialValues({
+          ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
+          bearerToken: user!.user!.token.access_token,
+          password: '',
+          passwordNew: '',
+          passwordConfirm: '',
+          newCity: '',
+          newCountry: '',
+          newPostalCode: '',
+          newStreetName: '',
+          isShippingAddress: false,
+          isBillingAddress: false,
+        });
+        setIsValidAddressesFields({
+          addresses: initialValues.addresses.reduce<{ [key: string]: { [key: string]: boolean } }>(
+            (acc, address) => {
+              if (address.id) {
+                acc[address.id] = {
+                  country: true,
+                  city: true,
+                  street: true,
+                  postalCode: true,
+                };
+              }
+              return acc;
+            },
+            {}
+          ),
+          shippingAddresses: initialValues.shippingAddresses.reduce<{
+            [key: string]: { [key: string]: boolean };
+          }>((acc, address) => {
+            if (address.id) {
+              acc[address.id] = {
+                country: true,
+                city: true,
+                street: true,
+                postalCode: true,
+              };
+            }
+            return acc;
+          }, {}),
+          billingAddresses: initialValues.billingAddresses.reduce<{
+            [key: string]: { [key: string]: boolean };
+          }>((acc, address) => {
+            if (address.id) {
+              acc[address.id] = {
+                country: true,
+                city: true,
+                street: true,
+                postalCode: true,
+              };
+            }
+            return acc;
+          }, {}),
+        });
+        // setIsValidAddresses(
+        //   isValidAddressesOfType('shippingAddresses') &&
+        //     isValidAddressesOfType('billingAddresses') &&
+        //     isValidAddressesOfType('addresses')
+        // );
+      }
+      setIsChangeNewAddressForm({
+        newCountry: false,
+        newCity: false,
+        newPostalCode: false,
+        newStreetName: false,
+      });
+      setIsValidNewAddressFields({
+        newCountry: true,
+        newCity: true,
+        newPostalCode: true,
+        newStreetName: true,
+      });
+      setIsAddedAddressForm(false);
+      toast.success(
+        `Адрес ${type === 'billing' ? 'оплаты' : 'доставки'} по умолчанию успешно установлен!`,
+        {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 2000,
+        }
+      );
+    } catch (error) {
+      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+  };
 
   return (
     <div className="form-wrapper">
@@ -1699,6 +1804,21 @@ const UpdatingForm = observer(() => {
                                     {address.id === values.defaultShippingAddressId && (
                                       <span>Адрес доставки по умолчанию</span>
                                     )}
+                                    {address.id !== values.defaultShippingAddressId && (
+                                      <label>
+                                        <input
+                                          type="checkbox"
+                                          onChange={async (
+                                            e: React.ChangeEvent<HTMLInputElement>
+                                          ) => {
+                                            if (e.target.checked) {
+                                              await setDefaultAddress(address.id || '', 'shipping');
+                                            }
+                                          }}
+                                        />
+                                        <span>Установить как адрес доставки по умолчанию</span>
+                                      </label>
+                                    )}
 
                                     <UpdatingSelectField
                                       label="Страна"
@@ -2075,6 +2195,21 @@ const UpdatingForm = observer(() => {
                                   </div>
                                   {address.id === values.defaultBillingAddressId && (
                                     <span>Адрес оплаты по умолчанию</span>
+                                  )}
+                                  {address.id !== values.defaultBillingAddressId && (
+                                    <label>
+                                      <input
+                                        type="checkbox"
+                                        onChange={async (
+                                          e: React.ChangeEvent<HTMLInputElement>
+                                        ) => {
+                                          if (e.target.checked) {
+                                            await setDefaultAddress(address.id || '', 'billing');
+                                          }
+                                        }}
+                                      />
+                                      <span>Установить как адрес оплаты по умолчанию</span>
+                                    </label>
                                   )}
 
                                   <UpdatingSelectField
