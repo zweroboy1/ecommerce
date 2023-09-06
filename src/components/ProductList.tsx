@@ -3,7 +3,9 @@ import { Product } from '../types';
 import { formatPrice } from '../utils/formatPrice';
 
 function ProductList({ products }: { products: Product[] }) {
-  return (
+  return products.length === 0 ? (
+    <p className="no-product">Нет продуктов, удовлетворяющих заданным условиям</p>
+  ) : (
     <div className="goods">
       {products.map((product) => (
         <div key={product.id} className="goods__card">
