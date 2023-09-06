@@ -4,7 +4,6 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   width: 100%;
   gap: 20px;
-  position: relative;
 
   @include media('xxl') {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -19,10 +18,6 @@
   }
 
   &__card {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -33,33 +28,9 @@
     border: 1px solid #eaeaea;
     transition: $transition;
 
-    .goods__description-txt {
-      transition: box-shadow 0.3s ease-in-out;
-    }
-
     &:hover {
-      box-shadow: 0 2px 60px #0000003d;
-      overflow: visible;
-
-      @include media('s') {
-        width: auto;
-      }
-
-      .goods__description-txt {
-        position: absolute;
-        max-height: none;
-        z-index: 100;
-        background: #fff;
-        padding: 0 15px 20px;
-        width: calc(100% + 32px);
-        border: 1px solid #eaeaea;
-        border-top: none;
-        border-bottom-left-radius: 8px;
-        border-bottom-right-radius: 8px;
-        box-shadow: 0px 80px 60px 0px #0000003d;
-      }
+      box-shadow: 0 2px 16px #0000003d;
     }
-
   }
 
   &__image {
@@ -103,7 +74,6 @@
     flex-direction: column;
     min-width: 135px;
     margin: 15px 0 0;
-    position: relative;
   }
 
   &__content {
@@ -116,7 +86,6 @@
   }
 
   &__name {
-    position: relative;
     display: flex;
     flex: 0 0 auto;
     white-space: normal;
@@ -226,11 +195,9 @@
   }
 
   &__description {
-    @include flexColumn();
     margin-top: 20px;
+    @include flexColumn();
     text-align: left;
-    min-height: 60px;
-    position: relative;
   }
 
   &__expand-description {

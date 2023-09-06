@@ -6,42 +6,14 @@ import { formatPrice } from '../utils/formatPrice';
 function ProductList({ products }: { products: Product[] }) {
   const [isHoveredMap, setIsHoveredMap] = useState<{ [key: string]: boolean }>({});
   const [expandedDescription, setExpandedDescription] = useState<string | null>(null);
-
-  const handleImageMouseEnter = (productId: string) => {
-    setIsHoveredMap((prevState) => ({
-      ...prevState,
-      [productId]: true,
-    }));
-  };
-
-  const handleImageMouseLeave = (productId: string) => {
-    setIsHoveredMap((prevState) => ({
-      ...prevState,
-      [productId]: false,
-    }));
-  };
-
-  const handleCardMouseEnter = (productId: string) => {
-    setExpandedDescription(productId);
-  };
-
-  const handleCardMouseLeave = () => {
-    setExpandedDescription(null);
-  };
-
   return (
     <div className="goods">
       {products.map((product) => (
-        <div
-          key={product.id}
-          className="goods__card"
-          onMouseEnter={() => handleCardMouseEnter(product.id)}
-          onMouseLeave={handleCardMouseLeave}
-        >
+        <div key={product.id} className="goods__card">
           <div
             className="goods__image"
-            onMouseEnter={() => handleImageMouseEnter(product.id)}
-            onMouseLeave={() => handleImageMouseLeave(product.id)}
+            onMouseEnter={() => setIsHoveredMap({ ...isHoveredMap, [product.id]: true })}
+            onMouseLeave={() => setIsHoveredMap({ ...isHoveredMap, [product.id]: false })}
           >
             <NavLink to={`/product/${product.slug}`}>
               <img
@@ -80,19 +52,25 @@ function ProductList({ products }: { products: Product[] }) {
               </div>
             </div>
             <div className="goods__description">
-              <div className="goods__description-txt">
-                {expandedDescription === product.id ? (
-                  product.description
-                ) : (
-                  <>
-                    {product.description.length > 70 ? (
-                      <>{product.description.substring(0, 70)}...</>
-                    ) : (
-                      product.description
-                    )}
-                  </>
-                )}
-              </div>
+              {expandedDescription === product.id ? (
+                product.description
+              ) : (
+                <>
+                  {product.description.length > 70 ? (
+                    <>
+                      {product.description.substring(0, 70)}...
+                      <button
+                        className="goods__expand-description button button-second"
+                        onClick={() => setExpandedDescription(product.id)}
+                      >
+                        Подробнее
+                      </button>
+                    </>
+                  ) : (
+                    product.description
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>

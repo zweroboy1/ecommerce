@@ -28,7 +28,6 @@
     }
 
     .carousel {
-
       .product__image,
       &-image {
         @include flex();
@@ -138,7 +137,6 @@
         }
       }
     }
-
   }
 
   &__details {
