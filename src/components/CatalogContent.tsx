@@ -71,7 +71,16 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
 
   useEffect(() => {
     setCurrentPage(0);
-  }, [currentCategoryUrl, selectedBrands, selectedColors, minPrice, maxPrice, textQuery]);
+  }, [
+    category,
+    subcategory,
+    currentCategoryUrl,
+    selectedBrands,
+    selectedColors,
+    minPrice,
+    maxPrice,
+    textQuery,
+  ]);
 
   useEffect(() => {
     const currentCategory = CATEGORIES.find((cat) => cat.url === currentCategoryUrl);
@@ -184,11 +193,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
             <Loader />
           ) : (
             <>
-              {products.length === 0 ? (
-                <p className="no-product">Нет продуктов, удовлетворяющих заданным условиям</p>
-              ) : (
-                <ProductList products={products} />
-              )}
+              <ProductList products={products} />
               {totalPages > 1 && (
                 <ReactPaginate
                   pageCount={totalPages}

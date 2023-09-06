@@ -1,5 +1,5 @@
 .filters {
-  width: max-content;
+  width: 100%;
 
   &__container {
     @include flex($justify: flex-start, $align: stretch, $wrap: wrap);
@@ -142,10 +142,12 @@
 
   &__selected {
     @include flex($justify: flex-start, $wrap: wrap);
+    width: 100%;
   }
 
   &__selected-list {
     @include flex($justify: flex-start, $wrap: wrap);
+    width: 100%;
   }
 
   &__selected-item {
