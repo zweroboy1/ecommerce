@@ -267,6 +267,51 @@ export async function addAddress(
   }
 }
 
+export async function removeAddress(
+  addressId: string,
+  id: string,
+  bearerToken: string,
+  version: number
+): Promise<Customer> {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/customers/${id}`;
+  const requestBody = {
+    version,
+    actions: [
+      {
+        action: 'removeAddress',
+        addressId,
+      },
+    ],
+  };
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+    const responseData = await response.json();
+
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === CT_INVALID_JSON_ERROR) {
+        throw new Error(CT_ERROR);
+      }
+      if (error.message === CT_EXISTING_CUSTOMER_ERROR) {
+        throw new Error(CT_EXISTING_CUSTOMER_ERROR);
+      }
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
 export async function getUser(credentials: Credentials): Promise<CustomerWithToken> {
   const bearerToken = await fetchBearerToken();
   if (bearerToken === null) {
