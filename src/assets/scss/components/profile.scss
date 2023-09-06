@@ -40,12 +40,10 @@
       position: relative;
     }
 
-    > span:first-child {
-      min-width: 120px;
+    >span:first-child {
       width: 120px;
 
       @include media('xxs') {
-        min-width: 75px;
         width: 75px;
       }
     }
@@ -85,25 +83,24 @@
         width: 120px;
       }
     }
+  }
 
-    input,
-    select {
-      min-width: 250px;
-      width: 250px;
-      font-size: 14px;
-      background: #fff0ac45;
-      box-shadow: inset 0px 2px 2px rgba(0, 8, 29, 5%), inset 0px 0px 2px rgba(0, 8, 29, 6%),
-        inset 0px 1px 3px rgba(0, 8, 29, 8%);
 
-      @include media('xs') {
-        min-width: 150px;
-        width: 150px;
-      }
+  input[type=text],
+  select {
+    width: 250px;
+    font-size: 14px;
+    background: #fff0ac45;
+    box-shadow: inset 0px 2px 2px rgba(0, 8, 29, 5%), inset 0px 0px 2px rgba(0, 8, 29, 6%),
+      inset 0px 1px 3px rgba(0, 8, 29, 8%);
 
-      @include media('xxs') {
-        min-width: 120px;
-        width: 120px;
-      }
+    @include media('xs') {
+      min-width: 150px;
+      width: 150px;
+    }
+
+    @include media('xxs') {
+      width: 120px;
     }
   }
 
@@ -185,14 +182,61 @@
 
     &-row {
       text-align: left;
+      @include flexColumn($align: flex-start);
+      gap: 15px;
 
       h2 {
         padding: 20px 0 0;
       }
 
-      .address > span {
+      .address>span {
         margin-top: 15px;
         @include font($family: $font-family-title);
+      }
+
+      .field,
+      .label {
+        margin: 10px 0;
+      }
+
+      .label {
+        @include flex($justify: flex-start);
+        text-align: left;
+        position: relative;
+
+        span {
+          width: 120px;
+
+          @include media('xxs') {
+            width: 75px;
+          }
+        }
+      }
+
+      .label-check {
+        margin-top: 20px;
+      }
+
+      .label-check+.label-check {
+        margin-top: 0;
+      }
+
+      .error-message {
+        top: 40px;
+        left: 120px;
+
+        @include media('xxs') {
+          left: 80px;
+        }
+
+        @include media('xxs') {
+          max-width: 150px;
+        }
+      }
+
+      .button-wrapper {
+        justify-content: flex-start;
+        width: 100%;
       }
     }
   }
@@ -200,11 +244,11 @@
   .personal-data {
     margin-bottom: 25px;
 
-    .field > span {
+    .field>span {
       min-width: 120px;
     }
 
-    .field:first-of-type > span {
+    .field:first-of-type>span {
       width: 50px;
       min-width: 50px;
     }
