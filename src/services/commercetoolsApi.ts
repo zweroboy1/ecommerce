@@ -181,47 +181,6 @@ async function createCustomer(
   }
 }
 
-export async function changePassword(
-  passwords: { password: string; passwordNew: string },
-  id: string,
-  bearerToken: string,
-  version: number
-): Promise<Customer> {
-  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/customers/password`;
-  const data = {
-    id,
-    version,
-    currentPassword: passwords.password,
-    newPassword: passwords.passwordNew,
-  };
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    const responseData = await response.json();
-
-    if (responseData.message) {
-      throw new Error(responseData.message);
-    }
-    return responseData;
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === CT_INVALID_JSON_ERROR) {
-        throw new Error(CT_ERROR);
-      }
-      if (error.message === CT_EXISTING_CUSTOMER_ERROR) {
-        throw new Error(CT_EXISTING_CUSTOMER_ERROR);
-      }
-    }
-    throw new Error(CT_ERROR);
-  }
-}
-
 export async function addSpecialAddress(
   addressId: string,
   addressType: 'shipping' | 'billing',
@@ -382,6 +341,48 @@ export async function getUser(credentials: Credentials): Promise<CustomerWithTok
     } else {
       throw new Error(CT_WRONG_PASSWORD_ERROR);
     }
+  }
+}
+
+export async function changePassword(
+  passwords: { password: string; passwordNew: string },
+  email: string,
+  id: string,
+  bearerToken: string,
+  version: number
+): Promise<CustomerWithToken> {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/customers/password`;
+  const data = {
+    id,
+    version,
+    currentPassword: passwords.password,
+    newPassword: passwords.passwordNew,
+  };
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const responseData = await response.json();
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    const userResponseData = await getUser({ email, password: passwords.passwordNew });
+    return userResponseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === CT_INVALID_JSON_ERROR) {
+        throw new Error(CT_ERROR);
+      }
+      if (error.message === CT_EXISTING_CUSTOMER_ERROR) {
+        throw new Error(CT_EXISTING_CUSTOMER_ERROR);
+      }
+    }
+    throw new Error(CT_ERROR);
   }
 }
 
