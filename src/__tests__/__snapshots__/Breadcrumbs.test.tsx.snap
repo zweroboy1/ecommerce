@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Breadcrumbs component displays a single breadcrumb 1`] = `
+<div>
+  <div
+    class="breadcrumbs"
+  >
+    <a
+      aria-current="page"
+      class="breadcrumbs__link active"
+      href="/"
+    >
+      Главная
+    </a>
+    <span
+      class="breadcrumbs__slash"
+    >
+      /
+    </span>
+    <span>
+      <a
+        aria-current="page"
+        class="breadcrumbs__current active"
+        href="/"
+      >
+        Категория
+      </a>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Breadcrumbs component displays multiple breadcrumbs 1`] = `
+<div>
+  <div
+    class="breadcrumbs"
+  >
+    <a
+      aria-current="page"
+      class="breadcrumbs__link active"
+      href="/"
+    >
+      Главная
+    </a>
+    <span
+      class="breadcrumbs__slash"
+    >
+      /
+    </span>
+    <span>
+      <a
+        class="breadcrumbs__link"
+        href="/catalog/category"
+      >
+        Категория
+      </a>
+    </span>
+    <span>
+      <span
+        class="breadcrumbs__slash"
+      >
+        /
+      </span>
+      <a
+        aria-current="page"
+        class="breadcrumbs__current active"
+        href="/"
+      >
+        Товар
+      </a>
+    </span>
+  </div>
+</div>
+`;

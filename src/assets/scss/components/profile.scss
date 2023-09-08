@@ -40,7 +40,7 @@
       position: relative;
     }
 
-    >span:first-child {
+    > span:first-child {
       width: 120px;
 
       @include media('xxs') {
@@ -85,8 +85,7 @@
     }
   }
 
-
-  input[type=text],
+  input[type='text'],
   select {
     width: 250px;
     font-size: 14px;
@@ -189,7 +188,7 @@
         padding: 20px 0 0;
       }
 
-      .address>span {
+      .address > span {
         margin-top: 15px;
         @include font($family: $font-family-title);
       }
@@ -217,7 +216,7 @@
         margin-top: 20px;
       }
 
-      .label-check+.label-check {
+      .label-check + .label-check {
         margin-top: 0;
       }
 
@@ -244,11 +243,11 @@
   .personal-data {
     margin-bottom: 25px;
 
-    .field>span {
+    .field > span {
       min-width: 120px;
     }
 
-    .field:first-of-type>span {
+    .field:first-of-type > span {
       width: 50px;
       min-width: 50px;
     }
