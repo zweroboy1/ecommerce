@@ -1,13 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-
-type FilterProps = {
-  title: string;
-  options: string[];
-  optionsLabel?: string[];
-  selectedOptions: string[];
-  onOptionsChange: (selectedOptions: string[]) => void;
-  onReset?: () => void;
-};
+import { FilterProps } from '../types';
 
 const Filter: React.FC<FilterProps> = ({
   title,

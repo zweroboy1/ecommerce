@@ -254,6 +254,15 @@ type SelectedFilters = {
   [key: number]: string;
 };
 
+type FilterProps = {
+  title: string;
+  options: string[];
+  optionsLabel?: string[];
+  selectedOptions: string[];
+  onOptionsChange: (selectedOptions: string[]) => void;
+  onReset?: () => void;
+};
+
 interface ProductImagesProps {
   productImages: string[];
 }
@@ -292,4 +301,5 @@ export type {
   ProductImagesProps,
   ProductDetailsProps,
   UpdatingInitialValues,
+  FilterProps,
 };
