@@ -593,18 +593,18 @@ const UpdatingForm = observer(() => {
       if (isChanged) {
         userData = await updateUser(
           [data],
-          initialValues.id,
-          initialValues.bearerToken,
-          initialValues.version
+          user?.getUser()!.user!.id || '',
+          user?.getUser()!.token.access_token || '',
+          user?.getUser()!.user!.version || 1
         );
       }
       if (isShipping) {
         userData = await addSpecialAddress(
           address.id || '',
           'shipping',
-          isChanged ? userData!.id : initialValues.id,
-          initialValues.bearerToken,
-          isChanged ? userData!.version : initialValues.version
+          isChanged ? userData!.id : user?.getUser()!.user!.id || '',
+          user?.getUser()!.token.access_token || '',
+          isChanged ? userData!.version : user?.getUser()!.user!.version || 1
         );
       }
       if (isBilling) {
@@ -617,7 +617,7 @@ const UpdatingForm = observer(() => {
               postalCode: address.postalCode,
             },
             userData!.id,
-            initialValues.bearerToken,
+            user?.getUser()!.token.access_token || '',
             userData!.version
           );
         }
@@ -626,9 +626,9 @@ const UpdatingForm = observer(() => {
             ? userData!.addresses[userData!.addresses.length - 1].id || ''
             : address.id || '',
           'billing',
-          isShipping || isChanged ? userData!.id : initialValues.id,
-          initialValues.bearerToken,
-          isShipping || isChanged ? userData!.version : initialValues.version
+          isShipping || isChanged ? userData!.id : user?.getUser()!.user!.id || '',
+          user?.getUser()!.token.access_token || '',
+          isShipping || isChanged ? userData!.version : user?.getUser()!.user!.version || 1
         );
       }
       const userToken = user?.user?.token;
@@ -731,9 +731,9 @@ const UpdatingForm = observer(() => {
       try {
         const userData = await updateUser(
           data,
-          initialValues.id,
-          initialValues.bearerToken,
-          initialValues.version
+          user?.getUser()!.user!.id || '',
+          user?.getUser()!.token.access_token || '',
+          user?.getUser()!.user!.version || 1
         );
         const userToken = user?.user?.token;
         if (userToken) {
@@ -761,9 +761,9 @@ const UpdatingForm = observer(() => {
       try {
         const userData = await updateUser(
           data,
-          initialValues.id,
-          initialValues.bearerToken,
-          initialValues.version
+          user?.getUser()!.user!.id || '',
+          user?.getUser()!.token.access_token || '',
+          user?.getUser()!.user!.version || 1
         );
         const userToken = user?.user?.token;
         if (userToken) {
@@ -791,9 +791,9 @@ const UpdatingForm = observer(() => {
       try {
         const userData = await updateUser(
           data,
-          initialValues.id,
-          initialValues.bearerToken,
-          initialValues.version
+          user?.getUser()!.user!.id || '',
+          user?.getUser()!.token.access_token || '',
+          user?.getUser()!.user!.version || 1
         );
         const userToken = user?.user?.token;
         if (userToken) {
@@ -817,9 +817,9 @@ const UpdatingForm = observer(() => {
       try {
         const userData = await updateUser(
           data,
-          initialValues.id,
-          initialValues.bearerToken,
-          initialValues.version
+          user?.getUser()!.user!.id || '',
+          user?.getUser()!.token.access_token || '',
+          user?.getUser()!.user!.version || 1
         );
         const userToken = user?.user?.token;
         if (userToken) {
@@ -843,9 +843,9 @@ const UpdatingForm = observer(() => {
       try {
         const userData = await updateUser(
           data,
-          initialValues.id,
-          initialValues.bearerToken,
-          initialValues.version
+          user?.getUser()!.user!.id || '',
+          user?.getUser()!.token.access_token || '',
+          user?.getUser()!.user!.version || 1
         );
         const userToken = user?.user?.token;
         if (userToken) {
@@ -879,15 +879,13 @@ const UpdatingForm = observer(() => {
     try {
       const userData = await changePassword(
         data,
-        initialValues.id,
-        initialValues.bearerToken,
-        initialValues.version
+        user?.getUser()!.user!.email || '',
+        user?.getUser()!.user!.id || '',
+        user?.getUser()!.token.access_token || '',
+        user?.getUser()!.user!.version || 1
       );
 
-      const userToken = user?.user?.token;
-      if (userToken) {
-        user?.setUser({ user: userData, token: userToken });
-      }
+      user?.setUser({ user: userData.user, token: userData.token });
       setIsChangeUserSettingsForm({
         ...isChangeUserSettingsForm,
         password: false,
@@ -916,16 +914,16 @@ const UpdatingForm = observer(() => {
     try {
       let userData = await addAddress(
         data,
-        initialValues.id,
-        initialValues.bearerToken,
-        initialValues.version
+        user?.getUser()!.user!.id || '',
+        user?.getUser()!.token.access_token || '',
+        user?.getUser()!.user!.version || 1
       );
       if (isShipping) {
         userData = await addSpecialAddress(
           userData.addresses[userData.addresses.length - 1].id || '',
           'shipping',
           userData.id,
-          initialValues.bearerToken,
+          user?.getUser()!.token.access_token || '',
           userData.version
         );
       }
@@ -935,7 +933,7 @@ const UpdatingForm = observer(() => {
           userData = await addAddress(
             data,
             userData.id,
-            initialValues.bearerToken,
+            user?.getUser()!.token.access_token || '',
             userData.version
           );
         }
@@ -943,7 +941,7 @@ const UpdatingForm = observer(() => {
           userData.addresses[userData.addresses.length - 1].id || '',
           'billing',
           userData.id,
-          initialValues.bearerToken,
+          user?.getUser()!.token.access_token || '',
           userData.version
         );
       }
@@ -1040,9 +1038,9 @@ const UpdatingForm = observer(() => {
     try {
       const userData = await removeAddress(
         addressId,
-        initialValues.id,
-        initialValues.bearerToken,
-        initialValues.version
+        user?.getUser()!.user!.id || '',
+        user?.getUser()!.token.access_token || '',
+        user?.getUser()!.user!.version || 1
       );
 
       const userToken = user?.user?.token;
@@ -1142,9 +1140,9 @@ const UpdatingForm = observer(() => {
     try {
       const userData = await updateUser(
         [data],
-        initialValues.id,
-        initialValues.bearerToken,
-        initialValues.version
+        user?.getUser()!.user!.id || '',
+        user?.getUser()!.token.access_token || '',
+        user?.getUser()!.user!.version || 1
       );
 
       const userToken = user?.user?.token;
