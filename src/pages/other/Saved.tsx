@@ -9,10 +9,7 @@ import {
   removeProductFromCart,
 } from '../../services/commercetoolsApi';
 
-interface LineItem {
-  id: string;
-  productId: string;
-}
+import { Cart } from '../../types';
 
 const OUR_PRODUCTS_IDS = [
   '220a50c3-c9f7-46e7-a9d4-3105e97a3c3e',
@@ -26,11 +23,9 @@ let PRODUCT_ID_TO_CART_ID: Record<string, string> = {};
 let accessToken = '';
 let cartId = '';
 let cartVersion = 0;
-let actualCart: { lineItems: LineItem[] } | null = null;
+let actualCart: Cart | null = null;
 
-function transformToProductIdMap(originalObject: {
-  lineItems: LineItem[];
-}): Record<string, string> {
+function transformToProductIdMap(originalObject: Cart): Record<string, string> {
   const resultObject: Record<string, string> = {};
 
   originalObject.lineItems.forEach((item) => {
@@ -40,7 +35,7 @@ function transformToProductIdMap(originalObject: {
   return resultObject;
 }
 
-function updateCardVariables(cart: { lineItems: LineItem[]; version: number }) {
+function updateCartVariables(cart: Cart) {
   cartVersion = cart.version; // обновили версию
   actualCart = cart;
   if (actualCart) {
@@ -113,7 +108,7 @@ async function addNewProduct(id: number) {
 
   try {
     const result = await addProductToCart(accessToken, OUR_PRODUCTS_IDS[id], cartId, cartVersion);
-    updateCardVariables(result);
+    updateCartVariables(result);
   } catch (error) {
     // eslint-disable-next-line
     console.log(error);
@@ -141,7 +136,7 @@ async function removeProduct(id: number) {
       cartVersion
       /* , последний параметр - количество. если не указан, то удалятся все экземпляры этого продукта, если цифра, например 1, то будет удалять столько единиц */
     );
-    updateCardVariables(result);
+    updateCartVariables(result);
   } catch (error) {
     // eslint-disable-next-line
     console.log(error);
