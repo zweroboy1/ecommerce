@@ -17,6 +17,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
   const isAuth = user?.isAuth;
   const userCard = isAuth ? user?.user?.card : null;
   const inCard = userCard?.some((item) => item.product.id === id);
+  const quantityInCard = inCard ? userCard?.find((item) => item.product.id === id)?.quantity : 0;
 
   const [quantity, setQuantity] = useState(1);
 
@@ -120,14 +121,15 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
           <input type="hidden" name="appearance[quick_view]" value="" />
           <div>
             <ButtonIcon
-              className="product__cart-button button"
+              className={`product__cart-button button ${isAuth && inCard ? 'inCard' : ''}`}
+              title="Добавлено"
               type="button"
               onClick={() => {}}
               disabled={isAuth && inCard}
             >
               <span>
                 <i className="product__icon-cart"></i>
-                {isAuth && inCard ? <bdi>Добавлено</bdi> : <bdi>В козине</bdi>}
+                {isAuth && inCard ? <bdi>Добавлено ({quantityInCard})</bdi> : <bdi>В корзину</bdi>}
               </span>
             </ButtonIcon>
           </div>
