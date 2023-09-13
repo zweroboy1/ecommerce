@@ -332,6 +332,24 @@ export async function getUser(credentials: Credentials): Promise<CustomerWithTok
     }
     return {
       user: userData,
+      card: [
+        {
+          product: {
+            id: 'c4c5b297-7694-45dd-b159-02dedece4793',
+            name: 'string',
+            description: 'string',
+            slug: 'string',
+            price: 1,
+            discountedPrice: undefined,
+            images: ['string'],
+            brand: 'string',
+            color: 'string',
+            sku: 'string',
+            categories: ['string'],
+          },
+          quantity: 1,
+        },
+      ],
       token: userToken,
     };
   } catch (error) {
