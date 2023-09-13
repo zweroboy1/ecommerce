@@ -632,8 +632,9 @@ const UpdatingForm = observer(() => {
         );
       }
       const userToken = user?.user?.token;
+      const userCard = user?.user?.card;
       if (userToken) {
-        user?.setUser({ user: userData!, token: userToken });
+        user?.setUser({ user: userData!, card: userCard!, token: userToken });
         setInitialValues({
           ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
           bearerToken: user!.user!.token.access_token,
@@ -736,8 +737,9 @@ const UpdatingForm = observer(() => {
           user?.getUser()!.user!.version || 1
         );
         const userToken = user?.user?.token;
+        const userCard = user?.user?.card;
         if (userToken) {
-          user?.setUser({ user: userData, token: userToken });
+          user?.setUser({ user: userData, card: userCard!, token: userToken });
         }
         setIsChangePersonalDataForm({ ...isChangePersonalDataForm, firstName: false });
         setIsUpdatePersonalDataForm({ ...isUpdatePersonalDataForm, firstName: false });
@@ -766,8 +768,9 @@ const UpdatingForm = observer(() => {
           user?.getUser()!.user!.version || 1
         );
         const userToken = user?.user?.token;
+        const userCard = user?.user?.card;
         if (userToken) {
-          user?.setUser({ user: userData, token: userToken });
+          user?.setUser({ user: userData, card: userCard!, token: userToken });
         }
         setIsChangePersonalDataForm({ ...isChangePersonalDataForm, lastName: false });
         setIsUpdatePersonalDataForm({ ...isUpdatePersonalDataForm, lastName: false });
@@ -796,8 +799,9 @@ const UpdatingForm = observer(() => {
           user?.getUser()!.user!.version || 1
         );
         const userToken = user?.user?.token;
+        const userCard = user?.user?.card;
         if (userToken) {
-          user?.setUser({ user: userData, token: userToken });
+          user?.setUser({ user: userData, card: userCard!, token: userToken });
         }
         setIsChangePersonalDataForm({ ...isChangePersonalDataForm, dateOfBirth: false });
         setIsUpdatePersonalDataForm({ ...isUpdatePersonalDataForm, dateOfBirth: false });
@@ -822,8 +826,9 @@ const UpdatingForm = observer(() => {
           user?.getUser()!.user!.version || 1
         );
         const userToken = user?.user?.token;
+        const userCard = user?.user?.card;
         if (userToken) {
-          user?.setUser({ user: userData, token: userToken });
+          user?.setUser({ user: userData, card: userCard!, token: userToken });
         }
         setIsChangeUserSettingsForm({ ...isChangeUserSettingsForm, email: false });
         setIsUpdateUserSettingsForm({ ...isUpdateUserSettingsForm, email: false });
@@ -848,8 +853,9 @@ const UpdatingForm = observer(() => {
           user?.getUser()!.user!.version || 1
         );
         const userToken = user?.user?.token;
+        const userCard = user?.user?.card;
         if (userToken) {
-          user?.setUser({ user: userData, token: userToken });
+          user?.setUser({ user: userData, card: userCard!, token: userToken });
         }
         setIsChangePersonalDataForm({
           firstName: false,
@@ -885,7 +891,7 @@ const UpdatingForm = observer(() => {
         user?.getUser()!.user!.version || 1
       );
 
-      user?.setUser({ user: userData.user, token: userData.token });
+      user?.setUser({ user: userData.user, card: userData.card, token: userData.token });
       setIsChangeUserSettingsForm({
         ...isChangeUserSettingsForm,
         password: false,
@@ -947,8 +953,9 @@ const UpdatingForm = observer(() => {
       }
 
       const userToken = user?.user?.token;
+      const userCard = user?.user?.card;
       if (userToken) {
-        user?.setUser({ user: userData, token: userToken });
+        user?.setUser({ user: userData, card: userCard!, token: userToken });
         setInitialValues({
           ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
           bearerToken: user!.user!.token.access_token,
@@ -1044,8 +1051,9 @@ const UpdatingForm = observer(() => {
       );
 
       const userToken = user?.user?.token;
+      const userCard = user?.user?.card;
       if (userToken) {
-        user?.setUser({ user: userData, token: userToken });
+        user?.setUser({ user: userData, card: userCard!, token: userToken });
         setInitialValues({
           ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
           bearerToken: user!.user!.token.access_token,
@@ -1146,8 +1154,9 @@ const UpdatingForm = observer(() => {
       );
 
       const userToken = user?.user?.token;
+      const userCard = user?.user?.card;
       if (userToken) {
-        user?.setUser({ user: userData, token: userToken });
+        user?.setUser({ user: userData, card: userCard!, token: userToken });
         setInitialValues({
           ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
           bearerToken: user!.user!.token.access_token,
