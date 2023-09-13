@@ -1,15 +1,16 @@
 import { useState, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 import { Product } from '../types';
 import { formatPrice } from '../utils/formatPrice';
 import { ButtonIcon } from './ButtonIcon';
 import { Context } from '../store/Context';
 import Notification from './Notification';
 
-function ProductList({ products }: { products: Product[] }) {
+const ProductList = observer(({ products }: { products: Product[] }) => {
   const { user } = useContext(Context);
   const isAuth = user?.isAuth;
-  const userCard = isAuth ? user?.user?.card : null;
+  const userCart = isAuth ? user?.user?.cart : null;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productData, setProductData] = useState({
     name: '',
@@ -79,7 +80,7 @@ function ProductList({ products }: { products: Product[] }) {
                   className="goods__control"
                   onClick={() => openModal(product.name, product.price, product.images[0])}
                   type="button"
-                  disabled={isAuth && userCard?.some((item) => item.product.id === product.id)}
+                  disabled={isAuth && userCart?.lineItems.some((item) => item.id === product.id)}
                   title="Добавить в карзину"
                 >
                   <i className="goods__control-icon cart__icon header-icon"></i>
@@ -100,6 +101,6 @@ function ProductList({ products }: { products: Product[] }) {
       ))}
     </div>
   );
-}
+});
 
 export { ProductList };
