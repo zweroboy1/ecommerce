@@ -106,6 +106,7 @@ const ProductPage = () => {
               <div className="right product__details">
                 <h1>{product.name}</h1>
                 <ProductDetails
+                  id={product.id}
                   price={product.price}
                   discountedPrice={product.discountedPrice}
                   brand={product.brand}

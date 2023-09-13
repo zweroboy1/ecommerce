@@ -103,7 +103,7 @@ type ButtonIconProps = {
   type?: 'button' | 'submit' | 'reset';
   id?: string;
   tabIndex?: number;
-  title: string;
+  title?: string;
 };
 
 type Country = {
@@ -287,6 +287,7 @@ interface ProductImagesProps {
 }
 
 interface ProductDetailsProps {
+  id: string;
   price: number;
   discountedPrice?: number;
   brand: string;

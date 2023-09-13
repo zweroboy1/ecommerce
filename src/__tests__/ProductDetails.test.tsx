@@ -3,6 +3,7 @@ import { ProductDetails } from '../pages/product/ProductDetails';
 
 describe('ProductDetails', () => {
   const defaultProps = {
+    id: '1',
     price: 1000,
     discountedPrice: 800,
     brand: 'Пример Бренда',
