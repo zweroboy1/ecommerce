@@ -1,15 +1,23 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { ProductDetailsProps } from '../../types';
 import { formatPrice } from '../../utils/formatPrice';
 import { COLORS } from '../../constants';
+import { ButtonIcon } from '../../components/ButtonIcon';
+import { Context } from '../../store/Context';
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({
+  id,
   price,
   discountedPrice,
   brand,
   color,
   sku,
 }) => {
+  const { user } = useContext(Context);
+  const isAuth = user?.isAuth;
+  const userCard = isAuth ? user?.user?.card : null;
+  const inCard = userCard?.some((item) => item.product.id === id);
+
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,10 +32,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 
   const handleIncrease = () => {
     setQuantity(quantity + 1);
-  };
-
-  const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault(); // логика добавления товара в корзину
   };
 
   const savings = discountedPrice ? (price - discountedPrice) / 100 : 0;
@@ -115,12 +119,17 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
           <input type="hidden" name="appearance[but_role]" value="big" />
           <input type="hidden" name="appearance[quick_view]" value="" />
           <div>
-            <button className="product__cart-button button" type="submit" onClick={handleAddToCart}>
+            <ButtonIcon
+              className="product__cart-button button"
+              type="button"
+              onClick={() => {}}
+              disabled={isAuth && inCard}
+            >
               <span>
                 <i className="product__icon-cart"></i>
-                <bdi>В корзину</bdi>
+                {isAuth && inCard ? <bdi>Добавлено</bdi> : <bdi>В козине</bdi>}
               </span>
-            </button>
+            </ButtonIcon>
           </div>
         </div>
 
