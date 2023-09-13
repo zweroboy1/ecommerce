@@ -275,6 +275,18 @@ interface ProductDetailsProps {
   sku: string;
 }
 
+interface LineItem {
+  id: string;
+  productId: string;
+  quantity: number;
+}
+
+type Cart = {
+  id: string;
+  version: number;
+  lineItems: LineItem[];
+};
+
 export type {
   InputProps,
   ButtonProps,
@@ -302,4 +314,5 @@ export type {
   ProductDetailsProps,
   UpdatingInitialValues,
   FilterProps,
+  Cart,
 };

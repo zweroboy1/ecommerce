@@ -20,6 +20,7 @@ import {
   TokenResponse,
   ProductAllData,
   ProductApiResponse,
+  Cart,
 } from '../types';
 
 import { PRODUCTS_ON_PAGE, MAX_PRICE_FILTER } from '../constants';
@@ -675,7 +676,7 @@ export async function addProductToCart(
   cartId: string,
   cartVersion: number = 1,
   quantity: number = 1
-) {
+): Promise<Cart> {
   const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts/${cartId}`;
   try {
     const response = await fetch(endpoint, {
@@ -703,7 +704,7 @@ export async function addProductToCart(
       );
 
       if (concurrentModificationError) {
-        return addProductToCart(
+        return await addProductToCart(
           accessToken,
           productId,
           cartId,
@@ -737,7 +738,7 @@ export async function removeProductFromCart(
   cartId: string,
   cartVersion: number = 1,
   quantity: number = 0
-) {
+): Promise<Cart> {
   const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts/${cartId}`;
   try {
     const response = await fetch(endpoint, {
@@ -764,7 +765,7 @@ export async function removeProductFromCart(
       );
 
       if (concurrentModificationError) {
-        return removeProductFromCart(
+        return await removeProductFromCart(
           accessToken,
           productId,
           cartId,
