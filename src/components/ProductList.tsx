@@ -1,8 +1,15 @@
 import { NavLink } from 'react-router-dom';
+import { useContext } from 'react';
 import { Product } from '../types';
 import { formatPrice } from '../utils/formatPrice';
+import { ButtonIcon } from './ButtonIcon';
+import { Context } from '../store/Context';
 
 function ProductList({ products }: { products: Product[] }) {
+  const { user } = useContext(Context);
+  const isAuth = user?.isAuth;
+  const userCard = isAuth ? user?.user?.card : null;
+
   return products.length === 0 ? (
     <p className="no-product">Нет продуктов, удовлетворяющих заданным условиям</p>
   ) : (
@@ -51,9 +58,15 @@ function ProductList({ products }: { products: Product[] }) {
                     <span className="goods__price">{formatPrice(product.price / 100)} ₴</span>
                   )}
                 </div>
-                <div className="goods__control">
+                <ButtonIcon
+                  className="goods__control"
+                  onClick={() => {}}
+                  type="button"
+                  disabled={isAuth && userCard?.some((item) => item.product.id === product.id)}
+                  title="Добавить в карзину"
+                >
                   <i className="goods__control-icon cart__icon header-icon"></i>
-                </div>
+                </ButtonIcon>
               </div>
               <div className="goods__description1">{product.description}</div>
             </div>

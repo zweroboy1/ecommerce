@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 type InputProps = {
   placeholder?: string;
   value?: string;
@@ -93,6 +95,17 @@ type ButtonProps = {
   tabIndex?: number;
 };
 
+type ButtonIconProps = {
+  children: ReactNode;
+  className?: string;
+  onClick?: () => void;
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  id?: string;
+  tabIndex?: number;
+  title: string;
+};
+
 type Country = {
   [key: string]: string;
 };
@@ -138,8 +151,14 @@ type CustomerUpdating = {
   bearerToken: string;
 };
 
+type LotInCard = {
+  product: Product;
+  quantity: number;
+};
+
 type CustomerWithToken = {
   user: Customer;
+  card: LotInCard[];
   token: TokenResponse;
 };
 
@@ -278,6 +297,7 @@ interface ProductDetailsProps {
 export type {
   InputProps,
   ButtonProps,
+  ButtonIconProps,
   Address,
   Country,
   TokenResponse,
