@@ -21,6 +21,7 @@ import {
   ProductAllData,
   ProductApiResponse,
   Cart,
+  CartAPI,
 } from '../types';
 
 import { PRODUCTS_ON_PAGE, MAX_PRICE_FILTER } from '../constants';
@@ -324,6 +325,53 @@ export async function removeAddress(
   }
 }
 
+export async function createCart(accessToken: string): Promise<Cart> {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts`;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ currency: 'UAH' }),
+    });
+    const responseData = await response.json();
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
+export async function getMyCarts(accessToken: string): Promise<CartAPI> {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts`;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const responseData = await response.json();
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
 export async function getUser(credentials: Credentials): Promise<CustomerWithToken> {
   const bearerToken = await fetchBearerToken();
   if (bearerToken === null) {
@@ -338,26 +386,25 @@ export async function getUser(credentials: Credentials): Promise<CustomerWithTok
     if (userData instanceof Error) {
       throw userData;
     }
+    let userCart: Cart;
+    try {
+      const userCarts = await getMyCarts(userToken.access_token);
+      if (userCarts.count) {
+        const cart = userCarts.results[0];
+        userCart = cart;
+      } else {
+        throw new Error('CT_NO_CART_ERROR');
+      }
+    } catch (error) {
+      const cart = await createCart(userToken.access_token);
+      userCart = cart;
+    }
+    if (userData instanceof Error) {
+      throw userData;
+    }
     return {
       user: userData,
-      card: [
-        {
-          product: {
-            id: 'c4c5b297-7694-45dd-b159-02dedece4793',
-            name: 'string',
-            description: 'string',
-            slug: 'string',
-            price: 1,
-            discountedPrice: undefined,
-            images: ['string'],
-            brand: 'string',
-            color: 'string',
-            sku: 'string',
-            categories: ['string'],
-          },
-          quantity: 1,
-        },
-      ],
+      cart: userCart,
       token: userToken,
     };
   } catch (error) {
@@ -461,7 +508,7 @@ export async function registerUser(userRegisterData: RegisterUser): Promise<Cust
   }
 
   if (userRegisterData.isBillingAddressDefault) {
-    userForRegistration.defaultBillingAddress = isSameAddress ? 0 : 1;
+    userForRegistration.defaultBillingAddress = isSameAddress ? 1 : 1;
   }
 
   const bearerToken = await fetchBearerToken();
@@ -618,30 +665,6 @@ export async function updateUser(
   }
 }
 
-export async function createCart(accessToken: string) {
-  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts`;
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ currency: 'UAH' }),
-    });
-    const responseData = await response.json();
-    if (responseData.message) {
-      throw new Error(responseData.message);
-    }
-    return responseData;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-    throw new Error(CT_ERROR);
-  }
-}
-
 export async function getAnonymousToken() {
   const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/${projectKey}/anonymous/token?grant_type=client_credentials`;
   try {
@@ -649,29 +672,6 @@ export async function getAnonymousToken() {
       method: 'POST',
       headers: {
         Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    const responseData = await response.json();
-    if (responseData.message) {
-      throw new Error(responseData.message);
-    }
-    return responseData;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-    throw new Error(CT_ERROR);
-  }
-}
-
-export async function getMyCarts(accessToken: string) {
-  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts`;
-  try {
-    const response = await fetch(endpoint, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       },
     });
