@@ -6,6 +6,8 @@ import {
   CT_INVALID_JSON_ERROR,
   CT_EXISTING_CUSTOMER_ERROR,
   CT_NETWORK_PROBLEM,
+  CT_PRODUCT_NOT_FOUND,
+  CT_PRODUCT_NO_ID,
 } from '../constants/apiMessages';
 
 import {
@@ -22,6 +24,11 @@ import {
 
 import { PRODUCTS_ON_PAGE, MAX_PRICE_FILTER } from '../constants';
 import { getCategoryCtIds } from '../utils/getCategoryCtIds';
+
+interface ErrorObject {
+  code: string;
+  currentVersion?: string;
+}
 
 const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
@@ -589,5 +596,198 @@ export async function updateUser(
     return responseData;
   } catch (error) {
     throw new Error(CT_LOGIN_ERROR);
+  }
+}
+
+export async function createCart(accessToken: string) {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts`;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ currency: 'UAH' }),
+    });
+    const responseData = await response.json();
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
+export async function getAnonymousToken() {
+  const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/${projectKey}/anonymous/token?grant_type=client_credentials`;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const responseData = await response.json();
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
+export async function getMyCarts(accessToken: string) {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts`;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const responseData = await response.json();
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
+export async function addProductToCart(
+  accessToken: string,
+  productId: string,
+  cartId: string,
+  cartVersion: number = 1,
+  quantity: number = 1
+) {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts/${cartId}`;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        version: cartVersion,
+        actions: [
+          {
+            action: 'addLineItem',
+            productId,
+            variantId: 1,
+            quantity,
+          },
+        ],
+      }),
+    });
+    const responseData = await response.json();
+    if (responseData.errors) {
+      const concurrentModificationError = responseData.errors.find(
+        (error: ErrorObject) => error.code === 'ConcurrentModification'
+      );
+
+      if (concurrentModificationError) {
+        return addProductToCart(
+          accessToken,
+          productId,
+          cartId,
+          Number(concurrentModificationError.currentVersion),
+          quantity
+        );
+      }
+
+      const referencedResourceNotFoundError = responseData.errors.find(
+        (error: ErrorObject) => error.code === 'ReferencedResourceNotFound'
+      );
+
+      if (referencedResourceNotFoundError) {
+        throw new Error(CT_PRODUCT_NOT_FOUND);
+      }
+
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
+export async function removeProductFromCart(
+  accessToken: string,
+  productId: string,
+  cartId: string,
+  cartVersion: number = 1,
+  quantity: number = 0
+) {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts/${cartId}`;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        version: cartVersion,
+        actions: [
+          {
+            action: 'removeLineItem',
+            lineItemId: productId,
+            ...(quantity !== 0 ? { quantity } : {}),
+          },
+        ],
+      }),
+    });
+    const responseData = await response.json();
+    if (responseData.errors) {
+      const concurrentModificationError = responseData.errors.find(
+        (error: ErrorObject) => error.code === 'ConcurrentModification'
+      );
+
+      if (concurrentModificationError) {
+        return removeProductFromCart(
+          accessToken,
+          productId,
+          cartId,
+          Number(concurrentModificationError.currentVersion),
+          quantity
+        );
+      }
+
+      const invalidOperationError = responseData.errors.find(
+        (error: ErrorObject) => error.code === 'InvalidOperation'
+      );
+
+      if (invalidOperationError) {
+        throw new Error(CT_PRODUCT_NO_ID);
+      }
+
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
   }
 }
