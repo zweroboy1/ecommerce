@@ -151,14 +151,9 @@ type CustomerUpdating = {
   bearerToken: string;
 };
 
-type LotInCard = {
-  product: Product;
-  quantity: number;
-};
-
 type CustomerWithToken = {
   user: Customer;
-  card: LotInCard[];
+  cart: Cart;
   token: TokenResponse;
 };
 
@@ -307,6 +302,13 @@ type Cart = {
   lineItems: LineItem[];
 };
 
+type CartAPI = {
+  count: number;
+  limit: number;
+  offset: number;
+  results: Cart[];
+};
+
 export type {
   InputProps,
   ButtonProps,
@@ -336,4 +338,5 @@ export type {
   UpdatingInitialValues,
   FilterProps,
   Cart,
+  CartAPI,
 };
