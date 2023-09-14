@@ -1,16 +1,20 @@
 import { useState, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import { ToastContainer, toast } from 'react-toastify';
 import { Product } from '../types';
 import { formatPrice } from '../utils/formatPrice';
 import { ButtonIcon } from './ButtonIcon';
 import { Context } from '../store/Context';
 import Notification from './Notification';
+import { addProductToCart, createCart, getMyCarts } from '../services/commercetoolsApi';
 
 const ProductList = observer(({ products }: { products: Product[] }) => {
   const { user } = useContext(Context);
   const isAuth = user?.isAuth;
-  const userCart = isAuth ? user?.user?.cart : null;
+
+  let userCart = isAuth ? user?.user?.cart : null;
+  const [loadAddToCart, setLoadAddToCart] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productData, setProductData] = useState({
     name: '',
@@ -28,10 +32,54 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
     setIsModalOpen(true);
   };
 
+  async function addToCart(id: string, quantity: number) {
+    setLoadAddToCart(id);
+    if (isAuth && !userCart) {
+      try {
+        const userCarts = await getMyCarts(user?.user?.token.access_token || '');
+        if (userCarts.count) {
+          const cart = userCarts.results[0];
+          userCart = cart;
+        } else {
+          throw new Error('CT_NO_CART_ERROR');
+        }
+      } catch (error) {
+        const cart = await createCart(user?.user?.token.access_token || '');
+        userCart = cart;
+      }
+    }
+
+    try {
+      const result = await addProductToCart(
+        user?.user?.token.access_token || '',
+        id,
+        userCart!.id,
+        userCart!.version,
+        quantity
+      );
+      if (isAuth) {
+        const userData = user!.user!.user;
+        const userToken = user!.user!.token;
+        user.setUser({
+          user: userData,
+          cart: result,
+          token: userToken,
+        });
+      }
+    } catch (error) {
+      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+    setLoadAddToCart('');
+  }
+
   return products.length === 0 ? (
     <p className="no-product">Нет продуктов, удовлетворяющих заданным условиям</p>
   ) : (
     <div className="goods">
+      <ToastContainer />
       {products.map((product) => (
         <div key={product.id} className="goods__card">
           <div className="goods__wrapper">
@@ -77,10 +125,16 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
                   )}
                 </div>
                 <ButtonIcon
-                  className="goods__control"
-                  onClick={() => openModal(product.name, product.price, product.images[0])}
+                  className={`goods__control ${loadAddToCart ? 'loading' : ''}`}
+                  onClick={async () => {
+                    openModal(product.name, product.price, product.images[0]);
+                    await addToCart(product.id, 1);
+                  }}
                   type="button"
-                  disabled={isAuth && userCart?.lineItems.some((item) => item.id === product.id)}
+                  disabled={
+                    userCart?.lineItems.some((item) => item.productId === product.id) ||
+                    loadAddToCart === product.id
+                  }
                   title="Добавить в карзину"
                 >
                   <i className="goods__control-icon cart__icon header-icon"></i>

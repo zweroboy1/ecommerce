@@ -1,22 +1,67 @@
 import { useContext, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import { toast } from 'react-toastify';
 import { ProductDetailsProps } from '../../types';
 import { formatPrice } from '../../utils/formatPrice';
 import { COLORS } from '../../constants';
 import { ButtonIcon } from '../../components/ButtonIcon';
 import { Context } from '../../store/Context';
+import { addProductToCart, createCart, getMyCarts } from '../../services/commercetoolsApi';
 
 const ProductDetails: React.FC<ProductDetailsProps> = observer(
   ({ id, price, discountedPrice, brand, color, sku }) => {
     const { user } = useContext(Context);
     const isAuth = user?.isAuth;
-    const userCard = isAuth ? user?.user?.cart : null;
-    const inCard = userCard?.lineItems.some((item) => item.id === id);
-    const quantityInCard = inCard
-      ? userCard?.lineItems.find((item) => item.id === id)?.quantity
+    let userCart = isAuth ? user?.user?.cart : null;
+    const inCart = userCart?.lineItems.some((item) => item.productId === id);
+    const quantityInCart = inCart
+      ? userCart?.lineItems.find((item) => item.productId === id)?.quantity || 0
       : 0;
+    const [quantity, setQuantity] = useState(inCart ? quantityInCart : 1);
+    const [loadAddToCart, setLoadAddToCart] = useState(false);
 
-    const [quantity, setQuantity] = useState(1);
+    async function addToCart(productId: string, productQuantity: number) {
+      setLoadAddToCart(true);
+      if (isAuth && !userCart) {
+        try {
+          const userCarts = await getMyCarts(user?.user?.token.access_token || '');
+          if (userCarts.count) {
+            const cart = userCarts.results[0];
+            userCart = cart;
+          } else {
+            throw new Error('CT_NO_CART_ERROR');
+          }
+        } catch (error) {
+          const cart = await createCart(user?.user?.token.access_token || '');
+          userCart = cart;
+        }
+      }
+
+      try {
+        const result = await addProductToCart(
+          user?.user?.token.access_token || '',
+          productId,
+          userCart!.id,
+          userCart!.version,
+          productQuantity
+        );
+        if (isAuth) {
+          const userData = user!.user!.user;
+          const userToken = user!.user!.token;
+          user.setUser({
+            user: userData,
+            cart: result,
+            token: userToken,
+          });
+        }
+      } catch (error) {
+        toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+      }
+      setLoadAddToCart(false);
+    }
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setQuantity(Number(event.target.value));
@@ -29,7 +74,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
     };
 
     const handleIncrease = () => {
-      setQuantity(quantity + 1);
+      setQuantity((prevQuantity) => prevQuantity + 1);
+      if (inCart) {
+        addToCart(id, 1);
+      }
     };
 
     const savings = discountedPrice ? (price - discountedPrice) / 100 : 0;
@@ -94,7 +142,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
               <input type="hidden" name="appearance[capture_options_vs_qty]" value="" />
               <div className="product__changer">
                 <div className="product__changer1">
-                  <button className="product__decrease" onClick={handleDecrease}>
+                  <button
+                    className="product__decrease"
+                    onClick={handleDecrease}
+                    disabled={loadAddToCart}
+                  >
                     −
                   </button>
                   <input
@@ -103,7 +155,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
                     value={quantity}
                     onChange={handleQuantityChange}
                   />
-                  <button className="product__decrease" onClick={handleIncrease}>
+                  <button
+                    className="product__decrease"
+                    onClick={handleIncrease}
+                    disabled={loadAddToCart}
+                  >
                     +
                   </button>
                 </div>
@@ -118,19 +174,25 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
             <input type="hidden" name="appearance[quick_view]" value="" />
             <div>
               <ButtonIcon
-                className={`product__cart-button button ${isAuth && inCard ? 'inCard' : ''}`}
+                className={`product__cart-button button ${isAuth && inCart ? 'inCard' : ''} ${
+                  loadAddToCart ? 'loading' : ''
+                }`}
                 title="Добавлено"
                 type="button"
-                onClick={() => {}}
-                disabled={isAuth && inCard}
+                onClick={async () => {
+                  await addToCart(id, quantity);
+                }}
+                disabled={isAuth && inCart}
               >
                 <span>
                   <i className="product__icon-cart"></i>
-                  {isAuth && inCard ? (
-                    <bdi>Добавлено ({quantityInCard})</bdi>
-                  ) : (
-                    <bdi>В корзину</bdi>
-                  )}
+                  {!loadAddToCart &&
+                    (isAuth && inCart ? (
+                      <bdi>Добавлено ({quantityInCart})</bdi>
+                    ) : (
+                      <bdi>В корзину</bdi>
+                    ))}
+                  {loadAddToCart && <bdi>loading</bdi>}
                 </span>
               </ButtonIcon>
             </div>
