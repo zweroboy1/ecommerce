@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { Cart } from '../pages/other/Cart';
+import { Cart } from '../pages/Cart';
 
 describe('Cart component', () => {
   it('renders main heading', () => {

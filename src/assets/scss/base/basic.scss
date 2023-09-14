@@ -67,10 +67,9 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: transparent;
   cursor: pointer;
   transition: border-color 0.25s;
-  background-color: #f9f9f9;
 
   &:hover {
     border: none;
@@ -209,19 +208,4 @@ input[type='checkbox']:checked {
   align-items: center;
   width: 100%;
   padding: 0 20px;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: $background;
-  }
-
-  a:hover {
-    color: $links-hover;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
 }
