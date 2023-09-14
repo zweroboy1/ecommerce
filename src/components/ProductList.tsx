@@ -1,14 +1,31 @@
+import { useState, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useContext } from 'react';
 import { Product } from '../types';
 import { formatPrice } from '../utils/formatPrice';
 import { ButtonIcon } from './ButtonIcon';
 import { Context } from '../store/Context';
+import Notification from './Notification';
 
 function ProductList({ products }: { products: Product[] }) {
   const { user } = useContext(Context);
   const isAuth = user?.isAuth;
   const userCard = isAuth ? user?.user?.card : null;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productData, setProductData] = useState({
+    name: '',
+    price: 0,
+    image: '',
+  });
+
+  const openModal = (productName: string, productPrice: number, productImage: string) => {
+    setProductData({
+      name: productName,
+      price: productPrice,
+      image: productImage,
+    });
+
+    setIsModalOpen(true);
+  };
 
   return products.length === 0 ? (
     <p className="no-product">Нет продуктов, удовлетворяющих заданным условиям</p>
@@ -60,13 +77,21 @@ function ProductList({ products }: { products: Product[] }) {
                 </div>
                 <ButtonIcon
                   className="goods__control"
-                  onClick={() => {}}
+                  onClick={() => openModal(product.name, product.price, product.images[0])}
                   type="button"
                   disabled={isAuth && userCard?.some((item) => item.product.id === product.id)}
                   title="Добавить в карзину"
                 >
                   <i className="goods__control-icon cart__icon header-icon"></i>
                 </ButtonIcon>
+                {isModalOpen && (
+                  <Notification
+                    onClose={() => setIsModalOpen(false)}
+                    productName={productData.name}
+                    productPrice={productData.price / 100}
+                    productImage={productData.image}
+                  />
+                )}
               </div>
               <div className="goods__description1">{product.description}</div>
             </div>
