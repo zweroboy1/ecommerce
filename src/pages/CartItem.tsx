@@ -1,6 +1,7 @@
 import { PropsWithoutRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { CartItemProps } from '../types';
+import { ButtonIcon } from '../components/ButtonIcon';
 
 const CartItem = observer(
   ({ product, removeFromCart, addToCart }: PropsWithoutRef<CartItemProps>) => {
@@ -96,9 +97,17 @@ const CartItem = observer(
           <a href={`/product/${product.productSlug.ru}`} className="cart__product-title">
             {product.name.ru}
           </a>
-          <a className="cart__product-delete" title="Удалить">
+          <ButtonIcon
+            className="cart__product-delete"
+            title="Удалить"
+            onClick={async () => {
+              setLoadChangeInCart(true);
+              await removeFromCart(product.id, quantity);
+              setLoadChangeInCart(false);
+            }}
+          >
             <span className="icon-cancel-circle"></span>
-          </a>
+          </ButtonIcon>
           <div className="cart__product-sku">
             КОД:
             <span>{product.variant.sku}</span>
