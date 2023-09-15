@@ -13,7 +13,8 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
   const { user } = useContext(Context);
   const isAuth = user?.isAuth;
 
-  let userCart = isAuth ? user?.user?.cart : null;
+  let userCart = user?.user?.cart;
+
   const [loadAddToCart, setLoadAddToCart] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productData, setProductData] = useState({
@@ -34,7 +35,7 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
 
   async function addToCart(id: string, quantity: number) {
     setLoadAddToCart(id);
-    if (isAuth && !userCart) {
+    if (!userCart) {
       try {
         const userCarts = await getMyCarts(user?.user?.token.access_token || '');
         if (userCarts.count) {
@@ -57,15 +58,13 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
         userCart!.version,
         quantity
       );
-      if (isAuth) {
-        const userData = user!.user!.user;
-        const userToken = user!.user!.token;
-        user.setUser({
-          user: userData,
-          cart: result,
-          token: userToken,
-        });
-      }
+      const userData = isAuth ? user!.user!.user : null;
+      const userToken = user!.user!.token;
+      user!.setUser({
+        user: userData,
+        cart: result,
+        token: userToken,
+      });
     } catch (error) {
       toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
         position: toast.POSITION.TOP_RIGHT,
