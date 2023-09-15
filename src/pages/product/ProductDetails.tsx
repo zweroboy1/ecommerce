@@ -6,7 +6,12 @@ import { formatPrice } from '../../utils/formatPrice';
 import { COLORS } from '../../constants';
 import { ButtonIcon } from '../../components/ButtonIcon';
 import { Context } from '../../store/Context';
-import { addProductToCart, createCart, getMyCarts } from '../../services/commercetoolsApi';
+import {
+  addProductToCart,
+  createCart,
+  getMyCarts,
+  removeProductFromCart,
+} from '../../services/commercetoolsApi';
 
 const ProductDetails: React.FC<ProductDetailsProps> = observer(
   ({ id, price, discountedPrice, brand, color, sku }) => {
@@ -60,14 +65,52 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
       }
       setLoadAddToCart(false);
     }
+    async function removeFromCart(productId: string, productQuantity: number) {
+      setLoadAddToCart(true);
+
+      if (!userCart?.lineItems.some((item) => item.id === productId)) {
+        // eslint-disable-next-line
+        console.log('Этого продукта нет в корзине');
+        return;
+      }
+
+      try {
+        const result = await removeProductFromCart(
+          user?.user?.token.access_token || '',
+          productId,
+          userCart!.id,
+          userCart!.version,
+          productQuantity
+          /* , последний параметр - количество. если не указан, то удалятся все экземпляры этого продукта, если цифра, например 1, то будет удалять столько единиц */
+        );
+        const userData = isAuth ? user!.user!.user : null;
+        const userToken = user!.user!.token;
+        user!.setUser({
+          user: userData,
+          cart: result,
+          token: userToken,
+        });
+      } catch (error) {
+        toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+      }
+      setLoadAddToCart(false);
+    }
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setQuantity(Number(event.target.value));
     };
 
-    const handleDecrease = () => {
-      if (quantity > 1) {
-        setQuantity(quantity - 1);
+    const handleDecrease = async () => {
+      if (quantity === 1) {
+        return;
+      }
+      setQuantity((prevQuantity) => prevQuantity - 1);
+      if (inCart) {
+        const productId = userCart?.lineItems.find((item) => item.productId === id)?.id || '';
+        await removeFromCart(productId, 1);
       }
     };
 
@@ -178,17 +221,23 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
                 title="Добавлено"
                 type="button"
                 onClick={async () => {
-                  await addToCart(id, quantity);
+                  if (inCart) {
+                    const productId =
+                      userCart?.lineItems.find((item) => item.productId === id)?.id || '';
+                    await removeFromCart(productId, quantity);
+                  } else {
+                    await addToCart(id, quantity);
+                  }
                 }}
-                disabled={inCart || loadAddToCart}
+                disabled={loadAddToCart}
               >
                 <span>
                   <i className="product__icon-cart"></i>
-                  {!loadAddToCart &&
-                    (inCart ? <bdi>Добавлено ({quantityInCart})</bdi> : <bdi>В корзину</bdi>)}
+                  {!loadAddToCart && (inCart ? <bdi>Удалить все</bdi> : <bdi>В корзину</bdi>)}
                   {loadAddToCart && <bdi>loading</bdi>}
                 </span>
               </ButtonIcon>
+              {inCart && <bdi>Добавлено ({quantityInCart})</bdi>}
             </div>
           </div>
 
