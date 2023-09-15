@@ -104,6 +104,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
         Number(event.target.value) < 0 ||
         Number.isNaN(Number(event.target.value)) ||
         !Number.isInteger(Number(event.target.value)) ||
+        Number(event.target.value) > 999 ||
         loadAddToCart
       ) {
         return;
@@ -124,10 +125,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
     };
 
     const handleDecrease = async () => {
-      if (quantity === 1) {
+      if (quantity <= 1) {
         return;
       }
-      setQuantity((prevQuantity) => prevQuantity - 1);
+
+      setQuantity((prevQuantity) => (prevQuantity - 1 < 0 ? 0 : prevQuantity - 1));
       if (inCart) {
         const productId = userCart?.lineItems.find((item) => item.productId === id)?.id || '';
         await removeFromCart(productId, 1);
@@ -135,7 +137,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
     };
 
     const handleIncrease = () => {
-      setQuantity((prevQuantity) => prevQuantity + 1);
+      setQuantity((prevQuantity) => (prevQuantity + 1 > 999 ? 999 : prevQuantity + 1));
       if (inCart) {
         addToCart(id, 1);
       }
@@ -249,7 +251,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
                     await addToCart(id, quantity);
                   }
                 }}
-                disabled={loadAddToCart}
+                disabled={loadAddToCart || quantity === 0}
               >
                 <span>
                   <i className="product__icon-cart"></i>
