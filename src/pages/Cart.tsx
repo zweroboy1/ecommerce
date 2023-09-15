@@ -12,7 +12,16 @@ const Cart = observer(() => {
   const { user } = useContext(Context);
   const userCart = user?.user?.cart;
   const isAuth = user?.isAuth;
-
+  // eslint-disable-next-line no-nested-ternary
+  const totalAmount = userCart
+    ? userCart.totalPrice.fractionDigits
+      ? `${userCart.totalPrice.centAmount
+          .toString()
+          .split('')
+          .slice(0, -userCart.totalPrice.fractionDigits)
+          .join('')}.${'0'.repeat(userCart.totalPrice.fractionDigits)}`
+      : userCart.totalPrice.centAmount
+    : 0;
   async function removeFromCart(productId: string, productQuantity: number) {
     if (!userCart?.lineItems.some((item) => item.id === productId)) {
       // eslint-disable-next-line
@@ -160,7 +169,7 @@ const Cart = observer(() => {
                             <span className="cart__statistic-title">Сумма</span>
                             <span className="cart__statistic-value">
                               <bdi>
-                                <span>19 999.00 ₴</span>
+                                <span>{totalAmount} ₴</span>
                               </bdi>
                             </span>
                           </li>
@@ -178,7 +187,7 @@ const Cart = observer(() => {
                             <span className="cart__statistic-total-title">Итоговая стоимость</span>
                             <span className="cart__statistic-total-value">
                               <bdi>
-                                <span>19 999.00</span>
+                                <span>{totalAmount}</span>
                                 <span> ₴</span>
                               </bdi>
                             </span>
