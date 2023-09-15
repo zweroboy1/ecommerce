@@ -190,6 +190,29 @@ async function createCustomer(
   }
 }
 
+export async function getAnonymousToken() {
+  const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/${projectKey}/anonymous/token?grant_type=client_credentials`;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const responseData = await response.json();
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
 export async function addSpecialAddress(
   addressId: string,
   addressType: 'shipping' | 'billing',
@@ -369,6 +392,39 @@ export async function getMyCarts(accessToken: string): Promise<CartAPI> {
       throw new Error(error.message);
     }
     throw new Error(CT_ERROR);
+  }
+}
+
+export async function getAnonymousUser(): Promise<CustomerWithToken | null> {
+  try {
+    const userToken = await getAnonymousToken();
+    if (userToken instanceof Error) {
+      return null;
+    }
+    let userCart: Cart | null;
+    try {
+      const userCarts = await getMyCarts(userToken.access_token);
+      if (userCarts.count) {
+        const cart = userCarts.results[0];
+        userCart = cart;
+      } else {
+        throw new Error('CT_NO_CART_ERROR');
+      }
+    } catch (error) {
+      try {
+        const cart = await createCart(userToken.access_token);
+        userCart = cart;
+      } catch {
+        userCart = null;
+      }
+    }
+    return {
+      user: null,
+      cart: userCart,
+      token: userToken,
+    };
+  } catch (error) {
+    return null;
   }
 }
 
@@ -662,29 +718,6 @@ export async function updateUser(
     return responseData;
   } catch (error) {
     throw new Error(CT_LOGIN_ERROR);
-  }
-}
-
-export async function getAnonymousToken() {
-  const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/${projectKey}/anonymous/token?grant_type=client_credentials`;
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    const responseData = await response.json();
-    if (responseData.message) {
-      throw new Error(responseData.message);
-    }
-    return responseData;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-    throw new Error(CT_ERROR);
   }
 }
 
