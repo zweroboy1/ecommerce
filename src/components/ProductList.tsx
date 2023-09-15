@@ -7,7 +7,12 @@ import { formatPrice } from '../utils/formatPrice';
 import { ButtonIcon } from './ButtonIcon';
 import { Context } from '../store/Context';
 import Notification from './Notification';
-import { addProductToCart, createCart, getMyCarts } from '../services/commercetoolsApi';
+import {
+  addProductToCart,
+  createCart,
+  getMyCarts,
+  removeProductFromCart,
+} from '../services/commercetoolsApi';
 
 const ProductList = observer(({ products }: { products: Product[] }) => {
   const { user } = useContext(Context);
@@ -57,6 +62,38 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
         userCart!.id,
         userCart!.version,
         quantity
+      );
+      const userData = isAuth ? user!.user!.user : null;
+      const userToken = user!.user!.token;
+      user!.setUser({
+        user: userData,
+        cart: result,
+        token: userToken,
+      });
+    } catch (error) {
+      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+    setLoadAddToCart('');
+  }
+  async function removeFromCart(id: string) {
+    setLoadAddToCart(id);
+
+    if (!userCart?.lineItems.some((item) => item.id === id)) {
+      // eslint-disable-next-line
+      console.log('Этого продукта нет в корзине');
+      return;
+    }
+
+    try {
+      const result = await removeProductFromCart(
+        user?.user?.token.access_token || '',
+        id,
+        userCart!.id,
+        userCart!.version
+        /* , последний параметр - количество. если не указан, то удалятся все экземпляры этого продукта, если цифра, например 1, то будет удалять столько единиц */
       );
       const userData = isAuth ? user!.user!.user : null;
       const userToken = user!.user!.token;
@@ -124,19 +161,34 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
                   )}
                 </div>
                 <ButtonIcon
-                  className={`goods__control ${loadAddToCart ? 'loading' : ''}`}
+                  className={`goods__control ${loadAddToCart ? 'loading' : ''} ${
+                    userCart?.lineItems.some((item) => item.productId === product.id) ? 'added' : ''
+                  }`}
                   onClick={async () => {
                     openModal(product.name, product.price, product.images[0]);
-                    await addToCart(product.id, 1);
+                    const inCart = userCart?.lineItems.some(
+                      (item) => item.productId === product.id
+                    );
+                    if (inCart) {
+                      const productId =
+                        userCart?.lineItems.find((item) => item.productId === product.id)?.id || '';
+                      await removeFromCart(productId);
+                    } else {
+                      await addToCart(product.id, 1);
+                    }
                   }}
                   type="button"
-                  disabled={
-                    userCart?.lineItems.some((item) => item.productId === product.id) ||
-                    loadAddToCart === product.id
-                  }
+                  disabled={loadAddToCart === product.id}
                   title="Добавить в карзину"
                 >
-                  <i className="goods__control-icon cart__icon header-icon"></i>
+                  {userCart?.lineItems.some((item) => item.productId === product.id) ? (
+                    <i
+                      className="goods__control-icon cart__icon header-icon"
+                      style={{ backgroundColor: 'red' }}
+                    ></i>
+                  ) : (
+                    <i className="goods__control-icon cart__icon header-icon"></i>
+                  )}
                 </ButtonIcon>
                 {isModalOpen && (
                   <Notification
