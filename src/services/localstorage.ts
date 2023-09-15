@@ -27,6 +27,7 @@ class LocalStorageState {
     if (storageItem) {
       return { ...DEFAULT_STATE, ...JSON.parse(storageItem) };
     }
+
     return { ...DEFAULT_STATE };
   }
 }
