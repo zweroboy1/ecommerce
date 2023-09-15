@@ -6,11 +6,16 @@ import { Header } from './main/Header';
 import { Footer } from './main/Footer';
 import { Context } from '../store/Context';
 import { CartItem } from './CartItem';
-import { removeProductFromCart } from '../services/commercetoolsApi';
+import {
+  addProductToCart,
+  createCart,
+  getMyCarts,
+  removeProductFromCart,
+} from '../services/commercetoolsApi';
 
 const Cart = observer(() => {
   const { user } = useContext(Context);
-  const userCart = user?.user?.cart;
+  let userCart = user?.user?.cart;
   const isAuth = user?.isAuth;
   // eslint-disable-next-line no-nested-ternary
   const totalAmount = userCart
@@ -22,6 +27,46 @@ const Cart = observer(() => {
           .join('')}.${'0'.repeat(userCart.totalPrice.fractionDigits)}`
       : userCart.totalPrice.centAmount
     : 0;
+
+  async function addToCart(productId: string, productQuantity: number) {
+    if (!userCart) {
+      try {
+        const userCarts = await getMyCarts(user?.user?.token.access_token || '');
+        if (userCarts.count) {
+          const cart = userCarts.results[0];
+          userCart = cart;
+        } else {
+          throw new Error('CT_NO_CART_ERROR');
+        }
+      } catch (error) {
+        const cart = await createCart(user?.user?.token.access_token || '');
+        userCart = cart;
+      }
+    }
+
+    try {
+      const result = await addProductToCart(
+        user?.user?.token.access_token || '',
+        productId,
+        userCart!.id,
+        userCart!.version,
+        productQuantity
+      );
+      const userData = isAuth ? user!.user!.user : null;
+      const userToken = user!.user!.token;
+      user!.setUser({
+        user: userData,
+        cart: result,
+        token: userToken,
+      });
+    } catch (error) {
+      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+  }
+
   async function removeFromCart(productId: string, productQuantity: number) {
     if (!userCart?.lineItems.some((item) => item.id === productId)) {
       // eslint-disable-next-line
@@ -109,6 +154,7 @@ const Cart = observer(() => {
                                     key={item.productId}
                                     product={item}
                                     removeFromCart={removeFromCart}
+                                    addToCart={addToCart}
                                   />
                                 ))}
                               </tbody>
