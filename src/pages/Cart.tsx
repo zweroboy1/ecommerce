@@ -1,8 +1,49 @@
+import { useContext } from 'react';
+import { observer } from 'mobx-react-lite';
+import { toast } from 'react-toastify';
 import { Top } from './main/Top';
 import { Header } from './main/Header';
 import { Footer } from './main/Footer';
+import { Context } from '../store/Context';
+import { CartItem } from './CartItem';
+import { removeProductFromCart } from '../services/commercetoolsApi';
 
-const Cart = () => {
+const Cart = observer(() => {
+  const { user } = useContext(Context);
+  const userCart = user?.user?.cart;
+  const isAuth = user?.isAuth;
+
+  async function removeFromCart(productId: string, productQuantity: number) {
+    if (!userCart?.lineItems.some((item) => item.id === productId)) {
+      // eslint-disable-next-line
+      console.log('Этого продукта нет в корзине');
+      return;
+    }
+
+    try {
+      const result = await removeProductFromCart(
+        user?.user?.token.access_token || '',
+        productId,
+        userCart!.id,
+        userCart!.version,
+        productQuantity
+        /* , последний параметр - количество. если не указан, то удалятся все экземпляры этого продукта, если цифра, например 1, то будет удалять столько единиц */
+      );
+      const userData = isAuth ? user!.user!.user : null;
+      const userToken = user!.user!.token;
+      user!.setUser({
+        user: userData,
+        cart: result,
+        token: userToken,
+      });
+    } catch (error) {
+      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+  }
+
   return (
     <div className="tygh">
       <Top />
@@ -22,7 +63,7 @@ const Cart = () => {
             <div className="cart__body">
               <div className="cart__main">
                 <div className="cart__form-wrapper">
-                  <form name="checkout-form" className="cart__form" action="" method="post">
+                  <div className="cart__form">
                     <h1 className="cart__title-page">Корзина</h1>
                     <div className="cart__buttons-container">
                       <div className="cart__left-buttons">
@@ -40,81 +81,33 @@ const Cart = () => {
 
                     <div>
                       <div className="cart__content">
-                        <div className="cart__items">
-                          <table className="cart__table">
-                            <thead>
-                              <tr>
-                                <th className="cart__table-title">Товар</th>
-                                <th className="cart__table-title">&nbsp;</th>
-                                <th className="cart__table-title">Цена за ед.</th>
-                                <th className="cart__table-title">Кол-во</th>
-                                <th className="cart__table-titlet">Итого</th>
-                              </tr>
-                            </thead>
+                        {userCart && userCart.lineItems.length > 0 ? (
+                          <div className="cart__items">
+                            <table className="cart__table">
+                              <thead>
+                                <tr>
+                                  <th className="cart__table-title">Товар</th>
+                                  <th className="cart__table-title">&nbsp;</th>
+                                  <th className="cart__table-title">Цена за ед.</th>
+                                  <th className="cart__table-title">Кол-во</th>
+                                  <th className="cart__table-titlet">Итого</th>
+                                </tr>
+                              </thead>
 
-                            <tbody>
-                              <tr>
-                                <td className="cart__image-block">
-                                  <div className="cart__table-image">
-                                    <a href="/product/roborock-vacuum-cleaner-s7-white">
-                                      <img
-                                        alt=""
-                                        title=""
-                                        src="https://973f0ebc2f4cec1318e0-33f939a34f35a5788da19fefac41f961.ssl.cf3.rackcdn.com/robot-pylesos-roboro-pgOecVSB.jpeg"
-                                        width="150"
-                                        height="150"
-                                      />
-                                    </a>
-                                  </div>
-                                </td>
-                                <td className="cart__content-description">
-                                  <a
-                                    href="/product/roborock-vacuum-cleaner-s7-white"
-                                    className="cart__product-title"
-                                  >
-                                    Робот-пылесос Roborock Vacuum Cleaner S7 (White)
-                                  </a>
-                                  <a className="cart__product-delete" title="Удалить">
-                                    <span className="icon-cancel-circle"></span>
-                                  </a>
-                                  <div className="cart__product-sku">
-                                    КОД:
-                                    <span> 398765432</span>
-                                  </div>
-                                </td>
-
-                                <td className="cart__product-price">
-                                  <bdi>
-                                    <span>19 999.00</span>
-                                    <span> ₴</span>
-                                  </bdi>
-                                </td>
-
-                                <td className="cart__product-qty">
-                                  <div className="quantity">
-                                    <div className="quantity__changer">
-                                      <a className="quantity__increase">+</a>
-                                      <input
-                                        type="text"
-                                        value="1"
-                                        className="quantity__decimal"
-                                        data-ca-min-qty="1"
-                                      />
-                                      <a className="quantity__decrease">−</a>
-                                    </div>
-                                  </div>
-                                </td>
-
-                                <td className="cart__product-price">
-                                  <bdi>
-                                    <span>19 999.00</span>
-                                    <span> ₴</span>
-                                  </bdi>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                              <tbody>
+                                {userCart.lineItems.map((item) => (
+                                  <CartItem
+                                    key={item.productId}
+                                    product={item}
+                                    removeFromCart={removeFromCart}
+                                  />
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        ) : (
+                          <div className="cart__empty">Корзина пуста</div>
+                        )}
                       </div>
                     </div>
 
@@ -125,7 +118,12 @@ const Cart = () => {
                             <form className="cart__processed-form" action="" method="post">
                               <div className="cart__hint">
                                 <label className="cart__hint-label">Промо-код</label>
-                                <input type="text" className="cart__hint-text" value="" />
+                                <input
+                                  type="text"
+                                  className="cart__hint-text"
+                                  value=""
+                                  onChange={() => {}}
+                                />
                                 <button title="Применить" className="cart__btn-go" type="submit">
                                   Применить
                                 </button>
@@ -205,7 +203,7 @@ const Cart = () => {
                         </a>
                       </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>
@@ -215,6 +213,6 @@ const Cart = () => {
       <Footer />
     </div>
   );
-};
+});
 
 export { Cart };
