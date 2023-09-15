@@ -99,8 +99,28 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
       setLoadAddToCart(false);
     }
 
-    const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setQuantity(Number(event.target.value));
+    const handleQuantityChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (
+        Number(event.target.value) < 0 ||
+        Number.isNaN(Number(event.target.value)) ||
+        !Number.isInteger(Number(event.target.value)) ||
+        loadAddToCart
+      ) {
+        return;
+      }
+      const prevQuantity = inCart ? quantityInCart : 0;
+      setQuantity(() => Number(event.target.value));
+      if (inCart) {
+        if (Number(event.target.value) > prevQuantity) {
+          await addToCart(id, Number(event.target.value) - prevQuantity);
+        } else {
+          const productId = userCart?.lineItems.find((item) => item.productId === id)?.id || '';
+          await removeFromCart(productId, prevQuantity - Number(event.target.value));
+        }
+      }
+      // else if (Number(event.target.value) > 0) {
+      //   await addToCart(id, Number(event.target.value));
+      // }
     };
 
     const handleDecrease = async () => {
