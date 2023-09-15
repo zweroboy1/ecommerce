@@ -7,7 +7,7 @@ import { Phone } from './header/Phone';
 import { ComparedProducts } from './header/ComparedProducts';
 import { Wishlist } from './header/Wishlist';
 import { Account } from './header/Account';
-import { Cart } from './header/Cart';
+import { CartIcon } from './header/CartIcon';
 
 const TopLogo = () => {
   return (
@@ -36,7 +36,7 @@ const TopButtons = () => {
           <ComparedProducts />
           <Wishlist />
           <Account />
-          <Cart />
+          <CartIcon />
         </>
       )}
     </div>

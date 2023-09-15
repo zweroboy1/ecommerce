@@ -255,7 +255,7 @@
   &__control[disabled]:hover {
     background-color: transparent;
 
-    .cart__icon::after {
+    .minicart__icon::after {
       content: '\2713';
       font-family: system-ui, sans-serif;
       font-style: normal;
