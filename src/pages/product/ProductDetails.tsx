@@ -12,7 +12,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
   ({ id, price, discountedPrice, brand, color, sku }) => {
     const { user } = useContext(Context);
     const isAuth = user?.isAuth;
-    let userCart = isAuth ? user?.user?.cart : null;
+    let userCart = user?.user?.cart;
     const inCart = userCart?.lineItems.some((item) => item.productId === id);
     const quantityInCart = inCart
       ? userCart?.lineItems.find((item) => item.productId === id)?.quantity || 0
@@ -22,7 +22,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
 
     async function addToCart(productId: string, productQuantity: number) {
       setLoadAddToCart(true);
-      if (isAuth && !userCart) {
+      if (!userCart) {
         try {
           const userCarts = await getMyCarts(user?.user?.token.access_token || '');
           if (userCarts.count) {
@@ -45,15 +45,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
           userCart!.version,
           productQuantity
         );
-        if (isAuth) {
-          const userData = user!.user!.user;
-          const userToken = user!.user!.token;
-          user.setUser({
-            user: userData,
-            cart: result,
-            token: userToken,
-          });
-        }
+        const userData = isAuth ? user!.user!.user : null;
+        const userToken = user!.user!.token;
+        user!.setUser({
+          user: userData,
+          cart: result,
+          token: userToken,
+        });
       } catch (error) {
         toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
           position: toast.POSITION.TOP_RIGHT,
@@ -174,7 +172,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
             <input type="hidden" name="appearance[quick_view]" value="" />
             <div>
               <ButtonIcon
-                className={`product__cart-button button ${isAuth && inCart ? 'inCard' : ''} ${
+                className={`product__cart-button button ${inCart ? 'inCard' : ''} ${
                   loadAddToCart ? 'loading' : ''
                 }`}
                 title="Добавлено"
@@ -182,16 +180,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
                 onClick={async () => {
                   await addToCart(id, quantity);
                 }}
-                disabled={isAuth && inCart}
+                disabled={inCart || loadAddToCart}
               >
                 <span>
                   <i className="product__icon-cart"></i>
                   {!loadAddToCart &&
-                    (isAuth && inCart ? (
-                      <bdi>Добавлено ({quantityInCart})</bdi>
-                    ) : (
-                      <bdi>В корзину</bdi>
-                    ))}
+                    (inCart ? <bdi>Добавлено ({quantityInCart})</bdi> : <bdi>В корзину</bdi>)}
                   {loadAddToCart && <bdi>loading</bdi>}
                 </span>
               </ButtonIcon>
