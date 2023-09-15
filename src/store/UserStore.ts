@@ -31,13 +31,6 @@ class UserStore {
       this.localStorageState.setField('customer', this.shadowUser);
       this.localStorageState.saveState();
     }
-    // eslint-disable-next-line no-console
-    console.log(
-      this.shadowIsAuth,
-      this.shadowUser?.token,
-      this.shadowUser?.user,
-      this.shadowUser?.cart
-    );
   }
 
   setIsAuth(value: boolean) {
