@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { CustomerWithToken } from '../types';
 import { LocalStorageState } from '../services/localstorage';
+import { getAnonymousToken } from '../services/commercetoolsApi';
 
 class UserStore {
   private shadowIsAuth: boolean;
@@ -13,26 +14,44 @@ class UserStore {
     this.shadowIsAuth = false;
     this.shadowUser = null;
     this.localStorageState = new LocalStorageState();
-    this.localStorageState.loadState();
-    this.getCustomerFromLS();
-    makeAutoObservable(this);
+    this.getCustomerFromLS().then(() => {
+      makeAutoObservable(this);
+    });
   }
 
-  getCustomerFromLS() {
+  async getCustomerFromLS() {
     const savedCustomer = this.localStorageState.getField('customer');
     if (savedCustomer) {
-      this.shadowIsAuth = true;
+      this.shadowIsAuth = !!savedCustomer.user;
       this.shadowUser = savedCustomer;
+    } else {
+      const token = await getAnonymousToken();
+      this.shadowIsAuth = false;
+      this.shadowUser = { user: null, cart: null, token };
+      this.localStorageState.setField('customer', this.shadowUser);
+      this.localStorageState.saveState();
     }
+    // eslint-disable-next-line no-console
+    console.log(
+      this.shadowIsAuth,
+      this.shadowUser.token,
+      this.shadowUser.user,
+      this.shadowUser.cart
+    );
   }
 
   setIsAuth(value: boolean) {
     this.shadowIsAuth = value;
   }
 
-  setUser(value: null | CustomerWithToken) {
-    this.shadowUser = value;
-    this.localStorageState.setField('customer', value);
+  async setUser(value: null | CustomerWithToken) {
+    if (value) {
+      this.shadowUser = value;
+    } else {
+      const token = await getAnonymousToken();
+      this.shadowUser = { user: null, cart: null, token };
+    }
+    this.localStorageState.setField('customer', this.shadowUser);
     this.localStorageState.saveState();
   }
 

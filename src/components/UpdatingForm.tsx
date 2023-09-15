@@ -34,7 +34,7 @@ const UpdatingForm = observer(() => {
   const { user } = useContext(Context);
 
   const [initialValues, setInitialValues] = useState<UpdatingInitialValues>({
-    ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
+    ...prepareCustomerUpdating(user!.user!.user!, user!.user!.token.access_token),
     bearerToken: user!.user!.token.access_token,
     password: '',
     passwordNew: '',
@@ -636,7 +636,7 @@ const UpdatingForm = observer(() => {
       if (userToken) {
         user?.setUser({ user: userData!, cart: userCard!, token: userToken });
         setInitialValues({
-          ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
+          ...prepareCustomerUpdating(user!.user!.user!, user!.user!.token.access_token),
           bearerToken: user!.user!.token.access_token,
           password: '',
           passwordNew: '',
@@ -957,7 +957,7 @@ const UpdatingForm = observer(() => {
       if (userToken) {
         user?.setUser({ user: userData, cart: userCard!, token: userToken });
         setInitialValues({
-          ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
+          ...prepareCustomerUpdating(user!.user!.user!, user!.user!.token.access_token),
           bearerToken: user!.user!.token.access_token,
           password: '',
           passwordNew: '',
@@ -1055,7 +1055,7 @@ const UpdatingForm = observer(() => {
       if (userToken) {
         user?.setUser({ user: userData, cart: userCard!, token: userToken });
         setInitialValues({
-          ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
+          ...prepareCustomerUpdating(user!.user!.user!, user!.user!.token.access_token),
           bearerToken: user!.user!.token.access_token,
           password: '',
           passwordNew: '',
@@ -1158,7 +1158,7 @@ const UpdatingForm = observer(() => {
       if (userToken) {
         user?.setUser({ user: userData, cart: userCard!, token: userToken });
         setInitialValues({
-          ...prepareCustomerUpdating(user!.user!.user, user!.user!.token.access_token),
+          ...prepareCustomerUpdating(user!.user!.user!, user!.user!.token.access_token),
           bearerToken: user!.user!.token.access_token,
           password: '',
           passwordNew: '',

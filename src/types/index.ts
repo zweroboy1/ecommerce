@@ -152,8 +152,8 @@ type CustomerUpdating = {
 };
 
 type CustomerWithToken = {
-  user: Customer;
-  cart: Cart;
+  user: Customer | null;
+  cart: Cart | null;
   token: TokenResponse;
 };
 
