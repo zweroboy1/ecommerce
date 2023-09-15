@@ -78,6 +78,7 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
     }
     setLoadAddToCart('');
   }
+
   async function removeFromCart(id: string) {
     setLoadAddToCart(id);
 
@@ -183,11 +184,11 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
                 >
                   {userCart?.lineItems.some((item) => item.productId === product.id) ? (
                     <i
-                      className="goods__control-icon cart__icon header-icon"
+                      className="goods__control-icon minicarticon__icon header-icon"
                       style={{ backgroundColor: 'red' }}
                     ></i>
                   ) : (
-                    <i className="goods__control-icon cart__icon header-icon"></i>
+                    <i className="goods__control-icon minicarticon__icon header-icon"></i>
                   )}
                 </ButtonIcon>
                 {isModalOpen && (
