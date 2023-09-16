@@ -14,8 +14,7 @@ const CartItem = observer(
       ? product.price.discounted.value.centAmount
       : false;
     const [loadChangeInCart, setLoadChangeInCart] = useState(false);
-    // eslint-disable-next-line no-console
-    console.log(product);
+
     const handleQuantityChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
       setLoadChangeInCart(true);
       if (event.target.value === '' || event.target.value === '0') {
