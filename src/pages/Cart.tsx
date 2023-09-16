@@ -11,6 +11,7 @@ import {
   createCart,
   getMyCarts,
   removeProductFromCart,
+  removeProductsFromCart,
 } from '../services/commercetoolsApi';
 import { formatPrice } from '../utils/formatPrice';
 
@@ -74,6 +75,36 @@ const Cart = observer(() => {
         userCart!.version,
         productQuantity
         /* , последний параметр - количество. если не указан, то удалятся все экземпляры этого продукта, если цифра, например 1, то будет удалять столько единиц */
+      );
+      const userData = isAuth ? user!.user!.user : null;
+      const userToken = user!.user!.token;
+      user!.setUser({
+        user: userData,
+        cart: result,
+        token: userToken,
+      });
+    } catch (error) {
+      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+  }
+
+  async function clearCart() {
+    if (!userCart?.lineItems || userCart?.lineItems.length === 0) {
+      // eslint-disable-next-line
+      console.log('Корзина пуста');
+      return;
+    }
+
+    const productsIds = userCart.lineItems.map((item) => item.id);
+    try {
+      const result = await removeProductsFromCart(
+        user?.user?.token.access_token || '',
+        productsIds,
+        userCart!.id,
+        userCart!.version
       );
       const userData = isAuth ? user!.user!.user : null;
       const userToken = user!.user!.token;
@@ -250,7 +281,14 @@ const Cart = observer(() => {
                           <bdi>Продолжить покупки</bdi>
                         </a>
                         {userCart && userCart.lineItems.length > 0 && (
-                          <a className="button" href="/">
+                          <a
+                            className="button"
+                            href="/"
+                            onClick={async (e: React.MouseEvent<HTMLAnchorElement>) => {
+                              e.preventDefault();
+                              await clearCart();
+                            }}
+                          >
                             <bdi>Очистить корзину</bdi>
                           </a>
                         )}
