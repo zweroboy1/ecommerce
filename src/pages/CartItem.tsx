@@ -25,7 +25,7 @@ const CartItem = observer(
 
     const handleQuantityChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
       setLoadChangeInCart(true);
-      if (event.target.value === '') {
+      if (event.target.value === '' || event.target.value === '0') {
         if (quantityInCart === 1) {
           setLoadChangeInCart(false);
           return;
@@ -44,6 +44,7 @@ const CartItem = observer(
         Number(event.target.value) > 999 ||
         loadChangeInCart
       ) {
+        setLoadChangeInCart(false);
         return;
       }
       if (value === quantityInCart) {
