@@ -12,21 +12,13 @@ import {
   getMyCarts,
   removeProductFromCart,
 } from '../services/commercetoolsApi';
+import { formatPrice } from '../utils/formatPrice';
 
 const Cart = observer(() => {
   const { user } = useContext(Context);
   let userCart = user?.user?.cart;
   const isAuth = user?.isAuth;
-  // eslint-disable-next-line no-nested-ternary
-  const totalAmount = userCart
-    ? userCart.totalPrice.fractionDigits
-      ? `${userCart.totalPrice.centAmount
-          .toString()
-          .split('')
-          .slice(0, -userCart.totalPrice.fractionDigits)
-          .join('')}.${'0'.repeat(userCart.totalPrice.fractionDigits)}`
-      : userCart.totalPrice.centAmount
-    : 0;
+  const totalAmount = userCart ? userCart.totalPrice.centAmount : 0;
 
   async function addToCart(productId: string, productQuantity: number) {
     if (!userCart) {
@@ -121,16 +113,18 @@ const Cart = observer(() => {
                     <h1 className="cart__title-page">Корзина</h1>
                     <div className="cart__buttons-container">
                       <div className="cart__left-buttons">
-                        <a href="/" className="button button-second">
+                        <a href="/catalog" className="button button-second">
                           <bdi>Продолжить покупки</bdi>
                         </a>
                       </div>
-                      <div className="cart__right-buttons">
-                        <a href="/" className="button">
-                          <span className="cart__icon-ok"></span>
-                          <bdi>Оформить заказ</bdi>
-                        </a>
-                      </div>
+                      {userCart && userCart.lineItems.length > 0 && (
+                        <div className="cart__right-buttons">
+                          <a href="/" className="button">
+                            <span className="cart__icon-ok"></span>
+                            <bdi>Оформить заказ</bdi>
+                          </a>
+                        </div>
+                      )}
                     </div>
 
                     <div>
@@ -161,7 +155,15 @@ const Cart = observer(() => {
                             </table>
                           </div>
                         ) : (
-                          <div className="cart__empty">Корзина пуста</div>
+                          <div className="cart__empty">
+                            <span>
+                              Ваша корзина пока еще пуста...Мы рады предложить Вам ознакомиться с
+                              нашим
+                            </span>
+                            <a href="/catalog" className="button button-second">
+                              Каталогом товаров
+                            </a>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -215,7 +217,7 @@ const Cart = observer(() => {
                             <span className="cart__statistic-title">Сумма</span>
                             <span className="cart__statistic-value">
                               <bdi>
-                                <span>{totalAmount} ₴</span>
+                                <span>{formatPrice(totalAmount / 100)} ₴</span>
                               </bdi>
                             </span>
                           </li>
@@ -233,7 +235,7 @@ const Cart = observer(() => {
                             <span className="cart__statistic-total-title">Итоговая стоимость</span>
                             <span className="cart__statistic-total-value">
                               <bdi>
-                                <span>{totalAmount}</span>
+                                <span>{formatPrice(totalAmount / 100)}</span>
                                 <span> ₴</span>
                               </bdi>
                             </span>
@@ -244,19 +246,23 @@ const Cart = observer(() => {
 
                     <div className="cart__buttons-container">
                       <div className="cart__left-buttons">
-                        <a href="/" className="button button-second">
+                        <a href="/catalog" className="button button-second">
                           <bdi>Продолжить покупки</bdi>
                         </a>
-                        <a className="button" href="/">
-                          <bdi>Очистить корзину</bdi>
-                        </a>
+                        {userCart && userCart.lineItems.length > 0 && (
+                          <a className="button" href="/">
+                            <bdi>Очистить корзину</bdi>
+                          </a>
+                        )}
                       </div>
-                      <div className="cart__right-buttons">
-                        <a href="/" className="button">
-                          <span className="icon-ok"></span>
-                          <bdi>Оформить заказ</bdi>
-                        </a>
-                      </div>
+                      {userCart && userCart.lineItems.length > 0 && (
+                        <div className="cart__right-buttons">
+                          <a href="/" className="button">
+                            <span className="icon-ok"></span>
+                            <bdi>Оформить заказ</bdi>
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
