@@ -26,7 +26,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
     const [loadAddToCart, setLoadAddToCart] = useState(false);
 
     async function addToCart(productId: string, productQuantity: number) {
-      setLoadAddToCart(true);
       if (!userCart) {
         try {
           const userCarts = await getMyCarts(user?.user?.token.access_token || '');
@@ -62,12 +61,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 3000,
         });
+        setLoadAddToCart(false);
       }
-      setLoadAddToCart(false);
     }
     async function removeFromCart(productId: string, productQuantity: number) {
-      setLoadAddToCart(true);
-
       if (!userCart?.lineItems.some((item) => item.id === productId)) {
         // eslint-disable-next-line
         console.log('Этого продукта нет в корзине');
@@ -95,52 +92,77 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 3000,
         });
+        setLoadAddToCart(false);
       }
-      setLoadAddToCart(false);
     }
 
     const handleQuantityChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      setLoadAddToCart(true);
+      if (event.target.value === '' || event.target.value === '0') {
+        if (!inCart) {
+          setQuantity(() => 0);
+          setLoadAddToCart(false);
+          return;
+        }
+        const prevQuantity = quantityInCart;
+        setQuantity(() => 0);
+        const productId = userCart?.lineItems.find((item) => item.productId === id)?.id || '';
+        await removeFromCart(productId, prevQuantity);
+        setLoadAddToCart(false);
+        return;
+      }
+      const value = parseInt(event.target.value, 10);
       if (
-        Number(event.target.value) < 0 ||
-        Number.isNaN(Number(event.target.value)) ||
-        !Number.isInteger(Number(event.target.value)) ||
-        Number(event.target.value) > 999 ||
+        Number(value) < 0 ||
+        Number.isNaN(value) ||
+        !Number.isInteger(value) ||
+        value > 999 ||
         loadAddToCart
       ) {
+        setLoadAddToCart(false);
         return;
       }
       const prevQuantity = inCart ? quantityInCart : 0;
-      setQuantity(() => Number(event.target.value));
+      setQuantity(() => Number(value));
       if (inCart) {
-        if (Number(event.target.value) > prevQuantity) {
-          await addToCart(id, Number(event.target.value) - prevQuantity);
+        if (Number(value) > prevQuantity) {
+          await addToCart(id, Number(value) - prevQuantity);
         } else {
           const productId = userCart?.lineItems.find((item) => item.productId === id)?.id || '';
-          await removeFromCart(productId, prevQuantity - Number(event.target.value));
+          await removeFromCart(productId, prevQuantity - Number(value));
         }
       }
       // else if (Number(event.target.value) > 0) {
       //   await addToCart(id, Number(event.target.value));
       // }
+      setLoadAddToCart(false);
     };
 
     const handleDecrease = async () => {
       if (quantity <= 1) {
         return;
       }
+      setLoadAddToCart(true);
 
       setQuantity((prevQuantity) => (prevQuantity - 1 < 0 ? 0 : prevQuantity - 1));
       if (inCart) {
         const productId = userCart?.lineItems.find((item) => item.productId === id)?.id || '';
         await removeFromCart(productId, 1);
       }
+      setLoadAddToCart(false);
     };
 
-    const handleIncrease = () => {
+    const handleIncrease = async () => {
+      if (quantity >= 999) {
+        return;
+      }
+      setLoadAddToCart(true);
+
       setQuantity((prevQuantity) => (prevQuantity + 1 > 999 ? 999 : prevQuantity + 1));
       if (inCart) {
-        addToCart(id, 1);
+        await addToCart(id, 1);
       }
+      setLoadAddToCart(false);
     };
 
     const savings = discountedPrice ? (price - discountedPrice) / 100 : 0;

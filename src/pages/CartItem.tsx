@@ -68,6 +68,9 @@ const CartItem = observer(
     };
 
     const handleIncrease = async () => {
+      if (quantity >= 999) {
+        return;
+      }
       setLoadChangeInCart(true);
       setQuantity((prevQuantity) => (prevQuantity + 1 > 999 ? 999 : prevQuantity + 1));
       await addToCart(product.productId, 1);
