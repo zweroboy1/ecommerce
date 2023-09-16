@@ -847,6 +847,7 @@ export async function removeProductFromCart(
 }
 
 export async function addDiscountCode(
+  code: string,
   accessToken: string,
   cartId: string,
   cartVersion: number = 1
@@ -865,12 +866,27 @@ export async function addDiscountCode(
         actions: [
           {
             action: 'addDiscountCode',
-            code: 'BOGO',
+            code,
           },
         ],
       }),
     });
     const responseData = await response.json();
+    if (responseData.errors) {
+      const concurrentModificationError = responseData.errors.find(
+        (error: ErrorObject) => error.code === 'ConcurrentModification'
+      );
+
+      if (concurrentModificationError) {
+        return await addDiscountCode(
+          code,
+          accessToken,
+          cartId,
+          Number(concurrentModificationError.currentVersion)
+        );
+      }
+    }
+
     return responseData;
   } catch (error) {
     if (error instanceof Error) {

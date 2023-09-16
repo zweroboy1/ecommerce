@@ -294,6 +294,35 @@ interface ProductDetailsProps {
 interface LineItem {
   id: string;
   productId: string;
+  name: {
+    ru: string;
+  };
+  price: {
+    value: {
+      centAmount: number;
+      currencyCode: string;
+      fractionDigits: number;
+    };
+    discounted: {
+      value: {
+        currencyCode: string;
+        centAmount: number;
+        fractionDigits: number;
+      };
+      discount: { id: string };
+    };
+    id: string;
+  };
+  productSlug: { ru: string };
+  totalPrice: {
+    currencyCode: string;
+    centAmount: number;
+    fractionDigits: number;
+  };
+  variant: {
+    sku: string;
+    images: { url: string }[];
+  };
   quantity: number;
 }
 
@@ -301,6 +330,11 @@ type Cart = {
   id: string;
   version: number;
   lineItems: LineItem[];
+  totalPrice: {
+    centAmount: number;
+    currencyCode: string;
+    fractionDigits: number;
+  };
 };
 
 type CartAPI = {
@@ -308,6 +342,12 @@ type CartAPI = {
   limit: number;
   offset: number;
   results: Cart[];
+};
+
+type CartItemProps = {
+  product: LineItem;
+  removeFromCart: (id: string, quantity: number) => void;
+  addToCart: (id: string, quantity: number) => void;
 };
 
 export type {
@@ -340,4 +380,6 @@ export type {
   FilterProps,
   Cart,
   CartAPI,
+  LineItem,
+  CartItemProps,
 };

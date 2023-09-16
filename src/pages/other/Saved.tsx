@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { Context } from '../../store/Context';
 import { Top } from '../main/Top';
 import { Header } from '../main/Header';
 import { Footer } from '../main/Footer';
@@ -145,14 +147,17 @@ async function removeProduct(id: number) {
   }
 }
 
-async function addPromoCode() {
+async function addPromoCode(userCart: string, userToken: string, userVersion: number) {
+  // eslint-disable-next-line
+  console.log(userCart, userToken, userVersion);
+  /*
   if (!accessToken || !cartId || !cartVersion) {
     // eslint-disable-next-line
     console.log('Нет карточки или токена');
     return;
   }
-
-  const result = await addDiscountCode(accessToken, cartId, cartVersion);
+*/
+  const result = await addDiscountCode('BOGO', userToken, userCart, userVersion);
   // eslint-disable-next-line
   console.log(result);
 }
@@ -166,6 +171,13 @@ async function refreshToken() {
 }
 
 const Saved = () => {
+  const { user } = useContext(Context);
+  const userCart = user?.user?.cart?.id || '';
+  const userToken = user?.user?.token.access_token || '';
+  const userVersion = Number(user?.user?.cart?.version) || 0;
+  // eslint-disable-next-line
+  console.log(userCart, userToken);
+
   return (
     <div className="tygh">
       <Top />
@@ -220,7 +232,10 @@ const Saved = () => {
         </button>
 
         <hr />
-        <button className="button button-second" onClick={addPromoCode}>
+        <button
+          className="button button-second"
+          onClick={() => addPromoCode(userCart, userToken, userVersion)}
+        >
           Добавить промокод
         </button>
 
