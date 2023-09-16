@@ -114,7 +114,7 @@ const CartItem = observer(
             ) : (
               <span>{formatPrice(amount / 100)}</span>
             )}
-            <span> €</span>
+            <span> ₴</span>
           </bdi>
           <br />
           <br />
