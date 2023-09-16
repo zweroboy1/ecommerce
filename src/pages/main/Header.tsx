@@ -31,14 +31,10 @@ const TopButtons = () => {
   const { user } = useContext(Context);
   return (
     <div className="top-buttons">
-      {user?.isAuth && (
-        <>
-          <ComparedProducts />
-          <Wishlist />
-          <Account />
-          <CartIcon />
-        </>
-      )}
+      <ComparedProducts />
+      <Wishlist />
+      {user?.isAuth && <Account />}
+      <CartIcon />
     </div>
   );
 };

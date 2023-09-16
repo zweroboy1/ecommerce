@@ -7,6 +7,8 @@ import {
   getMyCarts,
   addProductToCart,
   removeProductFromCart,
+  addDiscountCode,
+  getRefreshedToken,
 } from '../../services/commercetoolsApi';
 
 import { Cart } from '../../types';
@@ -143,6 +145,26 @@ async function removeProduct(id: number) {
   }
 }
 
+async function addPromoCode() {
+  if (!accessToken || !cartId || !cartVersion) {
+    // eslint-disable-next-line
+    console.log('Нет карточки или токена');
+    return;
+  }
+
+  const result = await addDiscountCode(accessToken, cartId, cartVersion);
+  // eslint-disable-next-line
+  console.log(result);
+}
+
+async function refreshToken() {
+  const response = await getRefreshedToken(
+    'rss-final-03082023:3bt4-CycVMc0CrmTb70js8PlKAJXD0GjCQQACOkEKrg'
+  );
+  // eslint-disable-next-line
+  console.log(response);
+}
+
 const Saved = () => {
   return (
     <div className="tygh">
@@ -195,6 +217,15 @@ const Saved = () => {
 
         <button className="button button-second" onClick={() => removeProduct(3)}>
           Удалить продукт 3
+        </button>
+
+        <hr />
+        <button className="button button-second" onClick={addPromoCode}>
+          Добавить промокод
+        </button>
+
+        <button className="button button-second" onClick={refreshToken}>
+          Обновить токен
         </button>
       </main>
       <Footer />

@@ -97,6 +97,7 @@ async function getUserWithCredentialsToken(credentials: Credentials): Promise<To
     if (!response.ok) {
       throw new Error(responseData.message);
     }
+    responseData.expires_at = responseData.expires_in * 1000 + Date.now();
     return responseData;
   } catch (error) {
     if (error instanceof Error) {
@@ -204,6 +205,7 @@ export async function getAnonymousToken() {
     if (responseData.message) {
       throw new Error(responseData.message);
     }
+    responseData.expires_at = responseData.expires_in * 1000 + Date.now();
     return responseData;
   } catch (error) {
     if (error instanceof Error) {
@@ -835,6 +837,94 @@ export async function removeProductFromCart(
 
       throw new Error(responseData.message);
     }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
+export async function addDiscountCode(
+  accessToken: string,
+  cartId: string,
+  cartVersion: number = 1
+): Promise<Cart> {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts/${cartId}`;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        version: cartVersion,
+        actions: [
+          {
+            action: 'addDiscountCode',
+            code: 'BOGO',
+          },
+        ],
+      }),
+    });
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
+export async function getRefreshedToken(refreshToken: string): Promise<TokenResponse> {
+  const bearerToken = await fetchBearerToken();
+  if (bearerToken === null) {
+    throw new Error(CT_ERROR);
+  }
+  const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/token?grant_type=refresh_token&refresh_token=${encodeURIComponent(
+    refreshToken
+  )}`;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const responseData = await response.json();
+    responseData.expires_at = responseData.expires_in * 1000 + Date.now();
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
+export async function introspectToken(accessToken: string) {
+  const bearerToken = await fetchBearerToken();
+  if (bearerToken === null) {
+    throw new Error(CT_ERROR);
+  }
+  const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/introspect?token=${encodeURIComponent(
+    accessToken
+  )}`;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const responseData = await response.json();
     return responseData;
   } catch (error) {
     if (error instanceof Error) {

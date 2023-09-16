@@ -113,6 +113,7 @@ type Country = {
 type TokenResponse = {
   access_token: string;
   expires_in: string;
+  expires_at: string;
   refresh_token: string;
   scope: string;
   token_type: string;
