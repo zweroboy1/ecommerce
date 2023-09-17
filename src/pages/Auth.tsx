@@ -10,7 +10,7 @@ const Auth = () => {
     <div className="tygh">
       <Top />
       <Header />
-      <main className="main">
+      <main className="mai container">
         <div className="authorization">
           <div className="authorization__container">
             <h1>Войти</h1>

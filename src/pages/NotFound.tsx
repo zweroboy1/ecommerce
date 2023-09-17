@@ -9,7 +9,7 @@ const NotFound = () => {
     <div className="tygh">
       <Top />
       <Header />
-      <main className="main">
+      <main className="main container">
         <div className="exception">
           <div className="exception__code">
             404

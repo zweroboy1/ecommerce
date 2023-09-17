@@ -33,7 +33,7 @@ const About = () => {
     <div className="tygh">
       <Top />
       <Header />
-      <main className="main page about">
+      <main className="main page about container">
         <div className="breadcrumbs">
           <a href="/" className="breadcrumbs__link">
             <bdi>Главная</bdi>
@@ -133,7 +133,7 @@ const About = () => {
           </p>
         </div>
         <p>
-          Надеемся, что вам понравился наш филаньный проек на курсе JavaScript/Front-end 2023Q1 от
+          Надеемся, что вам понравился наш финаньный проект на курсе JavaScript/Front-end 2023Q1 от
           <a className="rs-link" href="https://rs.school/js/" target="_blank">
             <svg className="rs-link__svg"></svg>
           </a>
