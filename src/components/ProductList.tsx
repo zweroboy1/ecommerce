@@ -159,21 +159,22 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
                 >
                   <i className="goods__control-icon minicart__icon header-icon"></i>
                 </ButtonIcon>
-                {isModalOpen && (
-                  <Notification
-                    onClose={() => setIsModalOpen(false)}
-                    productName={productData.name}
-                    productPrice={productData.price / 100}
-                    discontPrice={productData.discountedPrice / 100}
-                    productImage={productData.image}
-                  />
-                )}
               </div>
               <div className="goods__description1">{product.description}</div>
             </div>
           </div>
         </div>
       ))}
+
+      {isModalOpen && (
+        <Notification
+          onClose={() => setIsModalOpen(false)}
+          productName={productData.name}
+          productPrice={productData.price / 100}
+          discontPrice={productData.discountedPrice / 100}
+          productImage={productData.image}
+        />
+      )}
     </div>
   );
 });
