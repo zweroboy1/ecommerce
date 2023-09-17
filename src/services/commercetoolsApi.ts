@@ -8,6 +8,7 @@ import {
   CT_NETWORK_PROBLEM,
   CT_PRODUCT_NOT_FOUND,
   CT_PRODUCT_NO_ID,
+  CT_BAD_PROMOCODE,
 } from '../constants/apiMessages';
 
 import {
@@ -885,6 +886,14 @@ export async function addDiscountCode(
           Number(concurrentModificationError.currentVersion)
         );
       }
+      const badCodeError = responseData.errors.find(
+        (error: ErrorObject) => error.code === 'DiscountCodeNonApplicable'
+      );
+
+      if (badCodeError) {
+        throw new Error(CT_BAD_PROMOCODE);
+      }
+      throw new Error(CT_ERROR);
     }
 
     return responseData;
@@ -941,6 +950,63 @@ export async function introspectToken(accessToken: string) {
       },
     });
     const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}
+
+export async function removeProductsFromCart(
+  accessToken: string,
+  productIds: string[],
+  cartId: string,
+  cartVersion: number = 1
+): Promise<Cart> {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts/${cartId}`;
+  const actions = productIds.map((productId) => ({
+    action: 'removeLineItem',
+    lineItemId: productId,
+  }));
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        version: cartVersion,
+        actions,
+      }),
+    });
+    const responseData = await response.json();
+    if (responseData.errors) {
+      const concurrentModificationError = responseData.errors.find(
+        (error: ErrorObject) => error.code === 'ConcurrentModification'
+      );
+
+      if (concurrentModificationError) {
+        return await removeProductsFromCart(
+          accessToken,
+          productIds,
+          cartId,
+          Number(concurrentModificationError.currentVersion)
+        );
+      }
+
+      const invalidOperationError = responseData.errors.find(
+        (error: ErrorObject) => error.code === 'InvalidOperation'
+      );
+
+      if (invalidOperationError) {
+        throw new Error(CT_PRODUCT_NO_ID);
+      }
+
+      throw new Error(responseData.message);
+    }
     return responseData;
   } catch (error) {
     if (error instanceof Error) {

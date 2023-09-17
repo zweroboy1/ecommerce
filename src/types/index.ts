@@ -313,6 +313,28 @@ interface LineItem {
     };
     id: string;
   };
+
+  discountedPrice: {
+    value: {
+      currencyCode: string;
+      centAmount: number;
+      fractionDigits: number;
+    };
+    includedDiscounts: [
+      {
+        discount: {
+          typeId: string;
+          id: string;
+        };
+        discountedAmount: {
+          currencyCode: string;
+          centAmount: number;
+          fractionDigits: number;
+        };
+      }
+    ];
+  };
+
   productSlug: { ru: string };
   totalPrice: {
     currencyCode: string;

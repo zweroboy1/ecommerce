@@ -1,32 +1,40 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import { NavLink } from 'react-router-dom';
 import { Top } from './main/Top';
 import { Header } from './main/Header';
 import { Footer } from './main/Footer';
 import { Context } from '../store/Context';
 import { CartItem } from './CartItem';
+import { CT_BAD_PROMOCODE } from '../constants/apiMessages';
 import {
   addProductToCart,
   createCart,
   getMyCarts,
   removeProductFromCart,
+  removeProductsFromCart,
+  addDiscountCode,
 } from '../services/commercetoolsApi';
+import { formatPrice } from '../utils/formatPrice';
+import { CATALOG_ROUTE, MAIN_ROUTE } from '../constants/route';
+import { LineItem } from '../types';
 
 const Cart = observer(() => {
+  const [promoCode, setPromoCode] = useState<string>('');
   const { user } = useContext(Context);
   let userCart = user?.user?.cart;
   const isAuth = user?.isAuth;
-  // eslint-disable-next-line no-nested-ternary
-  const totalAmount = userCart
-    ? userCart.totalPrice.fractionDigits
-      ? `${userCart.totalPrice.centAmount
-          .toString()
-          .split('')
-          .slice(0, -userCart.totalPrice.fractionDigits)
-          .join('')}.${'0'.repeat(userCart.totalPrice.fractionDigits)}`
-      : userCart.totalPrice.centAmount
-    : 0;
+  const totalAmount = userCart ? userCart.totalPrice.centAmount : 0;
+
+  const countTotal = (items: LineItem[] | undefined) =>
+    items === undefined
+      ? 0
+      : items.reduce(
+          (acc, product) => acc + Number(product.price.value.centAmount) * Number(product.quantity),
+          0
+        );
+  const totalSum = countTotal(userCart?.lineItems);
 
   async function addToCart(productId: string, productQuantity: number) {
     if (!userCart) {
@@ -81,7 +89,6 @@ const Cart = observer(() => {
         userCart!.id,
         userCart!.version,
         productQuantity
-        /* , последний параметр - количество. если не указан, то удалятся все экземпляры этого продукта, если цифра, например 1, то будет удалять столько единиц */
       );
       const userData = isAuth ? user!.user!.user : null;
       const userToken = user!.user!.token;
@@ -98,19 +105,87 @@ const Cart = observer(() => {
     }
   }
 
+  async function clearCart() {
+    if (!userCart?.lineItems || userCart?.lineItems.length === 0) {
+      // eslint-disable-next-line
+      console.log('Корзина пуста');
+      return;
+    }
+
+    const productsIds = userCart.lineItems.map((item) => item.id);
+    try {
+      const result = await removeProductsFromCart(
+        user?.user?.token.access_token || '',
+        productsIds,
+        userCart!.id,
+        userCart!.version
+      );
+      const userData = isAuth ? user!.user!.user : null;
+      const userToken = user!.user!.token;
+      user!.setUser({
+        user: userData,
+        cart: result,
+        token: userToken,
+      });
+    } catch (error) {
+      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+  }
+
+  async function applyCode() {
+    if (!promoCode) {
+      return;
+    }
+
+    try {
+      const newCart = await addDiscountCode(
+        promoCode,
+        user?.user?.token.access_token || '',
+        userCart!.id,
+        userCart!.version
+      );
+      const userData = isAuth ? user!.user!.user : null;
+      const userToken = user!.user!.token;
+      user!.setUser({
+        user: userData,
+        cart: newCart,
+        token: userToken,
+      });
+    } catch (error) {
+      toast.error(CT_BAD_PROMOCODE, {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      applyCode();
+    }
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPromoCode(event.target.value);
+  };
+
   return (
     <div className="tygh">
       <Top />
       <Header />
       <main className="main cart container">
+        <ToastContainer />
         <div className="breadcrumbs">
-          <a href="/" className="breadcrumbs__link">
-            <bdi>Главная</bdi>
-          </a>
+          <NavLink className="breadcrumbs__link" to={MAIN_ROUTE}>
+            Главная
+          </NavLink>
           <span className="breadcrumbs__slash">/</span>
-          <a href="/cart" className="breadcrumbs__link">
-            <bdi>Корзина</bdi>
-          </a>
+          <NavLink className="breadcrumbs__current" to=".">
+            Корзина
+          </NavLink>
         </div>
         <div className="cart__grid">
           <div className="cart__container">
@@ -121,16 +196,18 @@ const Cart = observer(() => {
                     <h1 className="cart__title-page">Корзина</h1>
                     <div className="cart__buttons-container">
                       <div className="cart__left-buttons">
-                        <a href="/" className="button button-second">
+                        <NavLink to={CATALOG_ROUTE} className="button button-second">
                           <bdi>Продолжить покупки</bdi>
-                        </a>
+                        </NavLink>
                       </div>
-                      <div className="cart__right-buttons">
-                        <a href="/" className="button">
-                          <span className="cart__icon-ok"></span>
-                          <bdi>Оформить заказ</bdi>
-                        </a>
-                      </div>
+                      {userCart && userCart.lineItems.length > 0 && (
+                        <div className="cart__right-buttons">
+                          <a href="/" className="button">
+                            <span className="cart__icon-ok"></span>
+                            <bdi>Оформить заказ</bdi>
+                          </a>
+                        </div>
+                      )}
                     </div>
 
                     <div>
@@ -161,7 +238,15 @@ const Cart = observer(() => {
                             </table>
                           </div>
                         ) : (
-                          <div className="cart__empty">Корзина пуста</div>
+                          <div className="cart__empty">
+                            <span>
+                              Ваша корзина пока еще пуста...Мы рады предложить Вам ознакомиться с
+                              нашим
+                            </span>
+                            <NavLink to={CATALOG_ROUTE} className="button button-second">
+                              Каталогом товаров
+                            </NavLink>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -170,20 +255,26 @@ const Cart = observer(() => {
                       <div className="cart__total-wrapper">
                         <div className="cart__coupons">
                           <div>
-                            <form className="cart__processed-form" action="" method="post">
+                            <div className="cart__processed-form">
                               <div className="cart__hint">
                                 <label className="cart__hint-label">Промо-код</label>
                                 <input
                                   type="text"
                                   className="cart__hint-text"
-                                  value=""
-                                  onChange={() => {}}
+                                  value={promoCode}
+                                  onChange={handleInputChange}
+                                  onKeyDown={handleKeyDown}
                                 />
-                                <button title="Применить" className="cart__btn-go" type="submit">
+                                <button
+                                  title="Применить"
+                                  className="cart__btn-go"
+                                  type="button"
+                                  onClick={applyCode}
+                                >
                                   Применить
                                 </button>
                               </div>
-                            </form>
+                            </div>
                           </div>
 
                           <ul className="cart__discount-info">
@@ -212,18 +303,20 @@ const Cart = observer(() => {
 
                         <ul className="cart__statistic-list">
                           <li className="cart__statistic-item">
-                            <span className="cart__statistic-title">Сумма</span>
+                            <span className="cart__statistic-title">
+                              Сумма без промокодов и акций
+                            </span>
                             <span className="cart__statistic-value">
                               <bdi>
-                                <span>{totalAmount} ₴</span>
+                                <span>{formatPrice(totalSum / 100)} ₴</span>
                               </bdi>
                             </span>
                           </li>
                           <li className="cart__statistic-item discount">
-                            <span className="cart__statistic-title">Включая скидку</span>
+                            <span className="cart__statistic-title">Итоговая скидка</span>
                             <span className="cart__statistic-value">
                               <bdi>
-                                <span>-100.00 ₴</span>
+                                <span>{formatPrice((totalSum - totalAmount) / 100)} ₴</span>
                               </bdi>
                             </span>
                           </li>
@@ -233,7 +326,7 @@ const Cart = observer(() => {
                             <span className="cart__statistic-total-title">Итоговая стоимость</span>
                             <span className="cart__statistic-total-value">
                               <bdi>
-                                <span>{totalAmount}</span>
+                                <span>{formatPrice(totalAmount / 100)}</span>
                                 <span> ₴</span>
                               </bdi>
                             </span>
@@ -244,19 +337,30 @@ const Cart = observer(() => {
 
                     <div className="cart__buttons-container">
                       <div className="cart__left-buttons">
-                        <a href="/" className="button button-second">
+                        <NavLink to={CATALOG_ROUTE} className="button button-second">
                           <bdi>Продолжить покупки</bdi>
-                        </a>
-                        <a className="button" href="/">
-                          <bdi>Очистить корзину</bdi>
-                        </a>
+                        </NavLink>
+                        {userCart && userCart.lineItems.length > 0 && (
+                          <a
+                            className="button"
+                            href="/"
+                            onClick={async (e: React.MouseEvent<HTMLAnchorElement>) => {
+                              e.preventDefault();
+                              await clearCart();
+                            }}
+                          >
+                            <bdi>Очистить корзину</bdi>
+                          </a>
+                        )}
                       </div>
-                      <div className="cart__right-buttons">
-                        <a href="/" className="button">
-                          <span className="icon-ok"></span>
-                          <bdi>Оформить заказ</bdi>
-                        </a>
-                      </div>
+                      {userCart && userCart.lineItems.length > 0 && (
+                        <div className="cart__right-buttons">
+                          <a href="/" className="button">
+                            <span className="icon-ok"></span>
+                            <bdi>Оформить заказ</bdi>
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

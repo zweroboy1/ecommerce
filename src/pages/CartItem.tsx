@@ -2,30 +2,25 @@ import { PropsWithoutRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { CartItemProps } from '../types';
 import { ButtonIcon } from '../components/ButtonIcon';
+import { formatPrice } from '../utils/formatPrice';
 
 const CartItem = observer(
   ({ product, removeFromCart, addToCart }: PropsWithoutRef<CartItemProps>) => {
     const quantityInCart = product.quantity;
     const [quantity, setQuantity] = useState(quantityInCart);
-    const amount = product.price.value.fractionDigits
-      ? `${product.price.value.centAmount
-          .toString()
-          .split('')
-          .slice(0, -product.price.value.fractionDigits)
-          .join('')}.${'0'.repeat(product.price.value.fractionDigits)}`
-      : product.price.value.centAmount;
-    const totalAmount = product.totalPrice.fractionDigits
-      ? `${product.totalPrice.centAmount
-          .toString()
-          .split('')
-          .slice(0, -product.totalPrice.fractionDigits)
-          .join('')}.${'0'.repeat(product.totalPrice.fractionDigits)}`
-      : product.totalPrice.centAmount;
+    const amount = product.price.value.centAmount;
+    const totalAmount = product.totalPrice.centAmount;
+    let discountedPrice = product.price.discounted
+      ? product.price.discounted.value.centAmount
+      : false;
+    if (product.discountedPrice) {
+      discountedPrice = product.discountedPrice.value.centAmount;
+    }
     const [loadChangeInCart, setLoadChangeInCart] = useState(false);
 
     const handleQuantityChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
       setLoadChangeInCart(true);
-      if (event.target.value === '') {
+      if (event.target.value === '' || event.target.value === '0') {
         if (quantityInCart === 1) {
           setLoadChangeInCart(false);
           return;
@@ -44,6 +39,7 @@ const CartItem = observer(
         Number(event.target.value) > 999 ||
         loadChangeInCart
       ) {
+        setLoadChangeInCart(false);
         return;
       }
       if (value === quantityInCart) {
@@ -115,11 +111,22 @@ const CartItem = observer(
         </td>
 
         <td className="cart__product-price">
-          <bdi>
-            <span>{amount}</span>
+          <bdi style={{ color: `${discountedPrice ? 'red' : 'black'}` }}>
+            {discountedPrice ? (
+              <span>{formatPrice(discountedPrice / 100)}</span>
+            ) : (
+              <span>{formatPrice(amount / 100)}</span>
+            )}
             <span> ₴</span>
-            {/* <span>{item.price.value.currencyCode}</span> */}
           </bdi>
+          <br />
+          <br />
+          {discountedPrice && (
+            <bdi style={{ textDecoration: 'line-through' }}>
+              <span>{formatPrice(amount / 100)}</span>
+              <span> ₴</span>
+            </bdi>
+          )}
         </td>
 
         <td className="cart__product-qty">
@@ -152,7 +159,7 @@ const CartItem = observer(
 
         <td className="cart__product-price">
           <bdi>
-            <span>{totalAmount}</span>
+            <span>{formatPrice(totalAmount / 100)}</span>
             <span> ₴</span>
           </bdi>
         </td>
