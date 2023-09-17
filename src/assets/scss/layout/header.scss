@@ -303,6 +303,23 @@
       line-height: 0;
       text-align: center;
       position: absolute;
+
+      @include media('s') {
+        top: -1px;
+        right: 1px;
+      }
+
+      @include media('xs') {
+        min-width: 10px;
+        height: 11px;
+        font-size: 6px;
+      }
+
+      @include media('xxs') {
+        min-width: 7px;
+        height: 7px;
+        padding: 0 1px;
+      }
     }
   }
 }
