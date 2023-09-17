@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { PAYMENT_ROUTE, RETURN_ROUTE, CONTACTS_ROUTE } from '../../../constants/route';
+import { PAYMENT_ROUTE, ABOUT_ROUTE, CONTACTS_ROUTE } from '../../../constants/route';
 
 const TopLinks = () => {
   const quickLinks = [
+    { text: 'О нас', link: ABOUT_ROUTE },
     { text: 'Доставка и оплата', link: PAYMENT_ROUTE },
-    { text: 'Возврат', link: RETURN_ROUTE },
     { text: 'Контакты', link: CONTACTS_ROUTE },
     { text: 'Каталог', link: '/catalog' },
   ];

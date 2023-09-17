@@ -45,12 +45,6 @@ const About = () => {
         </div>
         <h1>О нас</h1>
         <p>Мы представляем команду ООПтираторы!</p>
-        <p>
-          Это наш филаньный проек на курсе JavaScript/Front-end 2023Q1 от
-          <a className="rs-link" href="https://rs.school/js/" target="_blank">
-            <svg className="rs-link__svg"></svg>
-          </a>
-        </p>
         <h2>Члены команды</h2>
         <div className="about__team">
           {teamMembers.map((member) => (
@@ -138,6 +132,12 @@ const About = () => {
             смогли успешно завершить проект и достичь поставленных целей.
           </p>
         </div>
+        <p>
+          Надеемся, что вам понравился наш филаньный проек на курсе JavaScript/Front-end 2023Q1 от
+          <a className="rs-link" href="https://rs.school/js/" target="_blank">
+            <svg className="rs-link__svg"></svg>
+          </a>
+        </p>
       </main>
       <Footer />
     </div>

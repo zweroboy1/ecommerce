@@ -50,7 +50,7 @@
       box-shadow: 0 2px 60px #0000003d;
       border: 1px solid #eaeaea;
       overflow: auto;
-      z-index: 10000;
+      z-index: 10;
 
       .goods__description1 {
         display: initial;
@@ -278,6 +278,6 @@
 
   &__control-icon {
     top: 0;
-    background: url(/src/assets/svg/cart-large.svg) no-repeat center center/cover;
+    background: url(/src/assets/svg/cart-large.svg) no-repeat center center / cover;
   }
 }

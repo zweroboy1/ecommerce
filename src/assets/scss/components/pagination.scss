@@ -11,10 +11,8 @@
     border: 1px solid #eee;
     color: #000;
     font-weight: bold;
-    padding: 0 10px;
+    padding: 0;
     margin: 2px;
-    min-width: $button-size-40;
-    height: $button-size-40;
     line-height: $button-size-40;
     border-radius: 8px;
     font-size: 14px;
@@ -30,6 +28,9 @@
 
     a {
       @include font();
+      @include flex();
+      min-width: $button-size-40;
+      height: $button-size-40;
     }
   }
 
