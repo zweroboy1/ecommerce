@@ -368,8 +368,8 @@ type CartAPI = {
 
 type CartItemProps = {
   product: LineItem;
-  removeFromCart: (id: string, quantity: number) => void;
-  addToCart: (id: string, quantity: number) => void;
+  removeFromCart: (id: string, quantity: number, cb?: () => void) => void;
+  addToCart: (id: string, quantity: number, cb?: () => void) => void;
 };
 
 export type {

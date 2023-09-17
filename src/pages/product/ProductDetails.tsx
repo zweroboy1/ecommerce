@@ -25,7 +25,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
     const [quantity, setQuantity] = useState(inCart ? quantityInCart : 1);
     const [loadAddToCart, setLoadAddToCart] = useState(false);
 
-    async function addToCart(productId: string, productQuantity: number) {
+    async function addToCart(productId: string, productQuantity: number, cb?: () => void) {
       if (!userCart) {
         try {
           const userCarts = await getMyCarts(user?.user?.token.access_token || '');
@@ -49,6 +49,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
           userCart!.version,
           productQuantity
         );
+        if (result instanceof Error) {
+          setLoadAddToCart(false);
+          throw Error(result.message);
+        }
         const userData = isAuth ? user!.user!.user : null;
         const userToken = user!.user!.token;
         user!.setUser({
@@ -56,6 +60,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
           cart: result,
           token: userToken,
         });
+        if (cb) {
+          cb();
+        }
+        setLoadAddToCart(false);
       } catch (error) {
         toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
           position: toast.POSITION.TOP_RIGHT,
@@ -64,7 +72,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
         setLoadAddToCart(false);
       }
     }
-    async function removeFromCart(productId: string, productQuantity: number) {
+    async function removeFromCart(productId: string, productQuantity: number, cb?: () => void) {
       if (!userCart?.lineItems.some((item) => item.id === productId)) {
         // eslint-disable-next-line
         console.log('Этого продукта нет в корзине');
@@ -80,6 +88,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
           productQuantity
           /* , последний параметр - количество. если не указан, то удалятся все экземпляры этого продукта, если цифра, например 1, то будет удалять столько единиц */
         );
+        if (result instanceof Error) {
+          setLoadAddToCart(false);
+          throw Error(result.message);
+        }
         const userData = isAuth ? user!.user!.user : null;
         const userToken = user!.user!.token;
         user!.setUser({
@@ -87,6 +99,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
           cart: result,
           token: userToken,
         });
+        if (cb) {
+          cb();
+        }
+        setLoadAddToCart(false);
       } catch (error) {
         toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
           position: toast.POSITION.TOP_RIGHT,
@@ -105,9 +121,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
           return;
         }
         const prevQuantity = quantityInCart;
-        setQuantity(() => 0);
+
         const productId = userCart?.lineItems.find((item) => item.productId === id)?.id || '';
-        await removeFromCart(productId, prevQuantity);
+        await removeFromCart(productId, prevQuantity, () => {
+          setQuantity(() => 0);
+        });
         setLoadAddToCart(false);
         return;
       }
@@ -123,18 +141,21 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
         return;
       }
       const prevQuantity = inCart ? quantityInCart : 0;
-      setQuantity(() => Number(value));
+
       if (inCart) {
         if (Number(value) > prevQuantity) {
-          await addToCart(id, Number(value) - prevQuantity);
+          await addToCart(id, Number(value) - prevQuantity, () => {
+            setQuantity(() => Number(value));
+          });
         } else {
           const productId = userCart?.lineItems.find((item) => item.productId === id)?.id || '';
-          await removeFromCart(productId, prevQuantity - Number(value));
+          await removeFromCart(productId, prevQuantity - Number(value), () => {
+            setQuantity(() => Number(value));
+          });
         }
+      } else {
+        setQuantity(() => Number(value));
       }
-      // else if (Number(event.target.value) > 0) {
-      //   await addToCart(id, Number(event.target.value));
-      // }
       setLoadAddToCart(false);
     };
 
@@ -144,10 +165,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
       }
       setLoadAddToCart(true);
 
-      setQuantity((prevQuantity) => (prevQuantity - 1 < 0 ? 0 : prevQuantity - 1));
-      if (inCart) {
+      if (!inCart) {
+        setQuantity((prevQuantity) => (prevQuantity - 1 < 0 ? 0 : prevQuantity - 1));
+      } else {
         const productId = userCart?.lineItems.find((item) => item.productId === id)?.id || '';
-        await removeFromCart(productId, 1);
+        await removeFromCart(productId, 1, () => {
+          setQuantity((prevQuantity) => (prevQuantity - 1 < 0 ? 0 : prevQuantity - 1));
+        });
       }
       setLoadAddToCart(false);
     };
@@ -158,9 +182,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
       }
       setLoadAddToCart(true);
 
-      setQuantity((prevQuantity) => (prevQuantity + 1 > 999 ? 999 : prevQuantity + 1));
-      if (inCart) {
-        await addToCart(id, 1);
+      if (!inCart) {
+        setQuantity((prevQuantity) => (prevQuantity + 1 > 999 ? 999 : prevQuantity + 1));
+      } else {
+        await addToCart(id, 1, () => {
+          setQuantity((prevQuantity) => (prevQuantity + 1 > 999 ? 999 : prevQuantity + 1));
+        });
       }
       setLoadAddToCart(false);
     };
