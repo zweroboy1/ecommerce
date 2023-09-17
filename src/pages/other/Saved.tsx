@@ -147,7 +147,6 @@ async function removeProduct(id: number) {
   }
 }
 
-
 async function addPromoCode(userCart: string, userToken: string, userVersion: number) {
   // eslint-disable-next-line
   console.log(userCart, userToken, userVersion);

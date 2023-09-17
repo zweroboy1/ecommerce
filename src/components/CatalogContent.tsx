@@ -3,7 +3,7 @@ import ReactPaginate from 'react-paginate';
 import { ToastContainer, toast } from 'react-toastify';
 import { CATEGORIES } from '../constants/categories';
 import { PRODUCTS_ON_PAGE, SORT_OPTIONS, MAX_PRICE_FILTER } from '../constants';
-import { ProductList } from './ProductList';
+import { ProductList } from './ProductList.1';
 import { Breadcrumbs } from './Breadcrumbs';
 import { CatalogMenu } from './CatalogMenu';
 import { Breadcrumb, Product } from '../types';

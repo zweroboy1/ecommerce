@@ -1,15 +1,33 @@
+import { useContext } from 'react';
+import { NavLink } from 'react-router-dom';
+import { Context } from '../store/Context';
+import { formatPrice } from '../utils/formatPrice';
+import { CART_ROUTE } from '../constants/route';
+
 interface NotificationProps {
   onClose: () => void;
   productName: string;
   productPrice: number;
+  discontPrice: number;
   productImage: string;
 }
+
 const Notification: React.FC<NotificationProps> = ({
   onClose,
   productName,
   productPrice,
+  discontPrice,
   productImage,
 }) => {
+  const { user } = useContext(Context);
+  const userCart = user?.user?.cart;
+  const cartQuantity = user?.user?.cart?.lineItems.length
+    ? user?.user?.cart?.lineItems.reduce((prev, cur) => prev + cur.quantity, 0)
+    : 0;
+  const totalAmount = userCart ? userCart.totalPrice.centAmount : 0;
+
+  const price = discontPrice || productPrice;
+
   return (
     <div className="notification">
       <div className="notification__overlay"></div>
@@ -39,19 +57,18 @@ const Notification: React.FC<NotificationProps> = ({
                   <span className="none">1</span>
                   <span dir="ltr">&nbsp;x&nbsp;</span>
                   <bdi>
-                    <span> ₴</span>
-                    <span>{productPrice}</span>
+                    <span>{formatPrice(price)} ₴</span>
                   </bdi>
                 </div>
               </div>
             </div>
             <hr className="notification__divider" />
             <div className="notification__total-info">
-              <div className="notification__amount">В корзине 12 товаров</div>
+              <div className="notification__amount">В корзине {cartQuantity} товаров</div>
               <div className="notification__subtotal">
                 Предварительная стоимость корзины
                 <bdi>
-                  ₴<span>432,850</span>
+                  <span>{formatPrice(totalAmount / 100)} ₴</span>
                 </bdi>
               </div>
             </div>
@@ -63,10 +80,12 @@ const Notification: React.FC<NotificationProps> = ({
               </a>
             </div>
             <div className="notification__btn-right">
-              <a href="/cart" className="button">
+              <NavLink to={CART_ROUTE} title="" className="button">
+                {/* <a href="/cart" className="button"> */}
                 <span className="ty-icon ty-icon-ok"></span>
-                <bdi>Оформить заказ</bdi>
-              </a>
+                <bdi>В корзину</bdi>
+                {/* </a> */}
+              </NavLink>
             </div>
           </div>
         </div>
