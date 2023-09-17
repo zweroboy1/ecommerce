@@ -69,6 +69,7 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
         setLoadAddToCart('');
         throw Error(result.message);
       }
+
       const userData = isAuth ? user!.user!.user : null;
       const userToken = user!.user!.token;
       user!.setUser({
@@ -85,6 +86,7 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
         autoClose: 3000,
       });
     }
+    setLoadAddToCart('');
   }
 
   return products.length === 0 ? (

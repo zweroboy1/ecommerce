@@ -29,7 +29,7 @@ const Registration = () => {
     <div className="tygh">
       <Top />
       <Header />
-      <main className="main">
+      <main className="main container">
         <div className="authorization">
           <div className="authorization__container">
             <h1>Создать учетную запись</h1>
