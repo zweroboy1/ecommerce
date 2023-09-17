@@ -58,6 +58,11 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
         userCart!.version,
         quantity
       );
+      if (result instanceof Error) {
+        setLoadAddToCart('');
+        throw Error(result.message);
+      }
+
       const userData = isAuth ? user!.user!.user : null;
       const userToken = user!.user!.token;
       user!.setUser({
@@ -65,6 +70,9 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
         cart: result,
         token: userToken,
       });
+      if (cb) {
+        cb();
+      }
     } catch (error) {
       toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
         position: toast.POSITION.TOP_RIGHT,
@@ -72,9 +80,6 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
       });
     }
     setLoadAddToCart('');
-    if (cb) {
-      cb();
-    }
   }
 
   return products.length === 0 ? (
@@ -143,7 +148,7 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
                     }
                     title="Добавить в карзину"
                   >
-                    <i className="goods__control-icon minicarticon__icon header-icon"></i>
+                    <i className="goods__control-icon minicart__icon header-icon"></i>
                   </ButtonIcon>
                   {isModalOpen && (
                     <Notification
