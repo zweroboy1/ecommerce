@@ -209,3 +209,29 @@ input[type='checkbox']:checked {
   width: 100%;
   padding: 0 20px;
 }
+
+.page {
+  padding: 0 20px;
+
+  h2,
+  h3,
+  p,
+  ul {
+    text-align: left;
+    padding: 6px 0;
+  }
+
+  h2,
+  h3 {
+    margin-top: 20px;
+  }
+
+  li span {
+    @include font($family: $font-family-title, $size: $font-size-14);
+    text-decoration: underline;
+  }
+
+  h3 {
+    @include font($family: $font-family-title, $size: $font-size-14);
+  }
+}

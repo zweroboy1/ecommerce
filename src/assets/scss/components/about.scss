@@ -1,0 +1,110 @@
+/* about */
+
+.about {
+  width: 100%;
+  box-sizing: border-box;
+  float: left;
+
+  &__team {
+    @include flex($wrap: wrap);
+    gap: 50px;
+  }
+
+  &__member {
+    @include flexColumn();
+    @include font($family: $font-family-title, $size: $font-size-24);
+    flex: 1;
+    max-width: calc(50% - 25px);
+
+    @include media('s') {
+      max-width: 100%;
+    }
+
+    h2,
+    p {
+      text-align: center;
+    }
+
+    @include media('s') {
+      &:nth-of-type(2) {
+        order: 1;
+      }
+
+      &:nth-of-type(1) {
+        order: 2;
+      }
+
+      &:nth-of-type(3) {
+        order: 3;
+      }
+    }
+  }
+
+  &__photo {
+    margin-bottom: 20px;
+    animation: photo 3s infinite alternate;
+    border: 10px solid #fbb03b;
+    box-shadow: 6px 7px 9px 5px #fbb03b73;
+    overflow: hidden;
+  }
+
+  &__img {
+    max-width: 250px;
+  }
+
+  &__details {
+    @include font($family: $font-family);
+
+    p {
+      padding: 0 0 15px;
+      line-height: 1.4;
+      text-align: justify;
+    }
+  }
+
+  .rs-link svg {
+    background: url(/src/assets/svg/rs.svg) center / contain no-repeat;
+    width: 6rem;
+    height: 2rem;
+    transition: $transition;
+
+    &:hover {
+      background: url(/src/assets/svg/rs-y.svg) center / contain no-repeat;
+      width: 6.5rem;
+      transform: scale(1.1);
+      fill: $button-second;
+    }
+  }
+
+  &__github {
+    @include font($family: $font-family, $size: $font-size-16);
+    color: $links;
+
+    span {
+      margin-right: 5px;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+      color: $links-hover;
+    }
+  }
+}
+
+@keyframes photo {
+  0% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+
+  40% {
+    border-radius: 45% 55% 55% 45% / 45% 45% 55% 55%;
+  }
+
+  60% {
+    border-radius: 55% 45% 45% 55% / 55% 55% 45% 45%;
+  }
+
+  100% {
+    border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+  }
+}

@@ -2,7 +2,9 @@ import { FooterMenu } from './FooterMenu';
 
 const Contacts = () => {
   const menuItems = [
-    { text: 'г. Boston, 44 Main street' },
+    {
+      text: 'пр. Победы, 18, Киев, Украина, 01135',
+    },
     {
       text: '+38 (111) 222-33-44',
       link: 'tel:+381112223344',
