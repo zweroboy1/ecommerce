@@ -5,7 +5,7 @@
     margin: 0;
     padding: 0;
     background: url(/src/assets/img/modal-bg.png) repeat-x 0 -100% scroll #000;
-    opacity: 0.2;
+    opacity: 0.8;
     top: 0;
     left: 0;
     width: 100%;
@@ -28,7 +28,6 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     transition: height 0.2s ease-in-out;
     border-radius: 12px;
-    // top: 261px;
   }
 
   &__content h1 {

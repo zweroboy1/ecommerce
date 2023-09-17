@@ -81,10 +81,8 @@ const Notification: React.FC<NotificationProps> = ({
             </div>
             <div className="notification__btn-right">
               <NavLink to={CART_ROUTE} title="" className="button">
-                {/* <a href="/cart" className="button"> */}
                 <span className="ty-icon ty-icon-ok"></span>
                 <bdi>В корзину</bdi>
-                {/* </a> */}
               </NavLink>
             </div>
           </div>
