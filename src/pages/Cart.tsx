@@ -36,7 +36,7 @@ const Cart = observer(() => {
         );
   const totalSum = countTotal(userCart?.lineItems);
 
-  async function addToCart(productId: string, productQuantity: number) {
+  async function addToCart(productId: string, productQuantity: number, cb?: () => void) {
     if (!userCart) {
       try {
         const userCarts = await getMyCarts(user?.user?.token.access_token || '');
@@ -60,6 +60,9 @@ const Cart = observer(() => {
         userCart!.version,
         productQuantity
       );
+      if (result instanceof Error) {
+        throw new Error(result.message);
+      }
       const userData = isAuth ? user!.user!.user : null;
       const userToken = user!.user!.token;
       user!.setUser({
@@ -67,6 +70,11 @@ const Cart = observer(() => {
         cart: result,
         token: userToken,
       });
+      if (cb) {
+        // eslint-disable-next-line no-console
+        console.log(49);
+        cb();
+      }
     } catch (error) {
       toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
         position: toast.POSITION.TOP_RIGHT,
@@ -75,7 +83,7 @@ const Cart = observer(() => {
     }
   }
 
-  async function removeFromCart(productId: string, productQuantity: number) {
+  async function removeFromCart(productId: string, productQuantity: number, cb?: () => void) {
     if (!userCart?.lineItems.some((item) => item.id === productId)) {
       // eslint-disable-next-line
       console.log('Этого продукта нет в корзине');
@@ -97,6 +105,9 @@ const Cart = observer(() => {
         cart: result,
         token: userToken,
       });
+      if (cb) {
+        cb();
+      }
     } catch (error) {
       toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
         position: toast.POSITION.TOP_RIGHT,
@@ -120,6 +131,9 @@ const Cart = observer(() => {
         userCart!.id,
         userCart!.version
       );
+      if (result instanceof Error) {
+        throw new Error(result.message);
+      }
       const userData = isAuth ? user!.user!.user : null;
       const userToken = user!.user!.token;
       user!.setUser({
@@ -176,6 +190,7 @@ const Cart = observer(() => {
     <div className="tygh">
       <Top />
       <Header />
+      <ToastContainer />
       <main className="main cart container">
         <ToastContainer />
         <div className="breadcrumbs">

@@ -1,5 +1,6 @@
 import { PropsWithoutRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import { toast } from 'react-toastify';
 import { CartItemProps } from '../types';
 import { ButtonIcon } from '../components/ButtonIcon';
 import { formatPrice } from '../utils/formatPrice';
@@ -26,8 +27,9 @@ const CartItem = observer(
           return;
         }
         const prevQuantity = quantityInCart;
-        setQuantity(() => 1);
-        await removeFromCart(product.id, prevQuantity - 1);
+        await removeFromCart(product.id, prevQuantity - 1, () => {
+          setQuantity(() => 1);
+        });
         setLoadChangeInCart(false);
         return;
       }
@@ -47,11 +49,14 @@ const CartItem = observer(
         return;
       }
       const prevQuantity = quantityInCart;
-      setQuantity(() => value);
       if (value > prevQuantity) {
-        await addToCart(product.productId, value - prevQuantity);
+        await addToCart(product.productId, value - prevQuantity, () => {
+          setQuantity(() => value);
+        });
       } else {
-        await removeFromCart(product.id, prevQuantity - value);
+        await removeFromCart(product.id, prevQuantity - value, () => {
+          setQuantity(() => value);
+        });
       }
       setLoadChangeInCart(false);
     };
@@ -62,8 +67,9 @@ const CartItem = observer(
       }
       setLoadChangeInCart(true);
 
-      setQuantity((prevQuantity) => (prevQuantity - 1 < 0 ? 0 : prevQuantity - 1));
-      await removeFromCart(product.id, 1);
+      await removeFromCart(product.id, 1, () => {
+        setQuantity((prevQuantity) => (prevQuantity - 1 < 0 ? 0 : prevQuantity - 1));
+      });
       setLoadChangeInCart(false);
     };
 
@@ -72,8 +78,10 @@ const CartItem = observer(
         return;
       }
       setLoadChangeInCart(true);
-      setQuantity((prevQuantity) => (prevQuantity + 1 > 999 ? 999 : prevQuantity + 1));
-      await addToCart(product.productId, 1);
+
+      await addToCart(product.productId, 1, () => {
+        setQuantity((prevQuantity) => (prevQuantity + 1 > 999 ? 999 : prevQuantity + 1));
+      });
       setLoadChangeInCart(false);
     };
 
@@ -105,6 +113,10 @@ const CartItem = observer(
                 setLoadChangeInCart(true);
                 await removeFromCart(product.id, quantity);
                 setLoadChangeInCart(false);
+                toast.warn('Товар удален!', {
+                  position: toast.POSITION.TOP_RIGHT,
+                  autoClose: 3000,
+                });
               }}
             >
               <span className="icon-cancel-circle"></span>
