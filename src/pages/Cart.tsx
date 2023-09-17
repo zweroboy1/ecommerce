@@ -169,7 +169,7 @@ const Cart = observer(() => {
                                   <th className="cart__table-title">&nbsp;</th>
                                   <th className="cart__table-title">Цена за ед.</th>
                                   <th className="cart__table-title">Кол-во</th>
-                                  <th className="cart__table-titlet">Итого</th>
+                                  <th className="cart__table-title">Итого</th>
                                 </tr>
                               </thead>
 

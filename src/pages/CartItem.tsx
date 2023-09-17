@@ -74,6 +74,7 @@ const CartItem = observer(
     return (
       <tr key={product.productId}>
         <td className="cart__image-block">
+          <div className="cart__table-title-mob">Товар</div>
           <div className="cart__table-image">
             <a href={`/product/${product.productSlug.ru}`}>
               <img
@@ -87,20 +88,22 @@ const CartItem = observer(
           </div>
         </td>
         <td className="cart__content-description">
-          <a href={`/product/${product.productSlug.ru}`} className="cart__product-title">
-            {product.name.ru}
-          </a>
-          <ButtonIcon
-            className="cart__product-delete"
-            title="Удалить"
-            onClick={async () => {
-              setLoadChangeInCart(true);
-              await removeFromCart(product.id, quantity);
-              setLoadChangeInCart(false);
-            }}
-          >
-            <span className="icon-cancel-circle"></span>
-          </ButtonIcon>
+          <div className="cart__product-name">
+            <a href={`/product/${product.productSlug.ru}`} className="cart__product-title">
+              {product.name.ru}
+            </a>
+            <ButtonIcon
+              className="cart__product-delete"
+              title="Удалить"
+              onClick={async () => {
+                setLoadChangeInCart(true);
+                await removeFromCart(product.id, quantity);
+                setLoadChangeInCart(false);
+              }}
+            >
+              <span className="icon-cancel-circle"></span>
+            </ButtonIcon>
+          </div>
           <div className="cart__product-sku">
             КОД:
             <span>{product.variant.sku}</span>
@@ -108,6 +111,7 @@ const CartItem = observer(
         </td>
 
         <td className="cart__product-price">
+          <div className="cart__table-title-mob">Цена за ед.</div>
           <bdi style={{ color: `${discountedPrice ? 'red' : 'black'}` }}>
             {discountedPrice ? (
               <span>{formatPrice(discountedPrice / 100)}</span>
@@ -127,6 +131,7 @@ const CartItem = observer(
         </td>
 
         <td className="cart__product-qty">
+          <div className="cart__table-title-mob">Кол-во</div>
           <div className="quantity">
             <div className="quantity__changer">
               <button
@@ -155,6 +160,7 @@ const CartItem = observer(
         </td>
 
         <td className="cart__product-price">
+          <div className="cart__table-title-mob">Итого</div>
           <bdi>
             <span>{formatPrice(totalAmount / 100)}</span>
             <span> ₴</span>

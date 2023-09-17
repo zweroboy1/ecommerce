@@ -16,11 +16,21 @@
     padding: 15px;
     border-radius: 0;
     width: 100%;
+
+    @include media('xs') {
+      @include flexColumn($align: flex-start);
+      gap: 10px;
+    }
   }
 
   &__left-buttons {
     @include flex();
     gap: 10px;
+
+    @include media('s') {
+      @include flexColumn($align: flex-start);
+      gap: 10px;
+    }
   }
 
   &__table {
@@ -37,6 +47,10 @@
       white-space: nowrap;
       line-height: normal;
 
+      @include media('m') {
+        display: none;
+      }
+
       a {
         color: #404040;
         font-weight: bold;
@@ -46,23 +60,70 @@
     tr {
       background-color: #fff;
       border: 0;
+
+      @include media('m') {
+        border: 1px solid #ccc;
+        border-bottom: none;
+      }
     }
 
     td {
       padding: 13px;
       vertical-align: top;
+
+      @include media('m') {
+        display: block;
+        border: none;
+        border-bottom: 1px solid #eee;
+        white-space: normal;
+        text-align: left;
+        min-height: 18px;
+        width: auto !important;
+      }
+    }
+  }
+
+  &__table-title-mob {
+    display: none;
+
+    @include media('m') {
+      display: block;
+      margin-bottom: 10px;
+      @include font($family: $font-family-title);
     }
   }
 
   &__table-image {
     padding-top: 7px;
     padding-bottom: 7px;
+    @include flex($align: baseline);
+    height: 150px;
+
+    @include media('m') {
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    img {
+      max-height: 150px;
+      max-width: 150px;
+      height: auto;
+      width: auto;
+    }
+  }
+
+  &__product-price {
+    white-space: nowrap;
   }
 
   &__content-description {
     padding-bottom: 10px;
     text-align: left;
     width: 50%;
+  }
+
+  &__product-name {
+    @include flex($justify: flex-start);
   }
 
   &__product-title {
@@ -80,7 +141,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #a2a2a2;
+    background: $error;
     position: relative;
     cursor: pointer;
 
@@ -101,6 +162,10 @@
 
     &:after {
       transform: rotate(-45deg);
+    }
+
+    &:hover {
+      background: $important;
     }
   }
 
@@ -178,6 +243,20 @@
     width: inherit;
     float: left;
     padding-right: 25px;
+
+    @include media('xl') {
+      width: 55%;
+    }
+
+    @include media('l') {
+      width: 44%;
+      padding-right: 10px;
+    }
+
+    @include media('m') {
+      width: 100%;
+      padding-right: 0;
+    }
   }
 
   &__hint {
