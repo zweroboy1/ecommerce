@@ -20,13 +20,20 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
   const [productData, setProductData] = useState({
     name: '',
     price: 0,
+    discountedPrice: 0,
     image: '',
   });
 
-  const openModal = (productName: string, productPrice: number, productImage: string) => {
+  const openModal = (
+    productName: string,
+    productPrice: number,
+    discontPrice: number,
+    productImage: string
+  ) => {
     setProductData({
       name: productName,
       price: productPrice,
+      discountedPrice: discontPrice,
       image: productImage,
     });
 
@@ -62,7 +69,6 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
         setLoadAddToCart('');
         throw Error(result.message);
       }
-
       const userData = isAuth ? user!.user!.user : null;
       const userToken = user!.user!.token;
       user!.setUser({
@@ -79,93 +85,94 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
         autoClose: 3000,
       });
     }
-    setLoadAddToCart('');
   }
 
   return products.length === 0 ? (
     <p className="no-product">Нет продуктов, удовлетворяющих заданным условиям</p>
   ) : (
-    <>
+    <div className="goods">
       <ToastContainer />
-      <div className="goods">
-        {products.map((product) => (
-          <div key={product.id} className="goods__card">
-            <div className="goods__wrapper">
-              <div className="goods__image">
-                <NavLink to={`/product/${product.slug}`}>
-                  {product.images[1] ? (
+      {products.map((product) => (
+        <div key={product.id} className="goods__card">
+          <div className="goods__wrapper">
+            <div className="goods__image">
+              <NavLink to={`/product/${product.slug}`}>
+                {product.images[1] ? (
+                  <>
+                    <img
+                      className="goods__image_first"
+                      src={product.images[0]}
+                      alt={`${product.name} - image #1`}
+                    />
+                    <img
+                      className="goods__image_second"
+                      src={product.images[1]}
+                      alt={`${product.name} - image #2`}
+                    />
+                  </>
+                ) : (
+                  <img className="goods__image_only" src={product.images[0]} alt={product.name} />
+                )}
+              </NavLink>
+            </div>
+
+            <div className="goods__info">
+              <h2 className="goods__name">
+                <NavLink className="goods__title" to={`/product/${product.slug}`}>
+                  {product.name}
+                </NavLink>
+              </h2>
+              <div className="goods__prices">
+                <div className="goods__price-block">
+                  {product.discountedPrice ? (
                     <>
-                      <img
-                        className="goods__image_first"
-                        src={product.images[0]}
-                        alt={`${product.name} - image #1`}
-                      />
-                      <img
-                        className="goods__image_second"
-                        src={product.images[1]}
-                        alt={`${product.name} - image #2`}
-                      />
+                      <span className="goods__old-price">{formatPrice(product.price / 100)} ₴</span>
+
+                      <span className="goods__discounted-price">
+                        {formatPrice(product.discountedPrice / 100)} ₴
+                      </span>
                     </>
                   ) : (
-                    <img className="goods__image_only" src={product.images[0]} alt={product.name} />
-                  )}
-                </NavLink>
-              </div>
-
-              <div className="goods__info">
-                <h2 className="goods__name">
-                  <NavLink className="goods__title" to={`/product/${product.slug}`}>
-                    {product.name}
-                  </NavLink>
-                </h2>
-                <div className="goods__prices">
-                  <div className="goods__price-block">
-                    {product.discountedPrice ? (
-                      <>
-                        <span className="goods__old-price">
-                          {formatPrice(product.price / 100)} ₴
-                        </span>
-
-                        <span className="goods__discounted-price">
-                          {formatPrice(product.discountedPrice / 100)} ₴
-                        </span>
-                      </>
-                    ) : (
-                      <span className="goods__price">{formatPrice(product.price / 100)} ₴</span>
-                    )}
-                  </div>
-                  <ButtonIcon
-                    className={`goods__control ${loadAddToCart ? 'loading' : ''}`}
-                    onClick={async () => {
-                      await addToCart(product.id, 1, () => {
-                        openModal(product.name, product.price, product.images[0]);
-                      });
-                    }}
-                    type="button"
-                    disabled={
-                      loadAddToCart === product.id ||
-                      userCart?.lineItems.some((item) => item.productId === product.id)
-                    }
-                    title="Добавить в карзину"
-                  >
-                    <i className="goods__control-icon minicart__icon header-icon"></i>
-                  </ButtonIcon>
-                  {isModalOpen && (
-                    <Notification
-                      onClose={() => setIsModalOpen(false)}
-                      productName={productData.name}
-                      productPrice={productData.price / 100}
-                      productImage={productData.image}
-                    />
+                    <span className="goods__price">{formatPrice(product.price / 100)} ₴</span>
                   )}
                 </div>
-                <div className="goods__description1">{product.description}</div>
+                <ButtonIcon
+                  className={`goods__control ${loadAddToCart ? 'loading' : ''}`}
+                  onClick={async () => {
+                    await addToCart(product.id, 1, () => {
+                      openModal(
+                        product.name,
+                        product.price,
+                        product.discountedPrice || 0,
+                        product.images[0]
+                      );
+                    });
+                  }}
+                  type="button"
+                  disabled={
+                    loadAddToCart === product.id ||
+                    userCart?.lineItems.some((item) => item.productId === product.id)
+                  }
+                  title="Добавить в карзину"
+                >
+                  <i className="goods__control-icon minicart__icon header-icon"></i>
+                </ButtonIcon>
+                {isModalOpen && (
+                  <Notification
+                    onClose={() => setIsModalOpen(false)}
+                    productName={productData.name}
+                    productPrice={productData.price / 100}
+                    discontPrice={productData.discountedPrice / 100}
+                    productImage={productData.image}
+                  />
+                )}
               </div>
+              <div className="goods__description1">{product.description}</div>
             </div>
           </div>
-        ))}
-      </div>
-    </>
+        </div>
+      ))}
+    </div>
   );
 });
 
