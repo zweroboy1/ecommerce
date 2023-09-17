@@ -10,9 +10,12 @@ const CartItem = observer(
     const [quantity, setQuantity] = useState(quantityInCart);
     const amount = product.price.value.centAmount;
     const totalAmount = product.totalPrice.centAmount;
-    const discountedPrice = product.price.discounted
+    let discountedPrice = product.price.discounted
       ? product.price.discounted.value.centAmount
       : false;
+    if (product.discountedPrice) {
+      discountedPrice = product.discountedPrice.value.centAmount;
+    }
     const [loadChangeInCart, setLoadChangeInCart] = useState(false);
 
     const handleQuantityChange = async (event: React.ChangeEvent<HTMLInputElement>) => {

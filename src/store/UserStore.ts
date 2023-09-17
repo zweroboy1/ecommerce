@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { CustomerWithToken } from '../types';
 import { LocalStorageState } from '../services/localstorage';
-import { getAnonymousUser } from '../services/commercetoolsApi';
+import { getAnonymousUser, getRefreshedToken } from '../services/commercetoolsApi';
 
 class UserStore {
   private shadowIsAuth: boolean;
@@ -19,15 +19,37 @@ class UserStore {
     });
   }
 
+  async updateToken() {
+    const savedCustomer = this.localStorageState.getField('customer');
+    if (savedCustomer) {
+      try {
+        const refreshToken = savedCustomer.token.refresh_token;
+        const result = await getRefreshedToken(refreshToken);
+        savedCustomer.token = result;
+        savedCustomer.token.refresh_token = refreshToken;
+        this.setUser(savedCustomer);
+      } catch {
+        this.setUser(null);
+      }
+    }
+  }
+
   async getCustomerFromLS() {
     const savedCustomer = this.localStorageState.getField('customer');
     if (savedCustomer) {
+      const tokenExpiresIn = Math.max(
+        0,
+        Number(savedCustomer.token.expires_at || 0) - Date.now() - 10000
+      );
+      setTimeout(() => this.updateToken(), tokenExpiresIn);
       this.shadowIsAuth = !!savedCustomer.user;
       this.shadowUser = savedCustomer;
     } else {
       const user = await getAnonymousUser();
       this.shadowIsAuth = false;
       this.shadowUser = user;
+      const tokenExpiresIn = Math.max(0, Number(user?.token.expires_at || 0) - Date.now() - 10000);
+      setTimeout(() => this.updateToken(), tokenExpiresIn);
       this.localStorageState.setField('customer', this.shadowUser);
       this.localStorageState.saveState();
     }
@@ -40,6 +62,8 @@ class UserStore {
   async setUser(value: null | CustomerWithToken) {
     if (value) {
       this.shadowUser = value;
+      const tokenExpiresIn = Math.max(0, Number(value.token.expires_at || 0) - Date.now() - 10000);
+      setTimeout(() => this.updateToken(), tokenExpiresIn);
     } else {
       const user = await getAnonymousUser();
       this.shadowUser = user;

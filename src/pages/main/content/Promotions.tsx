@@ -9,23 +9,23 @@ import promotion4 from '../../../assets/img/promotion4.png';
 const promotionsData = [
   {
     image: promotion1,
-    endDate: new Date('2023-09-10'),
-    description: 'Бесплатная доставка на заказ от 1000 грн.',
+    endDate: new Date('2023-10-10'),
+    description: 'Минус 1000₴ при покупке на сумму больше 10000₴ по коду minus1000',
   },
   {
     image: promotion2,
-    endDate: new Date('2023-09-15'),
-    description: 'Гоночный картинг + двухлетняя лицензия на гонки K1',
+    endDate: new Date('2023-10-15'),
+    description: 'Минус 5% на всё по коду 5percents',
   },
   {
     image: promotion3,
-    endDate: new Date('2023-09-20'),
-    description: 'Весь месяц черная пятница',
+    endDate: new Date('2023-10-20'),
+    description: 'Минус 10% на всё по коду BLACK_FRIDAY',
   },
   {
     image: promotion4,
-    endDate: new Date('2023-09-30'),
-    description: 'Купите фотоаппарат известного бренда со скидкой - 20%',
+    endDate: new Date('2023-10-30'),
+    description: 'Минус 30% на видеокамеры по коду VIDEO_30',
   },
 ];
 
@@ -119,9 +119,9 @@ const Promotions = () => {
                       </div>
 
                       <div className="promotions__txt">
-                        <NavLink to={PROMOTIONS_ROUTE} title="">
-                          {promotion.description}
-                        </NavLink>
+                        {/* <NavLink to={PROMOTIONS_ROUTE} title=""> */}
+                        {promotion.description}
+                        {/* </NavLink> */}
                         <div className="promotions__date">
                           по {promotion.endDate.toLocaleDateString()}
                         </div>

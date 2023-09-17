@@ -8,6 +8,7 @@ const CT_NETWORK_PROBLEM =
   'К сожалению, не получается загрузить данные с сервера. Проверьте качество подключения!';
 const CT_PRODUCT_NOT_FOUND = 'Продукт с данным id не найден в нашей базе';
 const CT_PRODUCT_NO_ID = 'Неправильный идентификатор продукта';
+const CT_BAD_PROMOCODE = 'Данный промокод не действует!';
 export {
   CT_ERROR,
   CT_NO_USER_ERROR,
@@ -18,4 +19,5 @@ export {
   CT_NETWORK_PROBLEM,
   CT_PRODUCT_NOT_FOUND,
   CT_PRODUCT_NO_ID,
+  CT_BAD_PROMOCODE,
 };
