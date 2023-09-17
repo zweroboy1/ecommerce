@@ -147,6 +147,7 @@ async function removeProduct(id: number) {
   }
 }
 
+
 async function addPromoCode(userCart: string, userToken: string, userVersion: number) {
   // eslint-disable-next-line
   console.log(userCart, userToken, userVersion);
@@ -169,6 +170,47 @@ async function refreshToken() {
   // eslint-disable-next-line
   console.log(response);
 }
+
+// async function removeProduct(id: string) {
+//   setLoadAddToCart(id);
+//   // if (!cartId || !cartVersion) {
+//   //   // eslint-disable-next-line
+//   //   console.log('Корзина ещё не создана!');
+//   //   return;
+//   // }
+
+//   if (!userCart?.lineItems.some((item) => item.productId === id)) {
+//     // eslint-disable-next-line
+//     console.log('Этого продукта нет в корзине');
+//     return;
+//   }
+
+//   try {
+//     const result = await removeProductFromCart(
+//       user?.user?.token.access_token || '',
+//       id,
+//       userCart!.id,
+//       userCart!.version,
+//       1
+//       /* , последний параметр - количество. если не указан, то удалятся все экземпляры этого продукта, если цифра, например 1, то будет удалять столько единиц */
+//     );
+//     if (isAuth) {
+//       const userData = user!.user!.user;
+//       const userToken = user!.user!.token;
+//       user.setUser({
+//         user: userData,
+//         cart: result,
+//         token: userToken,
+//       });
+//     }
+//   } catch (error) {
+//     toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+//       position: toast.POSITION.TOP_RIGHT,
+//       autoClose: 3000,
+//     });
+//   }
+//   setLoadAddToCart('');
+// }
 
 const Saved = () => {
   const { user } = useContext(Context);
