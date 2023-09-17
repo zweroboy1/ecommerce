@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { Context } from '../../store/Context';
 import { Top } from '../main/Top';
 import { Header } from '../main/Header';
 import { Footer } from '../main/Footer';
@@ -7,6 +9,8 @@ import {
   getMyCarts,
   addProductToCart,
   removeProductFromCart,
+  addDiscountCode,
+  getRefreshedToken,
 } from '../../services/commercetoolsApi';
 
 import { Cart } from '../../types';
@@ -143,6 +147,30 @@ async function removeProduct(id: number) {
   }
 }
 
+
+async function addPromoCode(userCart: string, userToken: string, userVersion: number) {
+  // eslint-disable-next-line
+  console.log(userCart, userToken, userVersion);
+  /*
+  if (!accessToken || !cartId || !cartVersion) {
+    // eslint-disable-next-line
+    console.log('Нет карточки или токена');
+    return;
+  }
+*/
+  const result = await addDiscountCode('BOGO', userToken, userCart, userVersion);
+  // eslint-disable-next-line
+  console.log(result);
+}
+
+async function refreshToken() {
+  const response = await getRefreshedToken(
+    'rss-final-03082023:3bt4-CycVMc0CrmTb70js8PlKAJXD0GjCQQACOkEKrg'
+  );
+  // eslint-disable-next-line
+  console.log(response);
+}
+
 // async function removeProduct(id: string) {
 //   setLoadAddToCart(id);
 //   // if (!cartId || !cartVersion) {
@@ -185,6 +213,13 @@ async function removeProduct(id: number) {
 // }
 
 const Saved = () => {
+  const { user } = useContext(Context);
+  const userCart = user?.user?.cart?.id || '';
+  const userToken = user?.user?.token.access_token || '';
+  const userVersion = Number(user?.user?.cart?.version) || 0;
+  // eslint-disable-next-line
+  console.log(userCart, userToken);
+
   return (
     <div className="tygh">
       <Top />
@@ -236,6 +271,18 @@ const Saved = () => {
 
         <button className="button button-second" onClick={() => removeProduct(3)}>
           Удалить продукт 3
+        </button>
+
+        <hr />
+        <button
+          className="button button-second"
+          onClick={() => addPromoCode(userCart, userToken, userVersion)}
+        >
+          Добавить промокод
+        </button>
+
+        <button className="button button-second" onClick={refreshToken}>
+          Обновить токен
         </button>
       </main>
       <Footer />
