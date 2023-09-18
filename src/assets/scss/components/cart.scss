@@ -177,7 +177,7 @@
   }
 
   .quantity__changer {
-    width: 80px;
+    width: 100px;
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
@@ -202,7 +202,7 @@
     width: 30px;
     height: 36px;
     border-width: 0;
-    font-size: 20px;
+    font-size: 16px;
     font-family: monospace;
     border-radius: 0;
     background: none;
@@ -215,7 +215,7 @@
 
   .quantity__decimal {
     padding: 0;
-    width: 20px;
+    width: 30px;
     height: 36px;
     min-height: 36px;
     float: left;
@@ -387,7 +387,7 @@
     padding: 9px 0 0 0;
     text-align: right;
     font-weight: bold;
-    font-size: 138%;
+    font-size: 130%;
     clear: both;
     overflow: hidden;
     color: #a2a2a2;
@@ -403,6 +403,7 @@
     width: 140px;
     margin: 6px 0;
     color: #000;
+    white-space: nowrap;
   }
 
   &__empty {

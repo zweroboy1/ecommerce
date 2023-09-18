@@ -20,6 +20,7 @@ import { formatPrice } from '../utils/formatPrice';
 import { CATALOG_ROUTE } from '../constants/route';
 import { LineItem } from '../types';
 import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
+import NotificationCart from '../components/NotificationCart';
 
 const Cart = observer(() => {
   const [promoCode, setPromoCode] = useState<string>('');
@@ -189,6 +190,16 @@ const Cart = observer(() => {
 
   const breadcrumbs = [{ to: '.', text: 'Корзина' }];
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="tygh">
       <Top />
@@ -212,7 +223,7 @@ const Cart = observer(() => {
                           </NavLink>
                         </div>
                         <div className="cart__right-buttons">
-                          <a role="button" className="button">
+                          <a role="button" className="button" onClick={openModal}>
                             <span className="cart__icon-ok"></span>
                             <bdi>Оформить заказ</bdi>
                           </a>
@@ -367,7 +378,7 @@ const Cart = observer(() => {
                       </div>
                       {userCart && userCart.lineItems.length > 0 && (
                         <div className="cart__right-buttons">
-                          <a role="button" className="button">
+                          <a role="button" className="button" onClick={openModal}>
                             <span className="icon-ok"></span>
                             <bdi>Оформить заказ</bdi>
                           </a>
@@ -380,6 +391,7 @@ const Cart = observer(() => {
             </div>
           </div>
         </div>
+        {isModalOpen && <NotificationCart onClose={closeModal} />}
       </main>
       <Footer />
     </div>
