@@ -904,7 +904,7 @@ const UpdatingForm = observer(() => {
         passwordNew: false,
         passwordConfirm: false,
       });
-      toast.success('Имя успешно изменено!', {
+      toast.success('Пароль успешно изменен!', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
       });

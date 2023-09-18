@@ -351,6 +351,13 @@ interface LineItem {
 type Cart = {
   id: string;
   version: number;
+  discountCodes: {
+    discountCode: {
+      id: string;
+    };
+    state: string;
+  }[];
+
   lineItems: LineItem[];
   totalPrice: {
     centAmount: number;
