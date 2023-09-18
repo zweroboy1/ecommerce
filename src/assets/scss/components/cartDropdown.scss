@@ -75,10 +75,18 @@
   }
 
   &__image {
-    min-width: 40px;
-    min-height: 40px;
+    @include flex();
+    width: 40px;
+    height: 40px;
     margin-right: 15px;
     float: left;
+
+    img {
+      max-width: 40px;
+      max-height: 40px;
+      height: auto;
+      width: auto;
+    }
 
     a {
       position: relative;
@@ -90,21 +98,22 @@
     width: 250px;
     overflow: hidden;
 
-    a {
-      position: relative;
-      display: inline-block;
-      padding-right: 20px;
-      padding-bottom: 20px;
-    }
-
     p {
       position: absolute;
       bottom: 5px;
     }
   }
 
+  &__name {
+    position: relative;
+    display: inline-block;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    color: $links;
+  }
+
   .buttons-container {
-    @include flex($justify: space-between, $wrap: wrap);
+    @include flex($wrap: wrap);
     padding: 15px 10px;
     border-radius: 0 0 12px 12px;
     background: #f6f6f6;

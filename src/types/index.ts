@@ -372,6 +372,8 @@ type CartItemProps = {
   addToCart: (id: string, quantity: number, cb?: () => void) => void;
 };
 
+type CartData = Cart | null;
+
 export type {
   InputProps,
   ButtonProps,
@@ -404,4 +406,5 @@ export type {
   CartAPI,
   LineItem,
   CartItemProps,
+  CartData,
 };
