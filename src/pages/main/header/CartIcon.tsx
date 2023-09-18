@@ -45,7 +45,7 @@ const CartIcon = observer(() => {
     <div className="minicart" ref={cartRef} onMouseEnter={openCart} onMouseLeave={closeCart}>
       <div className="minicart__title" onClick={handleCartClick}>
         <i className="minicart__icon header-icon">
-          <span className="minicart__count">{cartQuantity}</span>
+          {cartQuantity > 0 && <span className="minicart__count">{cartQuantity}</span>}
         </i>
       </div>
       {isCartOpen && <CartDropdown closeCart={closeCart} cartData={user?.user?.cart as CartData} />}
