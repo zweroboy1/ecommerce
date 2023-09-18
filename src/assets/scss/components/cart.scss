@@ -134,6 +134,9 @@
   &__product-delete {
     margin: 0 0 0 6px;
     vertical-align: middle;
+    &:focus {
+      outline: 2px solid black;
+    }
   }
 
   .icon-cancel-circle {
@@ -174,6 +177,9 @@
     word-break: break-word;
     padding: 0;
     font-size: 90%;
+    & span {
+      margin-left: 5px;
+    }
   }
 
   .quantity__changer {
@@ -207,6 +213,10 @@
     border-radius: 0;
     background: none;
     color: rgba(0, 0, 0, 0.5);
+
+    &:focus {
+      outline: 2px solid black;
+    }
   }
 
   .quantity__increase {
@@ -289,6 +299,9 @@
     background: #eee;
     cursor: pointer;
     box-sizing: border-box;
+    &:focus {
+      outline: 2px solid black;
+    }
   }
 
   &__coupons__item {
@@ -408,12 +421,16 @@
 
   &__empty {
     @include flexColumn();
-    gap: 10px;
+    gap: 20px;
     background: #fbfbfb;
     padding: 60px 20px;
     color: #bdc3c7;
     text-align: center;
     font-size: 115%;
     margin-bottom: 20px;
+
+    & .button {
+      margin-top: 30px;
+    }
   }
 }

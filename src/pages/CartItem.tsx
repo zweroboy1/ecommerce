@@ -120,7 +120,7 @@ const CartItem = observer(
                 });
               }}
             >
-              <span className="icon-cancel-circle"></span>
+              <span className="icon-cancel-circle" title="Удалить товар из корзины"></span>
             </ButtonIcon>
           </div>
           <div className="cart__product-sku">

@@ -33,7 +33,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
       />
-      <button onClick={handleSearch}></button>
+      <button onClick={handleSearch} tabIndex={-1}></button>
     </div>
   );
 };
