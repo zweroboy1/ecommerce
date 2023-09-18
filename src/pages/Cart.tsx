@@ -17,8 +17,9 @@ import {
   addDiscountCode,
 } from '../services/commercetoolsApi';
 import { formatPrice } from '../utils/formatPrice';
-import { CATALOG_ROUTE, MAIN_ROUTE } from '../constants/route';
+import { CATALOG_ROUTE } from '../constants/route';
 import { LineItem } from '../types';
+import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 
 const Cart = observer(() => {
   const [promoCode, setPromoCode] = useState<string>('');
@@ -186,6 +187,8 @@ const Cart = observer(() => {
     setPromoCode(event.target.value);
   };
 
+  const breadcrumbs = [{ to: '.', text: 'Корзина' }];
+
   return (
     <div className="tygh">
       <Top />
@@ -193,15 +196,7 @@ const Cart = observer(() => {
       <ToastContainer />
       <main className="main cart container">
         <ToastContainer />
-        <div className="breadcrumbs">
-          <NavLink className="breadcrumbs__link" to={MAIN_ROUTE}>
-            Главная
-          </NavLink>
-          <span className="breadcrumbs__slash">/</span>
-          <NavLink className="breadcrumbs__current" to=".">
-            Корзина
-          </NavLink>
-        </div>
+        <BreadcrumbsPage links={breadcrumbs} />
         <div className="cart__grid">
           <div className="cart__container">
             <div className="cart__body">
@@ -217,7 +212,7 @@ const Cart = observer(() => {
                       </div>
                       {userCart && userCart.lineItems.length > 0 && (
                         <div className="cart__right-buttons">
-                          <a href="/" className="button">
+                          <a role="button" className="button">
                             <span className="cart__icon-ok"></span>
                             <bdi>Оформить заказ</bdi>
                           </a>
@@ -370,7 +365,7 @@ const Cart = observer(() => {
                       </div>
                       {userCart && userCart.lineItems.length > 0 && (
                         <div className="cart__right-buttons">
-                          <a href="/" className="button">
+                          <a role="button" className="button">
                             <span className="icon-ok"></span>
                             <bdi>Оформить заказ</bdi>
                           </a>

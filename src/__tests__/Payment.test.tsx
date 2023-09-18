@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { Payment } from '../pages/other/Payment';
+import { Payment } from '../pages/Payment';
 
 describe('Payment component', () => {
   it('renders main heading', () => {

@@ -1,22 +1,16 @@
-import { Top } from '../main/Top';
-import { Header } from '../main/Header';
-import { Footer } from '../main/Footer';
+import { Top } from './main/Top';
+import { Header } from './main/Header';
+import { Footer } from './main/Footer';
+import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 
 const Return = () => {
+  const breadcrumbs = [{ to: '.', text: 'Возврат товара' }];
   return (
     <div className="tygh">
       <Top />
       <Header />
       <main className="main page">
-        <div className="breadcrumbs">
-          <a href="/" className="breadcrumbs__link">
-            <bdi>Главная</bdi>
-          </a>
-          <span className="breadcrumbs__slash">/</span>
-          <a href="/return" className="breadcrumbs__link">
-            <bdi>Возврат товара</bdi>
-          </a>
-        </div>
+        <BreadcrumbsPage links={breadcrumbs} />
         <h1>Возврат товара</h1>
         <p>
           Если у вас возникли вопросы или проблемы с оплатой или доставкой, не стесняйтесь связаться

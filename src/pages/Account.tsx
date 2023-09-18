@@ -2,22 +2,16 @@ import { Top } from './main/Top';
 import { Header } from './main/Header';
 import { Footer } from './main/Footer';
 import { UpdatingForm } from '../components/UpdatingForm';
+import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 
 const Account = () => {
+  const breadcrumbs = [{ to: '.', text: 'Мой профиль' }];
   return (
     <div className="tygh">
       <Top />
       <Header />
       <main className="main my-profile container">
-        <div className="breadcrumbs">
-          <a href="/" className="breadcrumbs__link">
-            <bdi>Главная</bdi>
-          </a>
-          <span className="breadcrumbs__slash">/</span>
-          <a href="/account" className="breadcrumbs__link">
-            <bdi>Мой профиль</bdi>
-          </a>
-        </div>
+        <BreadcrumbsPage links={breadcrumbs} />
         <h1>Мой профиль</h1>
         <UpdatingForm />
       </main>
