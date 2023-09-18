@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { ProductList } from '../components/ProductList.1';
+import { ProductList } from '../components/ProductList';
 import { Product } from '../types';
 
 const mockProducts: Product[] = [
