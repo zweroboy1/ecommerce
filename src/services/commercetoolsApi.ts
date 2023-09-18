@@ -59,7 +59,7 @@ async function fetchBearerToken(): Promise<string | null> {
         Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `grant_type=client_credentials&scope=manage_project:${projectKey}`,
+      body: `grant_type=client_credentials`,
     });
     if (!response.ok) {
       return null;
@@ -77,11 +77,10 @@ async function fetchBearerToken(): Promise<string | null> {
 }
 
 async function getUserWithCredentialsToken(credentials: Credentials): Promise<TokenResponse> {
-  const scope = `manage_project:${projectKey}`;
   const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/${projectKey}/customers/token`;
   const requestBody = `grant_type=password&username=${encodeURIComponent(
     credentials.email
-  )}&password=${encodeURIComponent(credentials.password)}&scope=${scope}`;
+  )}&password=${encodeURIComponent(credentials.password)}`;
 
   try {
     const response = await fetch(endpoint, {
