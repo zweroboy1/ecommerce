@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { PromotionsAll } from '../pages/other/PromotionsAll';
+import { PromotionsAll } from '../pages/PromotionsAll';
 
 describe('PromotionsAll component', () => {
   it('renders main heading', () => {
