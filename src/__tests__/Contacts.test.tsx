@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { Contacts } from '../pages/other/Contacts';
+import { Contacts } from '../pages/Contacts';
 
 describe('Contacts component', () => {
   it('renders main heading', () => {

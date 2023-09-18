@@ -4,13 +4,16 @@ import { Top } from './main/Top';
 import { Header } from './main/Header';
 import { Footer } from './main/Footer';
 import { REGISTRATION_ROUTE } from '../constants/route';
+import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 
 const Auth = () => {
+  const breadcrumbs = [{ to: '.', text: 'Вход' }];
   return (
     <div className="tygh">
       <Top />
       <Header />
-      <main className="mai container">
+      <main className="main page container">
+        <BreadcrumbsPage links={breadcrumbs} />
         <div className="authorization">
           <div className="authorization__container">
             <h1>Войти</h1>

@@ -5,6 +5,7 @@ import { Top } from './main/Top';
 import { Header } from './main/Header';
 import { Footer } from './main/Footer';
 import { AUTH_ROUTE } from '../constants/route';
+import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 
 const Registration = () => {
   const initialValues = {
@@ -24,12 +25,14 @@ const Registration = () => {
     billingAddressCountry: '',
     isBillingAddressDefault: false,
   };
+  const breadcrumbs = [{ to: '.', text: 'Регистрация' }];
 
   return (
     <div className="tygh">
       <Top />
       <Header />
-      <main className="main container">
+      <main className="main container page">
+        <BreadcrumbsPage links={breadcrumbs} />
         <div className="authorization">
           <div className="authorization__container">
             <h1>Создать учетную запись</h1>
