@@ -27,6 +27,7 @@ import { PROMOCODES } from '../constants/promocodes';
 import { Cart as CartType, LineItem } from '../types';
 import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 import NotificationCart from '../components/NotificationCart';
+import { ConfirmNotification } from '../components/ConfirmNotification';
 
 const Cart = observer(() => {
   const [promoCode, setPromoCode] = useState<string>('');
@@ -223,6 +224,7 @@ const Cart = observer(() => {
   const breadcrumbs = [{ to: '.', text: 'Корзина' }];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -230,6 +232,19 @@ const Cart = observer(() => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const openConfirmModal = () => {
+    setIsConfirmModalOpen(true);
+  };
+
+  const closeConfirmModal = async (answer: boolean) => {
+    if (!answer) {
+      setIsConfirmModalOpen(false);
+    } else {
+      await clearCart();
+      setIsConfirmModalOpen(false);
+    }
   };
 
   return (
@@ -411,9 +426,9 @@ const Cart = observer(() => {
                           <a
                             className="button"
                             href="/"
-                            onClick={async (e: React.MouseEvent<HTMLAnchorElement>) => {
+                            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                               e.preventDefault();
-                              await clearCart();
+                              openConfirmModal();
                             }}
                           >
                             <bdi>Очистить корзину</bdi>
@@ -436,6 +451,14 @@ const Cart = observer(() => {
         {isModalOpen && <NotificationCart onClose={closeModal} />}
       </main>
       <Footer />
+
+      {isConfirmModalOpen && (
+        <ConfirmNotification
+          onClose={async (answer: boolean) => {
+            await closeConfirmModal(answer);
+          }}
+        />
+      )}
     </div>
   );
 });
