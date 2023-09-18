@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useContext } from 'react';
-import { NavLink } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { CART_ROUTE } from '../../../constants/route';
 import CartDropdown from '../../../components/CartDropdown';
 import { Context } from '../../../store/Context';
+import { CartData } from '../../../types';
 
 const CartIcon = observer(() => {
   const { user } = useContext(Context);
@@ -13,12 +13,16 @@ const CartIcon = observer(() => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const cartRef = useRef<HTMLDivElement | null>(null);
 
-  const toggleCart = () => {
-    setIsCartOpen(!isCartOpen);
+  const openCart = () => {
+    setIsCartOpen(true);
   };
 
   const closeCart = () => {
     setIsCartOpen(false);
+  };
+
+  const handleCartClick = () => {
+    window.location.href = CART_ROUTE;
   };
 
   useEffect(() => {
@@ -37,14 +41,17 @@ const CartIcon = observer(() => {
 
   return (
     <div className="minicart" ref={cartRef}>
-      <div className="minicart__title">
-        <NavLink to={CART_ROUTE} title="">
-          <i className="minicart__icon header-icon" onClick={toggleCart}>
-            <span className="minicart__count">{cartQuantity}</span>
-          </i>
-        </NavLink>
+      <div
+        className="minicart__title"
+        onMouseEnter={openCart}
+        onMouseLeave={closeCart}
+        onClick={handleCartClick}
+      >
+        <i className="minicart__icon header-icon">
+          <span className="minicart__count">{cartQuantity}</span>
+        </i>
       </div>
-      {isCartOpen && <CartDropdown closeCart={closeCart} />}
+      {isCartOpen && <CartDropdown closeCart={closeCart} cartData={user?.user?.cart as CartData} />}
     </div>
   );
 });
