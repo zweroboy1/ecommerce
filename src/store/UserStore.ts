@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import { CustomerWithToken } from '../types';
 import { LocalStorageState } from '../services/localstorage';
 import { getAnonymousUser, getRefreshedToken } from '../services/commercetoolsApi';
@@ -14,9 +14,8 @@ class UserStore {
     this.shadowIsAuth = false;
     this.shadowUser = null;
     this.localStorageState = new LocalStorageState();
-    this.getCustomerFromLS().then(() => {
-      makeAutoObservable(this);
-    });
+    this.getCustomerFromLS().then();
+    makeAutoObservable(this);
   }
 
   async updateToken() {
@@ -29,7 +28,9 @@ class UserStore {
         savedCustomer.token.refresh_token = refreshToken;
         this.setUser(savedCustomer);
       } catch {
-        this.setUser(null);
+        runInAction(() => {
+          this.setUser(null);
+        });
       }
     }
   }
@@ -42,12 +43,16 @@ class UserStore {
         Number(savedCustomer.token.expires_at || 0) - Date.now() - 10000
       );
       setTimeout(() => this.updateToken(), tokenExpiresIn);
-      this.shadowIsAuth = !!savedCustomer.user;
-      this.shadowUser = savedCustomer;
+      runInAction(() => {
+        this.shadowIsAuth = !!savedCustomer.user;
+        this.shadowUser = savedCustomer;
+      });
     } else {
       const user = await getAnonymousUser();
-      this.shadowIsAuth = false;
-      this.shadowUser = user;
+      runInAction(() => {
+        this.shadowIsAuth = false;
+        this.shadowUser = user;
+      });
       const tokenExpiresIn = Math.max(0, Number(user?.token.expires_at || 0) - Date.now() - 10000);
       setTimeout(() => this.updateToken(), tokenExpiresIn);
       this.localStorageState.setField('customer', this.shadowUser);
@@ -61,12 +66,16 @@ class UserStore {
 
   async setUser(value: null | CustomerWithToken) {
     if (value) {
-      this.shadowUser = value;
+      runInAction(() => {
+        this.shadowUser = value;
+      });
       const tokenExpiresIn = Math.max(0, Number(value.token.expires_at || 0) - Date.now() - 10000);
       setTimeout(() => this.updateToken(), tokenExpiresIn);
     } else {
       const user = await getAnonymousUser();
-      this.shadowUser = user;
+      runInAction(() => {
+        this.shadowUser = user;
+      });
     }
     this.localStorageState.setField('customer', this.shadowUser);
     this.localStorageState.saveState();
