@@ -71,10 +71,17 @@
 
 .slide {
   width: 300px;
-  // margin-right: 12px;
-  margin-right: 25px;
+  margin-right: 16px;
   object-fit: cover;
   transition: transform 0.5s ease-in-out;
+
+  @include media('l') {
+    margin-right: 30px;
+  }
+
+  @include media('s') {
+    margin-left: 5px;
+  }
 }
 
 .slide.visible {
