@@ -4,8 +4,10 @@ import { Footer } from './main/Footer';
 import zweroboy from '../assets/img/zweroboy1.jpeg';
 import mila from '../assets/img/mila.jpeg';
 import nyurasheva from '../assets/img/nyurasheva1.jpg';
+import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 
 const About = () => {
+  const breadcrumbs = [{ to: '.', text: 'О нас' }];
   const teamMembers = [
     {
       name: 'Мила Божевская',
@@ -34,15 +36,7 @@ const About = () => {
       <Top />
       <Header />
       <main className="main page about container">
-        <div className="breadcrumbs">
-          <a href="/" className="breadcrumbs__link">
-            <bdi>Главная</bdi>
-          </a>
-          <span className="breadcrumbs__slash">/</span>
-          <a href="/account" className="breadcrumbs__link">
-            <bdi>О нас</bdi>
-          </a>
-        </div>
+        <BreadcrumbsPage links={breadcrumbs} />
         <h1>О нас</h1>
         <p>Мы представляем команду ООПтираторы!</p>
         <h2>Члены команды</h2>

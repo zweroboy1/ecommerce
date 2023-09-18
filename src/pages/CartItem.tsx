@@ -1,6 +1,7 @@
 import { PropsWithoutRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { toast } from 'react-toastify';
+import { NavLink } from 'react-router-dom';
 import { CartItemProps } from '../types';
 import { ButtonIcon } from '../components/ButtonIcon';
 import { formatPrice } from '../utils/formatPrice';
@@ -90,7 +91,7 @@ const CartItem = observer(
         <td className="cart__image-block">
           <div className="cart__table-title-mob">Товар</div>
           <div className="cart__table-image">
-            <a href={`/product/${product.productSlug.ru}`}>
+            <NavLink to={`/product/${product.productSlug.ru}`}>
               <img
                 alt={product.name.ru}
                 title=""
@@ -98,14 +99,14 @@ const CartItem = observer(
                 width="150"
                 height="150"
               />
-            </a>
+            </NavLink>
           </div>
         </td>
         <td className="cart__content-description">
           <div className="cart__product-name">
-            <a href={`/product/${product.productSlug.ru}`} className="cart__product-title">
+            <NavLink to={`/product/${product.productSlug.ru}`} className="cart__product-title">
               {product.name.ru}
-            </a>
+            </NavLink>
             <ButtonIcon
               className="cart__product-delete"
               title="Удалить"

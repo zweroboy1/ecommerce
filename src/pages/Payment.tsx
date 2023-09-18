@@ -1,22 +1,16 @@
-import { Top } from '../main/Top';
-import { Header } from '../main/Header';
-import { Footer } from '../main/Footer';
+import { Top } from './main/Top';
+import { Header } from './main/Header';
+import { Footer } from './main/Footer';
+import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 
 const Payment = () => {
+  const breadcrumbs = [{ to: '.', text: 'Доставка и Оплата' }];
   return (
     <div className="tygh">
       <Top />
       <Header />
       <main className="main page">
-        <div className="breadcrumbs">
-          <a href="/" className="breadcrumbs__link">
-            <bdi>Главная</bdi>
-          </a>
-          <span className="breadcrumbs__slash">/</span>
-          <a href="/payment" className="breadcrumbs__link">
-            <bdi>Доставка и Оплата</bdi>
-          </a>
-        </div>
+        <BreadcrumbsPage links={breadcrumbs} />
         <h1>Доставка и Оплата</h1>
 
         <h2>Доставка</h2>

@@ -10,6 +10,7 @@ interface NotificationProps {
   productPrice: number;
   discontPrice: number;
   productImage: string;
+  productSlug: string;
 }
 
 const Notification: React.FC<NotificationProps> = ({
@@ -18,6 +19,7 @@ const Notification: React.FC<NotificationProps> = ({
   productPrice,
   discontPrice,
   productImage,
+  productSlug,
 }) => {
   const { user } = useContext(Context);
   const userCart = user?.user?.cart;
@@ -50,9 +52,9 @@ const Notification: React.FC<NotificationProps> = ({
                 src={productImage}
               />
               <div className="notification__product-content">
-                <a href="/" className="notification__product-name">
+                <NavLink className="notification__product-name" to={`/product/${productSlug}`}>
                   {productName}
-                </a>
+                </NavLink>
                 <div className="notification__product-price">
                   <span className="none">1</span>
                   <span dir="ltr">&nbsp;x&nbsp;</span>

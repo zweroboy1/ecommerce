@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { Return } from '../pages/other/Return';
+import { Return } from '../pages/Return';
 
 describe('Return component', () => {
   it('renders main heading', () => {
