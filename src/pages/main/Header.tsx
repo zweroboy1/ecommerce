@@ -4,8 +4,8 @@ import { Search } from './header/Search';
 import { Categories } from './header/Categories';
 import { Logo } from './header/Logo';
 import { Phone } from './header/Phone';
-import { ComparedProducts } from './header/ComparedProducts';
-import { Wishlist } from './header/Wishlist';
+// import { ComparedProducts } from './header/ComparedProducts';
+// import { Wishlist } from './header/Wishlist';
 import { Account } from './header/Account';
 import { CartIcon } from './header/CartIcon';
 
@@ -31,8 +31,8 @@ const TopButtons = () => {
   const { user } = useContext(Context);
   return (
     <div className="top-buttons">
-      <ComparedProducts />
-      <Wishlist />
+      {/* <ComparedProducts /> */}
+      {/* <Wishlist /> */}
       {user?.isAuth && <Account />}
       <CartIcon />
     </div>

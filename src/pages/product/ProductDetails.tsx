@@ -313,7 +313,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
           </div>
 
           <div className="product__buttons">
-            <div className="compared-products">
+            {/* <div className="compared-products">
               <div className="compared-products__title">
                 <a title="" rel="nofollow" className="" href="/compare">
                   <i className="compared-products__icon header-icon"></i>
@@ -326,7 +326,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
                   <i className="wishlist__icon header-icon"></i>
                 </a>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
