@@ -7,6 +7,7 @@ const ButtonIcon = (props: PropsWithChildren<ButtonIconProps>) => {
     <button
       type={type || 'button'}
       className={`${className || ''}`}
+      tabIndex={0}
       disabled={disabled || false}
       onClick={onClick}
     >

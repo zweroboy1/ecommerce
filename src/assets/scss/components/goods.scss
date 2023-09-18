@@ -251,6 +251,12 @@
     }
   }
 
+  &__control {
+    &:focus {
+      outline: 2px solid black;
+    }
+  }
+
   &__control[disabled],
   &__control[disabled]:hover {
     background-color: transparent;
@@ -279,5 +285,9 @@
   &__control-icon {
     top: 0;
     background: url(/src/assets/svg/cart-large.svg) no-repeat center center / cover;
+  }
+
+  &__control[disabled] .goods__control-icon {
+    cursor: not-allowed;
   }
 }
