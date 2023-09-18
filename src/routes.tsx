@@ -28,7 +28,7 @@ import { Account } from './pages/Account';
 import { Saved } from './pages/other/Saved';
 import { Compare } from './pages/other/Compare';
 import { About } from './pages/About';
-import { PromotionsAll } from './pages/other/PromotionsAll';
+import { PromotionsAll } from './pages/PromotionsAll';
 import { Catalog } from './pages/Catalog';
 import { ProductPage } from './pages/product/ProductPage';
 
