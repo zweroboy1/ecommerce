@@ -9,6 +9,8 @@ const CT_NETWORK_PROBLEM =
 const CT_PRODUCT_NOT_FOUND = 'Продукт с данным id не найден в нашей базе';
 const CT_PRODUCT_NO_ID = 'Неправильный идентификатор продукта';
 const CT_BAD_PROMOCODE = 'Данный промокод не действует!';
+const CT_FAILED_TO_FETCH = 'Failed to fetch';
+const CT_UNKNOWN_ERROR = 'Что-то пошло не так! Попробуйте чуть позже!';
 export {
   CT_ERROR,
   CT_NO_USER_ERROR,
@@ -20,4 +22,6 @@ export {
   CT_PRODUCT_NOT_FOUND,
   CT_PRODUCT_NO_ID,
   CT_BAD_PROMOCODE,
+  CT_FAILED_TO_FETCH,
+  CT_UNKNOWN_ERROR,
 };
