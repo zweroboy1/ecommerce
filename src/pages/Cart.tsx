@@ -7,7 +7,12 @@ import { Header } from './main/Header';
 import { Footer } from './main/Footer';
 import { Context } from '../store/Context';
 import { CartItem } from './CartItem';
-import { CT_BAD_PROMOCODE } from '../constants/apiMessages';
+import {
+  CT_BAD_PROMOCODE,
+  CT_NETWORK_PROBLEM,
+  CT_FAILED_TO_FETCH,
+  CT_UNKNOWN_ERROR,
+} from '../constants/apiMessages';
 import {
   addProductToCart,
   createCart,
@@ -73,12 +78,10 @@ const Cart = observer(() => {
         token: userToken,
       });
       if (cb) {
-        // eslint-disable-next-line no-console
-        console.log(49);
         cb();
       }
     } catch (error) {
-      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+      toast.error(CT_UNKNOWN_ERROR, {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
       });
@@ -111,7 +114,7 @@ const Cart = observer(() => {
         cb();
       }
     } catch (error) {
-      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+      toast.error(CT_UNKNOWN_ERROR, {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
       });
@@ -144,7 +147,7 @@ const Cart = observer(() => {
         token: userToken,
       });
     } catch (error) {
-      toast.error('Что-то пошло не так! Попробуйте чуть позже!', {
+      toast.error(CT_UNKNOWN_ERROR, {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
       });
@@ -171,7 +174,16 @@ const Cart = observer(() => {
         token: userToken,
       });
     } catch (error) {
-      toast.error(CT_BAD_PROMOCODE, {
+      let toastText = CT_UNKNOWN_ERROR;
+      if (error instanceof Error) {
+        if (error?.message === CT_FAILED_TO_FETCH) {
+          toastText = CT_NETWORK_PROBLEM;
+        }
+        if (error?.message === CT_BAD_PROMOCODE) {
+          toastText = CT_BAD_PROMOCODE;
+        }
+      }
+      toast.error(toastText, {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
       });
