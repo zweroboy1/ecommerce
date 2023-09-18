@@ -54,7 +54,7 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ closeCart, cartData }) => {
         </div>
         <div className="buttons-container">
           <p className="buttons-container__subtotal">
-            Всего:&nbsp;
+            Всего (без промокодов):&nbsp;
             <span className="float-right">
               {lineItems.reduce((total, item) => total + item.quantity, 0)}&nbsp;шт. на&nbsp;&nbsp;
               <bdi>
