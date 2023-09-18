@@ -59,10 +59,10 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ closeCart }) => {
             Корзина
           </a>
 
-          <a href="/" className="button">
+          {/* <a href="/" className="button">
             <span className="icon-ok"></span>
             <bdi>Оформить заказ</bdi>
-          </a>
+          </a> */}
         </div>
       </div>
     </div>
