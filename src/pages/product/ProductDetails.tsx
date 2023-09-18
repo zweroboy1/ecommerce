@@ -284,7 +284,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
             <input type="hidden" name="appearance[show_list_buttons]" value="1" />
             <input type="hidden" name="appearance[but_role]" value="big" />
             <input type="hidden" name="appearance[quick_view]" value="" />
-            <div>
+            <div className="product__cart-add">
               <ButtonIcon
                 className={`product__cart-button button ${inCart ? 'inCard' : ''} ${
                   loadAddToCart ? 'loading' : ''
