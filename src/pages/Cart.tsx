@@ -223,7 +223,7 @@ const Cart = observer(() => {
                           </NavLink>
                         </div>
                         <div className="cart__right-buttons">
-                          <a role="button" className="button" onClick={openModal}>
+                          <a role="button" tabIndex={0} className="button" onClick={openModal}>
                             <span className="cart__icon-ok"></span>
                             <bdi>Оформить заказ</bdi>
                           </a>
@@ -358,12 +358,12 @@ const Cart = observer(() => {
                       </div>
                     )}
 
-                    <div className="cart__buttons-container">
-                      <div className="cart__left-buttons">
-                        <NavLink to={CATALOG_ROUTE} className="button button-second">
-                          <bdi>Продолжить покупки</bdi>
-                        </NavLink>
-                        {userCart && userCart.lineItems.length > 0 && (
+                    {userCart && userCart.lineItems.length > 0 && (
+                      <div className="cart__buttons-container">
+                        <div className="cart__left-buttons">
+                          <NavLink to={CATALOG_ROUTE} className="button button-second">
+                            <bdi>Продолжить покупки</bdi>
+                          </NavLink>
                           <a
                             className="button"
                             href="/"
@@ -374,17 +374,15 @@ const Cart = observer(() => {
                           >
                             <bdi>Очистить корзину</bdi>
                           </a>
-                        )}
-                      </div>
-                      {userCart && userCart.lineItems.length > 0 && (
+                        </div>
                         <div className="cart__right-buttons">
-                          <a role="button" className="button" onClick={openModal}>
+                          <a role="button" tabIndex={0} className="button" onClick={openModal}>
                             <span className="icon-ok"></span>
                             <bdi>Оформить заказ</bdi>
                           </a>
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

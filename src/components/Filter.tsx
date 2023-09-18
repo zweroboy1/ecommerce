@@ -50,7 +50,7 @@ const Filter: React.FC<FilterProps> = ({
 
   return (
     <div className={`filters__item ${expanded ? 'open' : ''}`} ref={filtersRef}>
-      <div className="filters__header" onClick={handleToggleFilter}>
+      <div className="filters__header" tabIndex={0} onClick={handleToggleFilter}>
         {title}
         <i className={`filters__icon ${expanded ? 'arrow-up' : 'arrow-down'}`}></i>
       </div>
