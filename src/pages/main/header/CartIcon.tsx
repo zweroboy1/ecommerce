@@ -40,13 +40,8 @@ const CartIcon = observer(() => {
   }, []);
 
   return (
-    <div className="minicart" ref={cartRef}>
-      <div
-        className="minicart__title"
-        onMouseEnter={openCart}
-        onMouseLeave={closeCart}
-        onClick={handleCartClick}
-      >
+    <div className="minicart" ref={cartRef} onMouseEnter={openCart} onMouseLeave={closeCart}>
+      <div className="minicart__title" onClick={handleCartClick}>
         <i className="minicart__icon header-icon">
           <span className="minicart__count">{cartQuantity}</span>
         </i>
