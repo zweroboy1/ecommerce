@@ -314,6 +314,7 @@
 
   &__bonus {
     @include font($family: $font-family-title);
+    margin-bottom: 10px;
   }
 
   &__discount-info {
@@ -431,6 +432,17 @@
 
     & .button {
       margin-top: 30px;
+    }
+  }
+  &__link {
+    margin: 0 5px;
+  }
+  &__dashed-link {
+    display: block;
+    margin: 10px 0 5px;
+
+    &:first-of-type {
+      margin-top: 0;
     }
   }
 }

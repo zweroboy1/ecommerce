@@ -22,8 +22,9 @@ import {
   addDiscountCode,
 } from '../services/commercetoolsApi';
 import { formatPrice } from '../utils/formatPrice';
-import { CATALOG_ROUTE } from '../constants/route';
-import { LineItem } from '../types';
+import { CATALOG_ROUTE, MAIN_ROUTE } from '../constants/route';
+import { PROMOCODES } from '../constants/promocodes';
+import { Cart as CartType, LineItem } from '../types';
 import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 import NotificationCart from '../components/NotificationCart';
 
@@ -34,6 +35,25 @@ const Cart = observer(() => {
   const isAuth = user?.isAuth;
   const totalAmount = userCart ? userCart.totalPrice.centAmount : 0;
 
+  const getActualPromocodes = (
+    cart: CartType | null | undefined
+  ): { code: string; description: string }[] => {
+    const promocodes: { code: string; description: string }[] = [];
+    if (cart && cart.discountCodes) {
+      cart.discountCodes.forEach((codeObj) => {
+        const currentPromocode = PROMOCODES.filter(
+          (promocode) => promocode.id === codeObj.discountCode.id
+        );
+        if (currentPromocode) {
+          const { code } = currentPromocode[0];
+          const { description } = currentPromocode[0];
+          promocodes.push({ code, description });
+        }
+      });
+    }
+    return promocodes;
+  };
+  const actualPromocodes: { code: string; description: string }[] = getActualPromocodes(userCart);
   const countTotal = (items: LineItem[] | undefined) =>
     items === undefined
       ? 0
@@ -316,17 +336,29 @@ const Cart = observer(() => {
                               </li>
                               <li className="cart__coupons-item">
                                 <div className="cart__promotions">
-                                  <span className="cart__bonus">Ваши бонусы</span>
+                                  <div className="cart__bonus">
+                                    {actualPromocodes.length
+                                      ? 'Примененные промокоды'
+                                      : 'Введите промокод'}{' '}
+                                  </div>
                                   <ul>
-                                    <li>
-                                      <a className="cart__dashed-link">Скидка 5%</a>
-                                      <div className="cart__wysiwyg-content">
-                                        <p>
-                                          При покупке комплекта Roborock Vacuum Cleaner S7 вы
-                                          получите скидку 5%.
-                                        </p>
-                                      </div>
-                                    </li>
+                                    {actualPromocodes.length === 0 && (
+                                      <li>
+                                        <div>
+                                          Актуальные промокоды можно найти на
+                                          <NavLink to={MAIN_ROUTE} className={'cart__link'}>
+                                            главной странице
+                                          </NavLink>
+                                          нашего магазина
+                                        </div>
+                                      </li>
+                                    )}
+                                    {actualPromocodes.map((promocode) => (
+                                      <li key={promocode.code}>
+                                        <a className="cart__dashed-link">{promocode.code}</a>
+                                        <div>{promocode.description}</div>
+                                      </li>
+                                    ))}
                                   </ul>
                                 </div>
                               </li>
