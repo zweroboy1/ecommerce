@@ -222,6 +222,7 @@
     max-width: 100%;
     line-height: normal;
     color: #dd4b39cc;
+    white-space: nowrap;
 
     @include media('xl') {
       font-size: 16px;
