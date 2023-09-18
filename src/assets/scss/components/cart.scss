@@ -134,7 +134,7 @@
   &__product-delete {
     margin: 0 0 0 6px;
     vertical-align: middle;
-    &:focus {
+    &:focus-visible {
       outline: 2px solid black;
     }
   }
@@ -214,7 +214,7 @@
     background: none;
     color: rgba(0, 0, 0, 0.5);
 
-    &:focus {
+    &:focus-visible {
       outline: 2px solid black;
     }
   }
@@ -299,7 +299,7 @@
     background: #eee;
     cursor: pointer;
     box-sizing: border-box;
-    &:focus {
+    &:focus-visible {
       outline: 2px solid black;
     }
   }
