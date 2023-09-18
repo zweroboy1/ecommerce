@@ -80,8 +80,12 @@ button {
     outline: none;
   }
 
-  &[disabled]:not(.product__decrease):not(.quantity__increase):not(.quantity__decrease),
-  &[disabled]:not(.product__decrease):not(.quantity__increase):not(.quantity__decrease):hover {
+  &[disabled]:not(.product__decrease):not(.quantity__increase):not(.quantity__decrease):not(
+      .goods__control
+    ),
+  &[disabled]:not(.product__decrease):not(.quantity__increase):not(.quantity__decrease):not(
+      .goods__control
+    ):hover {
     background-color: gray;
     color: $background;
     cursor: not-allowed;
