@@ -10,7 +10,7 @@ const NotificationCart = ({ onClose }: { onClose: () => void }) => {
       <div className="notification__overlay"></div>
       <div className="notification__content">
         <h1>
-          Ваш заказ успешно создан!
+          Ваш заказ очень важен для нас!
           <span className="notification__close" onClick={handleClose}>
             ×
           </span>
@@ -18,7 +18,7 @@ const NotificationCart = ({ onClose }: { onClose: () => void }) => {
         <div className="notification__body">
           <div className="notification__product">
             <div className="notification__total-info">
-              <div className="notification__cart">Спасибо, что выбрали нас.</div>
+              <div className="notification__cart">Ожидайте быструю доставку!</div>
             </div>
           </div>
           <div className="notification__buttons">
