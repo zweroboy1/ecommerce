@@ -35,6 +35,19 @@
     color: $text-color;
     background: $button-second-hover;
   }
+
+  &.confirm {
+    min-width: 161px;
+
+    span {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+  }
 }
 
 .header-icon {
