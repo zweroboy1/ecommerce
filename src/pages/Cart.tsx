@@ -20,6 +20,7 @@ import {
   removeProductFromCart,
   removeProductsFromCart,
   addDiscountCode,
+  deleteCart,
 } from '../services/commercetoolsApi';
 import { formatPrice } from '../utils/formatPrice';
 import { CATALOG_ROUTE, MAIN_ROUTE } from '../constants/route';
@@ -224,8 +225,36 @@ const Cart = observer(() => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openModal = async () => {
+    try {
+      const accessToken = user!.user!.token.access_token;
+      const cartId = userCart?.id;
+      const cartVersion = userCart?.version;
+      if (accessToken && cartId && cartVersion) {
+        await deleteCart(accessToken, cartId, cartVersion);
+        const newCart = await createCart(accessToken);
+
+        const userData = isAuth ? user!.user!.user : null;
+        const userToken = user!.user!.token;
+        await user!.setUser({
+          user: userData,
+          cart: newCart,
+          token: userToken,
+        });
+      }
+      setIsModalOpen(true);
+    } catch (error) {
+      let toastText = CT_UNKNOWN_ERROR;
+      if (error instanceof Error) {
+        if (error?.message === CT_FAILED_TO_FETCH) {
+          toastText = CT_NETWORK_PROBLEM;
+        }
+      }
+      toast.error(toastText, {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
   };
 
   const closeModal = () => {
