@@ -40,7 +40,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
           userCart = cart;
         }
       }
-
+      if (!loadAddToCart) {
+        setLoadAddToCart(true);
+      }
       try {
         const result = await addProductToCart(
           user?.user?.token.access_token || '',
@@ -71,7 +73,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
         });
         setLoadAddToCart(false);
       }
+      setLoadAddToCart(false);
     }
+
     async function removeFromCart(productId: string, productQuantity: number, cb?: () => void) {
       if (!userCart?.lineItems.some((item) => item.id === productId)) {
         // eslint-disable-next-line
@@ -79,6 +83,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
         return;
       }
 
+      if (!loadAddToCart) {
+        setLoadAddToCart(true);
+      }
       try {
         const result = await removeProductFromCart(
           user?.user?.token.access_token || '',
@@ -110,6 +117,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
         });
         setLoadAddToCart(false);
       }
+      setLoadAddToCart(false);
     }
 
     const handleQuantityChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -305,7 +313,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
                 <span>
                   <i className="product__icon-cart"></i>
                   {!loadAddToCart && (inCart ? <bdi>Удалить все</bdi> : <bdi>В корзину</bdi>)}
-                  {loadAddToCart && <bdi>loading</bdi>}
+                  {loadAddToCart && (
+                    <i
+                      className={`${
+                        loadAddToCart
+                          ? 'goods__control-icon--loader header-icon mini showing loader'
+                          : ''
+                      }`}
+                    ></i>
+                  )}
+                  {/* {loadAddToCart && <bdi>loading</bdi>} */}
                 </span>
               </ButtonIcon>
               {inCart && <bdi>Добавлено ({quantityInCart})</bdi>}
