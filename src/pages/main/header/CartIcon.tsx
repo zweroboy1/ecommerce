@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { CART_ROUTE } from '../../../constants/route';
 import CartDropdown from '../../../components/CartDropdown';
@@ -7,6 +8,7 @@ import { CartData } from '../../../types';
 
 const CartIcon = observer(() => {
   const { user } = useContext(Context);
+  const history = useNavigate();
   const cartQuantity = user?.user?.cart?.lineItems.length
     ? user?.user?.cart?.lineItems.reduce((prev, cur) => prev + cur.quantity, 0)
     : 0;
@@ -22,7 +24,7 @@ const CartIcon = observer(() => {
   };
 
   const handleCartClick = () => {
-    window.location.href = CART_ROUTE;
+    history(CART_ROUTE);
   };
 
   useEffect(() => {
