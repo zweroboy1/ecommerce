@@ -112,12 +112,13 @@ const CartItem = observer(
               title="Удалить"
               onClick={async () => {
                 setLoadChangeInCart(true);
-                await removeFromCart(product.id, quantity);
-                setLoadChangeInCart(false);
-                toast.warn('Товар удален!', {
-                  position: toast.POSITION.TOP_RIGHT,
-                  autoClose: 3000,
+                await removeFromCart(product.id, quantity, () => {
+                  toast.warn('Товар удален!', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 3000,
+                  });
                 });
+                setLoadChangeInCart(false);
               }}
             >
               <span className="icon-cancel-circle" title="Удалить товар из корзины"></span>
