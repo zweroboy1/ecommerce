@@ -36,6 +36,7 @@ import { ButtonIcon } from '../components/ButtonIcon';
 const Cart = observer(() => {
   const [loading, setLoading] = useState(true);
   const [isErrorFetch, setIsErrorFetch] = useState(false);
+  const [isClearingCart, setIsClearingCart] = useState(false);
   const [promoCode, setPromoCode] = useState<string>('');
   const { user } = useContext(Context);
   let userCart = user?.user?.cart;
@@ -271,6 +272,7 @@ const Cart = observer(() => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const openModal = async () => {
+    setIsClearingCart(true);
     try {
       const accessToken = user!.user!.token.access_token;
       const cartId = userCart?.id;
@@ -299,6 +301,8 @@ const Cart = observer(() => {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
       });
+    } finally {
+      setIsClearingCart(false);
     }
   };
 
@@ -349,15 +353,32 @@ const Cart = observer(() => {
                                 </NavLink>
                               </div>
                               <div className="cart__right-buttons">
-                                <a
-                                  role="button"
+                                <ButtonIcon
                                   tabIndex={0}
-                                  className="button"
-                                  onClick={openModal}
+                                  className={`button button-order confirm ${
+                                    isClearingCart ? 'disabled' : ''
+                                  }`}
+                                  onClick={async () => {
+                                    if (!isClearingCart) {
+                                      await openModal();
+                                    }
+                                  }}
+                                  disabled={isClearingCart}
                                 >
-                                  <span className="cart__icon-ok"></span>
-                                  <bdi>Оформить заказ</bdi>
-                                </a>
+                                  <span>
+                                    {isClearingCart ? (
+                                      <i
+                                        className={`${
+                                          isClearingCart
+                                            ? 'goods__control-icon--loader header-icon mini showing loader'
+                                            : ''
+                                        }`}
+                                      ></i>
+                                    ) : (
+                                      <bdi>Оформить заказ</bdi>
+                                    )}
+                                  </span>
+                                </ButtonIcon>
                               </div>
                             </div>
                           )}
@@ -518,15 +539,32 @@ const Cart = observer(() => {
                                 </ButtonIcon>
                               </div>
                               <div className="cart__right-buttons">
-                                <a
-                                  role="button"
+                                <ButtonIcon
                                   tabIndex={0}
-                                  className="button"
-                                  onClick={openModal}
+                                  className={`button button-order confirm ${
+                                    isClearingCart ? 'disabled' : ''
+                                  }`}
+                                  onClick={async () => {
+                                    if (!isClearingCart) {
+                                      await openModal();
+                                    }
+                                  }}
+                                  disabled={isClearingCart}
                                 >
-                                  <span className="icon-ok"></span>
-                                  <bdi>Оформить заказ</bdi>
-                                </a>
+                                  <span>
+                                    {isClearingCart ? (
+                                      <i
+                                        className={`${
+                                          isClearingCart
+                                            ? 'goods__control-icon--loader header-icon mini showing loader'
+                                            : ''
+                                        }`}
+                                      ></i>
+                                    ) : (
+                                      <bdi>Оформить заказ</bdi>
+                                    )}
+                                  </span>
+                                </ButtonIcon>
                               </div>
                             </div>
                           )}
