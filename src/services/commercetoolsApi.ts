@@ -1014,3 +1014,30 @@ export async function removeProductsFromCart(
     throw new Error(CT_ERROR);
   }
 }
+
+export async function deleteCart(
+  accessToken: string,
+  cartId: string,
+  cartVersion: number
+): Promise<Cart> {
+  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/me/carts/${cartId}?version=${cartVersion}`;
+  try {
+    const response = await fetch(endpoint, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const responseData = await response.json();
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error(CT_ERROR);
+  }
+}

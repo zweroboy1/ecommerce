@@ -1,5 +1,7 @@
+import { NavLink } from 'react-router-dom';
 import { Cart } from '../types';
 import { formatPrice } from '../utils/formatPrice';
+import { CART_ROUTE } from '../constants/route';
 
 interface CartDropdownProps {
   closeCart: () => void;
@@ -83,9 +85,9 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ closeCart, cartData }) => {
               &nbsp;
             </p>
 
-            <a href="/cart" rel="nofollow" className="button button-cart">
+            <NavLink to={CART_ROUTE} title="" className="button button-cart">
               Перейти в Корзину
-            </a>
+            </NavLink>
           </div>
         )}
       </div>
