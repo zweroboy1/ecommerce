@@ -141,7 +141,11 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
                   )}
                 </div>
                 <ButtonIcon
-                  className={`goods__control ${loadAddToCart ? 'loading' : ''}`}
+                  className={`goods__control ${
+                    userCart?.lineItems.some((item) => item.productId === product.id)
+                      ? 'disabled'
+                      : ''
+                  }`}
                   onClick={async () => {
                     await addToCart(product.id, 1, () => {
                       openModal(
@@ -160,7 +164,9 @@ const ProductList = observer(({ products }: { products: Product[] }) => {
                   }
                 >
                   <i
-                    className="goods__control-icon minicart__icon header-icon"
+                    className={`goods__control-icon minicart__icon header-icon ${
+                      loadAddToCart === product.id ? 'loader' : ''
+                    }`}
                     title={
                       userCart?.lineItems.some((item) => item.productId === product.id)
                         ? 'Уже в корзине'
