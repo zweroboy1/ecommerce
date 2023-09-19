@@ -20,7 +20,7 @@ const Slider: React.FC<SliderProps> = ({ items, slideWidth, slideMargin }) => {
       let newSlideCount = Math.floor(screenWidth / (slideWidth + slideMargin + 20));
       newSlideCount = Math.min(newSlideCount, 4);
 
-      const newSliderWidth = newSlideCount * (slideWidth + slideMargin) + slideMargin;
+      const newSliderWidth = newSlideCount * (slideWidth + slideMargin);
       setSliderWidth(newSliderWidth);
       setTotalImages(items.length - (newSlideCount - 1));
     };
