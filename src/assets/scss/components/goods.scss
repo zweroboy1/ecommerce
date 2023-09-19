@@ -258,8 +258,8 @@
     }
   }
 
-  &__control[disabled],
-  &__control[disabled]:hover {
+  &__control.disabled,
+  &__control.disabled:hover {
     background-color: transparent;
 
     .minicart__icon::after {
@@ -286,9 +286,28 @@
   &__control-icon {
     top: 0;
     background: url(/src/assets/svg/cart-large.svg) no-repeat center center / cover;
+
+    &.loader {
+      background: url(/src/assets/svg/loader.svg) no-repeat center center / cover;
+    }
+    &--loader {
+      position: absolute;
+      opacity: 0;
+      background: url(/src/assets/svg/loader.svg) no-repeat center center / cover;
+
+      &.mini {
+        top: calc(50% - 15px);
+        left: calc(50% - 15px);
+        width: 30px;
+        height: 30px;
+      }
+      &.showing {
+        opacity: 1;
+      }
+    }
   }
 
-  &__control[disabled] .goods__control-icon {
+  &__control.disabled .goods__control-icon {
     cursor: not-allowed;
   }
 }
