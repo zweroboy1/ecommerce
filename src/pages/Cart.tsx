@@ -31,6 +31,7 @@ import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 import NotificationCart from '../components/NotificationCart';
 import { ConfirmNotification } from '../components/ConfirmNotification';
 import { Loader } from './Loader';
+import { ButtonIcon } from '../components/ButtonIcon';
 
 const Cart = observer(() => {
   const [loading, setLoading] = useState(true);
@@ -506,16 +507,15 @@ const Cart = observer(() => {
                                 <NavLink to={CATALOG_ROUTE} className="button button-second">
                                   <bdi>Продолжить покупки</bdi>
                                 </NavLink>
-                                <a
+                                <ButtonIcon
                                   className="button"
-                                  href="/"
-                                  onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                                    e.preventDefault();
+                                  onClick={() => {
                                     openConfirmModal();
                                   }}
+                                  disabled={isConfirmModalOpen}
                                 >
                                   <bdi>Очистить корзину</bdi>
-                                </a>
+                                </ButtonIcon>
                               </div>
                               <div className="cart__right-buttons">
                                 <a
