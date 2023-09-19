@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { ToastContainer, toast } from 'react-toastify';
 import { NavLink } from 'react-router-dom';
@@ -12,6 +12,7 @@ import {
   CT_NETWORK_PROBLEM,
   CT_FAILED_TO_FETCH,
   CT_UNKNOWN_ERROR,
+  CT_NETWORK_OR_SERVER_PROBLEM,
 } from '../constants/apiMessages';
 import {
   addProductToCart,
@@ -29,14 +30,55 @@ import { Cart as CartType, LineItem } from '../types';
 import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 import NotificationCart from '../components/NotificationCart';
 import { ConfirmNotification } from '../components/ConfirmNotification';
+import { Loader } from './Loader';
 
 const Cart = observer(() => {
+  const [loading, setLoading] = useState(true);
+  const [isErrorFetch, setIsErrorFetch] = useState(false);
   const [promoCode, setPromoCode] = useState<string>('');
   const { user } = useContext(Context);
   let userCart = user?.user?.cart;
   const isAuth = user?.isAuth;
   const totalAmount = userCart ? userCart.totalPrice.centAmount : 0;
 
+  useEffect(() => {
+    const getCart = async () => {
+      try {
+        setLoading(true);
+        const userCarts = await getMyCarts(user?.user?.token.access_token || '');
+        if (userCarts.count) {
+          const cart = userCarts.results[0];
+          const userData = isAuth ? user!.user!.user : null;
+          const userToken = user!.user!.token;
+          user!.setUser({
+            user: userData,
+            cart,
+            token: userToken,
+          });
+          setLoading(false);
+        } else {
+          throw new Error('CT_NO_CART_ERROR');
+        }
+      } catch (error) {
+        setLoading(true);
+        try {
+          const cart = await createCart(user?.user?.token.access_token || '');
+          const userData = isAuth ? user!.user!.user : null;
+          const userToken = user!.user!.token;
+          user!.setUser({
+            user: userData,
+            cart,
+            token: userToken,
+          });
+          setLoading(false);
+        } catch {
+          setIsErrorFetch(true);
+          setLoading(false);
+        }
+      }
+    };
+    getCart();
+  }, [isAuth, user]);
   const getActualPromocodes = (
     cart: CartType | null | undefined
   ): { code: string; description: string }[] => {
@@ -289,189 +331,209 @@ const Cart = observer(() => {
             <div className="cart__body">
               <div className="cart__main">
                 <div className="cart__form-wrapper">
-                  <div className="cart__form">
-                    <h1 className="cart__title-page">Корзина</h1>
-                    {userCart && userCart.lineItems.length > 0 && (
-                      <div className="cart__buttons-container">
-                        <div className="cart__left-buttons">
-                          <NavLink to={CATALOG_ROUTE} className="button button-second">
-                            <bdi>Продолжить покупки</bdi>
-                          </NavLink>
-                        </div>
-                        <div className="cart__right-buttons">
-                          <a role="button" tabIndex={0} className="button" onClick={openModal}>
-                            <span className="cart__icon-ok"></span>
-                            <bdi>Оформить заказ</bdi>
-                          </a>
-                        </div>
-                      </div>
-                    )}
-
-                    <div>
-                      <div className="cart__content">
-                        {userCart && userCart.lineItems.length > 0 ? (
-                          <div className="cart__items">
-                            <table className="cart__table">
-                              <thead>
-                                <tr>
-                                  <th className="cart__table-title">Товар</th>
-                                  <th className="cart__table-title">&nbsp;</th>
-                                  <th className="cart__table-title">Цена за ед.</th>
-                                  <th className="cart__table-title">Кол-во</th>
-                                  <th className="cart__table-title">Итого</th>
-                                </tr>
-                              </thead>
-
-                              <tbody>
-                                {userCart.lineItems.map((item) => (
-                                  <CartItem
-                                    key={item.productId}
-                                    product={item}
-                                    removeFromCart={removeFromCart}
-                                    addToCart={addToCart}
-                                  />
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        ) : (
-                          <div className="cart__empty">
-                            <span>Ваша корзина пока еще пуста...</span>
-                            <span>Мы рады предложить Вам ознакомиться с нашим</span>
-                            <NavLink to={CATALOG_ROUTE} className="button">
-                              Каталогом товаров
-                            </NavLink>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {userCart?.lineItems && userCart.lineItems.length > 0 && (
-                      <div className="cart__total">
-                        <div className="cart__total-wrapper">
-                          <div className="cart__coupons">
-                            <div>
-                              <div className="cart__processed-form">
-                                <div className="cart__hint">
-                                  <label className="cart__hint-label">Промо-код</label>
-                                  <input
-                                    type="text"
-                                    className="cart__hint-text"
-                                    value={promoCode}
-                                    onChange={handleInputChange}
-                                    onKeyDown={handleKeyDown}
-                                  />
-                                  <button
-                                    title="Применить"
-                                    className="cart__btn-go"
-                                    type="button"
-                                    onClick={applyCode}
-                                  >
-                                    Применить
-                                  </button>
-                                </div>
+                  {loading ? (
+                    <Loader />
+                  ) : (
+                    <>
+                      {isErrorFetch ? (
+                        <p className="no-product">{CT_NETWORK_OR_SERVER_PROBLEM}</p>
+                      ) : (
+                        <div className="cart__form">
+                          <h1 className="cart__title-page">Корзина</h1>
+                          {userCart && userCart.lineItems.length > 0 && (
+                            <div className="cart__buttons-container">
+                              <div className="cart__left-buttons">
+                                <NavLink to={CATALOG_ROUTE} className="button button-second">
+                                  <bdi>Продолжить покупки</bdi>
+                                </NavLink>
+                              </div>
+                              <div className="cart__right-buttons">
+                                <a
+                                  role="button"
+                                  tabIndex={0}
+                                  className="button"
+                                  onClick={openModal}
+                                >
+                                  <span className="cart__icon-ok"></span>
+                                  <bdi>Оформить заказ</bdi>
+                                </a>
                               </div>
                             </div>
+                          )}
 
-                            <ul className="cart__discount-info">
-                              <li className="cart__discount-list">
-                                <span className="caret-outer"></span>
-                                <span className="caret-inner"></span>
-                              </li>
-                              <li className="cart__coupons-item">
-                                <div className="cart__promotions">
-                                  <div className="cart__bonus">
-                                    {actualPromocodes.length
-                                      ? 'Примененные промокоды'
-                                      : 'Введите промокод'}{' '}
-                                  </div>
-                                  <ul>
-                                    {actualPromocodes.length === 0 && (
-                                      <li>
-                                        <div>
-                                          Актуальные промокоды можно найти на
-                                          <NavLink to={MAIN_ROUTE} className={'cart__link'}>
-                                            главной странице
-                                          </NavLink>
-                                          нашего магазина
-                                        </div>
-                                      </li>
-                                    )}
-                                    {actualPromocodes.map((promocode) => (
-                                      <li key={promocode.code}>
-                                        <a className="cart__dashed-link">{promocode.code}</a>
-                                        <div>{promocode.description}</div>
-                                      </li>
-                                    ))}
-                                  </ul>
+                          <div>
+                            <div className="cart__content">
+                              {userCart && userCart.lineItems.length > 0 ? (
+                                <div className="cart__items">
+                                  <table className="cart__table">
+                                    <thead>
+                                      <tr>
+                                        <th className="cart__table-title">Товар</th>
+                                        <th className="cart__table-title">&nbsp;</th>
+                                        <th className="cart__table-title">Цена за ед.</th>
+                                        <th className="cart__table-title">Кол-во</th>
+                                        <th className="cart__table-title">Итого</th>
+                                      </tr>
+                                    </thead>
+
+                                    <tbody>
+                                      {userCart.lineItems.map((item) => (
+                                        <CartItem
+                                          key={item.productId}
+                                          product={item}
+                                          removeFromCart={removeFromCart}
+                                          addToCart={addToCart}
+                                        />
+                                      ))}
+                                    </tbody>
+                                  </table>
                                 </div>
-                              </li>
-                            </ul>
+                              ) : (
+                                <div className="cart__empty">
+                                  <span>Ваша корзина пока еще пуста...</span>
+                                  <span>Мы рады предложить Вам ознакомиться с нашим</span>
+                                  <NavLink to={CATALOG_ROUTE} className="button">
+                                    Каталогом товаров
+                                  </NavLink>
+                                </div>
+                              )}
+                            </div>
                           </div>
 
-                          <ul className="cart__statistic-list">
-                            <li className="cart__statistic-item">
-                              <span className="cart__statistic-title">
-                                Сумма без промокодов и акций
-                              </span>
-                              <span className="cart__statistic-value">
-                                <bdi>
-                                  <span>{formatPrice(totalSum / 100)} ₴</span>
-                                </bdi>
-                              </span>
-                            </li>
-                            <li className="cart__statistic-item discount">
-                              <span className="cart__statistic-title">Итоговая скидка</span>
-                              <span className="cart__statistic-value">
-                                <bdi>
-                                  <span>{formatPrice((totalSum - totalAmount) / 100)} ₴</span>
-                                </bdi>
-                              </span>
-                            </li>
-                          </ul>
-                          <ul className="cart__statistic-total-list">
-                            <li className="cart__statistic-total-item">
-                              <span className="cart__statistic-total-title">
-                                Итоговая стоимость
-                              </span>
-                              <span className="cart__statistic-total-value">
-                                <bdi>
-                                  <span>{formatPrice(totalAmount / 100)}</span>
-                                  <span> ₴</span>
-                                </bdi>
-                              </span>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    )}
+                          {userCart?.lineItems && userCart.lineItems.length > 0 && (
+                            <div className="cart__total">
+                              <div className="cart__total-wrapper">
+                                <div className="cart__coupons">
+                                  <div>
+                                    <div className="cart__processed-form">
+                                      <div className="cart__hint">
+                                        <label className="cart__hint-label">Промо-код</label>
+                                        <input
+                                          type="text"
+                                          className="cart__hint-text"
+                                          value={promoCode}
+                                          onChange={handleInputChange}
+                                          onKeyDown={handleKeyDown}
+                                        />
+                                        <button
+                                          title="Применить"
+                                          className="cart__btn-go"
+                                          type="button"
+                                          onClick={applyCode}
+                                        >
+                                          Применить
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
 
-                    {userCart && userCart.lineItems.length > 0 && (
-                      <div className="cart__buttons-container">
-                        <div className="cart__left-buttons">
-                          <NavLink to={CATALOG_ROUTE} className="button button-second">
-                            <bdi>Продолжить покупки</bdi>
-                          </NavLink>
-                          <a
-                            className="button"
-                            href="/"
-                            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                              e.preventDefault();
-                              openConfirmModal();
-                            }}
-                          >
-                            <bdi>Очистить корзину</bdi>
-                          </a>
+                                  <ul className="cart__discount-info">
+                                    <li className="cart__discount-list">
+                                      <span className="caret-outer"></span>
+                                      <span className="caret-inner"></span>
+                                    </li>
+                                    <li className="cart__coupons-item">
+                                      <div className="cart__promotions">
+                                        <div className="cart__bonus">
+                                          {actualPromocodes.length
+                                            ? 'Примененные промокоды'
+                                            : 'Введите промокод'}{' '}
+                                        </div>
+                                        <ul>
+                                          {actualPromocodes.length === 0 && (
+                                            <li>
+                                              <div>
+                                                Актуальные промокоды можно найти на
+                                                <NavLink to={MAIN_ROUTE} className={'cart__link'}>
+                                                  главной странице
+                                                </NavLink>
+                                                нашего магазина
+                                              </div>
+                                            </li>
+                                          )}
+                                          {actualPromocodes.map((promocode) => (
+                                            <li key={promocode.code}>
+                                              <a className="cart__dashed-link">{promocode.code}</a>
+                                              <div>{promocode.description}</div>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </div>
+
+                                <ul className="cart__statistic-list">
+                                  <li className="cart__statistic-item">
+                                    <span className="cart__statistic-title">
+                                      Сумма без промокодов и акций
+                                    </span>
+                                    <span className="cart__statistic-value">
+                                      <bdi>
+                                        <span>{formatPrice(totalSum / 100)} ₴</span>
+                                      </bdi>
+                                    </span>
+                                  </li>
+                                  <li className="cart__statistic-item discount">
+                                    <span className="cart__statistic-title">Итоговая скидка</span>
+                                    <span className="cart__statistic-value">
+                                      <bdi>
+                                        <span>{formatPrice((totalSum - totalAmount) / 100)} ₴</span>
+                                      </bdi>
+                                    </span>
+                                  </li>
+                                </ul>
+                                <ul className="cart__statistic-total-list">
+                                  <li className="cart__statistic-total-item">
+                                    <span className="cart__statistic-total-title">
+                                      Итоговая стоимость
+                                    </span>
+                                    <span className="cart__statistic-total-value">
+                                      <bdi>
+                                        <span>{formatPrice(totalAmount / 100)}</span>
+                                        <span> ₴</span>
+                                      </bdi>
+                                    </span>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          )}
+
+                          {userCart && userCart.lineItems.length > 0 && (
+                            <div className="cart__buttons-container">
+                              <div className="cart__left-buttons">
+                                <NavLink to={CATALOG_ROUTE} className="button button-second">
+                                  <bdi>Продолжить покупки</bdi>
+                                </NavLink>
+                                <a
+                                  className="button"
+                                  href="/"
+                                  onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                                    e.preventDefault();
+                                    openConfirmModal();
+                                  }}
+                                >
+                                  <bdi>Очистить корзину</bdi>
+                                </a>
+                              </div>
+                              <div className="cart__right-buttons">
+                                <a
+                                  role="button"
+                                  tabIndex={0}
+                                  className="button"
+                                  onClick={openModal}
+                                >
+                                  <span className="icon-ok"></span>
+                                  <bdi>Оформить заказ</bdi>
+                                </a>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                        <div className="cart__right-buttons">
-                          <a role="button" tabIndex={0} className="button" onClick={openModal}>
-                            <span className="icon-ok"></span>
-                            <bdi>Оформить заказ</bdi>
-                          </a>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
