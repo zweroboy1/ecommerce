@@ -28,7 +28,7 @@ const NotificationCart = ({ onClose }: { onClose: () => void }) => {
               </a>
             </div>
             <div className="notification__btn-right">
-              <NavLink to={CATALOG_ROUTE} title="" className="button">
+              <NavLink to={CATALOG_ROUTE} className="button">
                 <span className="ty-icon ty-icon-ok"></span>
                 <bdi>В каталог</bdi>
               </NavLink>
