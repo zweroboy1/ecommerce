@@ -128,7 +128,7 @@ const About = () => {
         </div>
         <p>
           Надеемся, что вам понравился наш финальный проект на курсе JavaScript/Front-end 2023Q1 от
-          <a className="rs-link" href="https://rs.school/js/" target="_blank">
+          <a className="rs-link" href="https://rs.school/" target="_blank">
             <svg className="rs-link__svg"></svg>
           </a>
         </p>
