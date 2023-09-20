@@ -329,7 +329,6 @@ const Cart = observer(() => {
       <Header />
       <ToastContainer />
       <main className="main cart container">
-        <ToastContainer />
         <BreadcrumbsPage links={breadcrumbs} />
         <div className="cart__grid">
           <div className="cart__container">
