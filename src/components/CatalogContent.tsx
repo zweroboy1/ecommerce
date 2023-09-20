@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ReactPaginate from 'react-paginate';
 import { ToastContainer, toast } from 'react-toastify';
 import { CATEGORIES } from '../constants/categories';
@@ -24,12 +24,18 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
   category,
   subcategory,
 }) => {
+  const prevCategoryRef = useRef('');
+  const prevSubcategoryRef = useRef('');
   const [pageTitle, setPageTitle] = useState('');
+  const [categoryBreadcrumbs, setCategoryBreadcrumbs] = useState<Breadcrumb[]>(
+    buildBreadcrumbs(subcategory || category || '')
+  );
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentSort, setCurrentSort] = useState('default');
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [shouldChangePageNumber, setShouldChangePageNumber] = useState(false);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(MAX_PRICE_FILTER);
   const [textQuery, setTextQuery] = useState('');
@@ -42,10 +48,12 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
 
   const handleBrandChange = (brands: string[]) => {
     setSelectedBrands(brands);
+    setShouldChangePageNumber(true);
   };
 
   const handleColorChange = (colors: string[]) => {
     setSelectedColors(colors);
+    setShouldChangePageNumber(true);
   };
   const handlePageChange = ({ selected }: { selected: number }) => {
     setCurrentPage(selected);
@@ -53,40 +61,44 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
   const handlePriceChange = (min: number, max: number) => {
     setMinPrice(min);
     setMaxPrice(max);
+    setShouldChangePageNumber(true);
   };
 
   const handleSearchChange = (text: string) => {
     setTextQuery(text);
+    setShouldChangePageNumber(true);
   };
-
-  const currentCategoryUrl = subcategory || category || '';
-  const categoryBreadcrumbs: Breadcrumb[] = buildBreadcrumbs(currentCategoryUrl);
 
   const handleResetFilters = () => {
     setSelectedBrands([]);
     setSelectedColors([]);
     setMinPrice(0);
     setMaxPrice(MAX_PRICE_FILTER);
+    setShouldChangePageNumber(true);
   };
 
   useEffect(() => {
-    setCurrentPage(0);
-  }, [
-    category,
-    subcategory,
-    currentCategoryUrl,
-    selectedBrands,
-    selectedColors,
-    minPrice,
-    maxPrice,
-    textQuery,
-  ]);
+    if (prevCategoryRef.current !== category || prevSubcategoryRef.current !== subcategory) {
+      prevCategoryRef.current = category;
+      prevSubcategoryRef.current = subcategory;
+      setShouldChangePageNumber(false);
+      setCurrentPage(0);
+      if (currentPage !== 0) {
+        return;
+      }
+    }
 
-  useEffect(() => {
-    const currentCategory = CATEGORIES.find((cat) => cat.url === currentCategoryUrl);
+    if (shouldChangePageNumber) {
+      setShouldChangePageNumber(false);
+      setCurrentPage(0);
+      return;
+    }
+
+    const currentCategory = CATEGORIES.find((cat) => cat.url === (subcategory || category || ''));
     if (currentCategory && currentCategory.ruName) {
       setPageTitle(currentCategory.ruName);
     }
+    setCategoryBreadcrumbs(buildBreadcrumbs(subcategory || category || ''));
 
     const getProductsFromServer = async () => {
       try {
@@ -97,7 +109,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
         )[0].ctSort;
 
         const response = await getProducts(
-          currentCategoryUrl,
+          subcategory || category || '',
           currentPage,
           sortCtParam,
           selectedBrands,
@@ -127,7 +139,8 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
     };
     getProductsFromServer();
   }, [
-    currentCategoryUrl,
+    category,
+    subcategory,
     selectedBrands,
     selectedColors,
     currentPage,
@@ -135,6 +148,7 @@ const CatalogContent: React.FC<{ category: string; subcategory: string }> = ({
     minPrice,
     maxPrice,
     textQuery,
+    shouldChangePageNumber,
   ]);
 
   return (
