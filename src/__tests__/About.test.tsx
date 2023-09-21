@@ -9,7 +9,7 @@ describe('About component', () => {
         <About />
       </MemoryRouter>
     );
-    const mainHeading = screen.getByText('О компании');
+    const mainHeading = screen.getByRole('heading', { name: 'О нас' });
     expect(mainHeading).toBeInTheDocument();
   });
 });

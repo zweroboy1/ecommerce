@@ -12,6 +12,13 @@ jest.mock('react-router-dom', () => ({
 
 jest.mock('../services/commercetoolsApi', () => ({
   getUser: jest.fn(() => Promise.resolve({})),
+  getAnonymousUser: jest.fn(() =>
+    Promise.resolve({
+      token: {
+        expires_at: (Date.now() + 10000).toString(), // Установите expires_at как строку
+      },
+    })
+  ),
 }));
 
 describe('Login component', () => {

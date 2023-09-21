@@ -8,8 +8,6 @@ const CONTACTS_ROUTE = '/contacts';
 const SPORT_ROUTE = '/sport';
 const CART_ROUTE = '/cart';
 const ACCOUNT_ROUTE = '/account';
-const SAVED_ROUTE = '/saved';
-const COMPARE_ROUTE = '/compare';
 const ABOUT_ROUTE = '/about';
 const PROMOTIONS_ROUTE = '/promotions';
 const CATALOG_ROUTE = '/catalog';
@@ -26,8 +24,6 @@ export {
   SPORT_ROUTE,
   CART_ROUTE,
   ACCOUNT_ROUTE,
-  SAVED_ROUTE,
-  COMPARE_ROUTE,
   ABOUT_ROUTE,
   PROMOTIONS_ROUTE,
   CATALOG_ROUTE,
