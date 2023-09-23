@@ -311,7 +311,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
                 disabled={loadAddToCart || quantity === 0}
               >
                 <span>
-                  <i className="product__icon-cart"></i>
+                  <i className="product__icon-cart">
+                    {inCart && <span className="product__icon-count">{quantityInCart}</span>}
+                  </i>
                   {!loadAddToCart && (inCart ? <bdi>Удалить все</bdi> : <bdi>В корзину</bdi>)}
                   {loadAddToCart && (
                     <i
@@ -325,7 +327,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = observer(
                   {/* {loadAddToCart && <bdi>loading</bdi>} */}
                 </span>
               </ButtonIcon>
-              {inCart && <bdi>Добавлено ({quantityInCart})</bdi>}
+              {/* {inCart && <bdi>Добавлено ({quantityInCart})</bdi>} */}
             </div>
           </div>
 
