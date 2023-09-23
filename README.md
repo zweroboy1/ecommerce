@@ -18,7 +18,29 @@ Key pages in the application include:
 
 The application is powered by CommerceTools 🌐, a leading provider of commerce solutions for B2C and B2B enterprises. CommerceTools offers a cloud-native, microservices-based commerce platform that enables brands to create unique and engaging digital commerce experiences.  
 
-# Home Library Service
+# Our tech stack
+- Npm
+- TypeScript
+- Vite
+- React
+-- React Router
+-- Mobx
+-- React Slick
+-- React Icons
+-- React Toastify
+-- React Responsive Carousel
+-- React Paginate
+-- Formik
+-- Yup
+- Sass/Scss
+- ESLint
+- Prettier 
+- Husky
+- Commitlint
+- Commitizen
+- Jest
+- React Testing Library
+# Installation
 
 ## Prerequisites
 
@@ -28,7 +50,7 @@ The application is powered by CommerceTools 🌐, a leading provider of commerce
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/zweroboy1/ecommerce.git
 ```
 
 ## Installing NPM modules
@@ -75,12 +97,6 @@ To run only one of all test suites
 npm run test -- <path to suite>
 ```
 
-To run to get a coverage of tests
-
-```
-npm run test-cover
-```
-
 ### Auto-fix and lint
 
 ```
@@ -90,9 +106,3 @@ npm run lint
 ```
 npm run lint:fix
 ```
-
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
