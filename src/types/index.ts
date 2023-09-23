@@ -46,6 +46,36 @@ type UpdatingInitialValues = CustomerUpdating & {
   isBillingAddress: boolean;
 };
 
+type UpdatingUserSettingsInitialValues = {
+  password: string;
+  email: string;
+  passwordNew: string;
+  passwordConfirm: string;
+};
+
+type UpdatingAddressesInitialValues = {
+  addresses: Address[];
+  shippingAddresses: Address[];
+  billingAddresses: Address[];
+  defaultShippingAddressId?: string;
+  defaultBillingAddressId?: string;
+  newCity: string;
+  newCountry: string;
+  newPostalCode: string;
+  newStreetName: string;
+  isShippingAddress: boolean;
+  isBillingAddress: boolean;
+};
+
+type AddAddressesInitialValues = {
+  newCity: string;
+  newCountry: string;
+  newPostalCode: string;
+  newStreetName: string;
+  isShippingAddress: boolean;
+  isBillingAddress: boolean;
+};
+
 type Address = {
   readonly id?: string;
   streetName: string;
@@ -150,6 +180,14 @@ type CustomerUpdating = {
   defaultShippingAddressId?: string;
   defaultBillingAddressId?: string;
   bearerToken: string;
+};
+
+type CustomerAddressesUpdating = {
+  addresses: Address[];
+  shippingAddresses: Address[];
+  billingAddresses: Address[];
+  defaultShippingAddressId?: string;
+  defaultBillingAddressId?: string;
 };
 
 type CustomerWithToken = {
@@ -394,6 +432,10 @@ export type {
   CreateUser,
   StateFields,
   CustomerUpdating,
+  CustomerAddressesUpdating,
+  UpdatingAddressesInitialValues,
+  UpdatingUserSettingsInitialValues,
+  AddAddressesInitialValues,
   Product,
   Category,
   Breadcrumb,
