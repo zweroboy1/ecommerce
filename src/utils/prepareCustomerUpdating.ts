@@ -1,13 +1,7 @@
-import { Customer, CustomerUpdating } from '../types';
+import { Customer, CustomerAddressesUpdating } from '../types';
 
-const prepareCustomerUpdating = (customer: Customer, bearerToken: string): CustomerUpdating => {
+const prepareCustomerAddressesUpdating = (customer: Customer): CustomerAddressesUpdating => {
   const {
-    id,
-    version,
-    email,
-    firstName,
-    lastName,
-    dateOfBirth,
     addresses,
     shippingAddressIds,
     billingAddressIds,
@@ -32,19 +26,12 @@ const prepareCustomerUpdating = (customer: Customer, bearerToken: string): Custo
     .map((address) => ({ ...address }));
 
   return {
-    id,
-    version,
-    email,
-    firstName,
-    lastName,
-    dateOfBirth,
     addresses: restAddresses,
     shippingAddresses,
     billingAddresses,
     defaultShippingAddressId,
     defaultBillingAddressId,
-    bearerToken,
   };
 };
 
-export { prepareCustomerUpdating };
+export { prepareCustomerAddressesUpdating };
