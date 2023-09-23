@@ -320,8 +320,26 @@
     &.inCard {
       padding: 5px 5px 5px 35px;
 
-      &:hover .product__icon-cart {
-        background: url(/src/assets/svg/trash.svg) no-repeat center center/cover;
+      .product__add-txt {
+        display: block;
+      }
+
+      .product__delete-txt {
+        display: none;
+      }
+
+      &:hover {
+        .product__add-txt {
+          display: none;
+        }
+
+        .product__delete-txt {
+          display: block;
+        }
+
+        .product__icon-cart {
+          background: url(/src/assets/svg/trash.svg) no-repeat center center/cover;
+        }
       }
     }
   }
