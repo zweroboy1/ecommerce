@@ -102,6 +102,7 @@
   &__role {
     color: #a6a6a6;
     margin-top: 10px;
+    font-size: 22px;
   }
 
   &__name {
@@ -148,7 +149,7 @@
   }
 
   &__github {
-    @include font($family: $font-family, $size: $font-size-16);
+    @include font($family: $font-family, $size: $font-size-22);
     color: $links;
 
     span {
@@ -313,8 +314,7 @@
     }
   }
 
-  p,
-  a {
+  &__gratitude p {
     font-size: 22px;
   }
 }
