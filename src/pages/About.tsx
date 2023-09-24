@@ -4,6 +4,9 @@ import { Footer } from './main/Footer';
 import zweroboy from '../assets/img/zweroboy1.jpeg';
 import mila from '../assets/img/mila.jpeg';
 import nyurasheva from '../assets/img/nyurasheva1.jpg';
+import rs1 from '../assets/svg/HelpingHandSloth.svg';
+import rs2 from '../assets/svg/im-fine.svg';
+import edu from '../assets/svg/mortarboard.svg';
 import { BreadcrumbsPage } from '../components/BreadcrumbsPage';
 
 const About = () => {
@@ -144,8 +147,8 @@ const About = () => {
             </p>
           </div>
           <div className="about__rs-img">
-            <img src="/src/assets/svg/HelpingHandSloth.svg" alt="RS Image" />
-            <img src="/src/assets/svg/im-fine.svg" alt="RS Image" />
+            <img src={rs1} alt="RS Image" />
+            <img src={rs2} alt="RS Image" />
           </div>
         </div>
         <h2>Члены команды</h2>
@@ -169,11 +172,7 @@ const About = () => {
                             </div>
                             <div className="education__img">
                               <div className="education__wrapp-img">
-                                <img
-                                  className="education__svg"
-                                  src="src/assets/svg/mortarboard.svg"
-                                  alt="икона"
-                                />
+                                <img className="education__svg" src={edu} alt="икона" />
                               </div>
                             </div>
                             <span className="education__date">{item.date}</span>
