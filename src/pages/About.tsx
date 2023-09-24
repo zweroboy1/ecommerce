@@ -79,7 +79,7 @@ const About = () => {
         'Реализация корзины',
         'Добавление и удаление товара в корзину',
       ],
-      github: 'milabozhevskaya',
+      github: 'bo-mila',
       photo: mila,
     },
     {
