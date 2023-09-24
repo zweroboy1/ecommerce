@@ -5,6 +5,17 @@
   box-sizing: border-box;
   float: left;
 
+  h2 {
+    margin: 20px 0;
+    font-size: 25px;
+    text-transform: uppercase;
+    color: #07c;
+
+    @include media('m') {
+      text-align: center;
+    }
+  }
+
   &__as {
     @include flex();
 
@@ -57,9 +68,17 @@
     gap: 50px;
     text-align: left;
 
+    &:nth-of-type(2) {
+      flex-direction: row-reverse;
+    }
+
     @include media('m') {
       flex-direction: column;
       align-items: center;
+
+      &:nth-of-type(2) {
+        flex-direction: column;
+      }
     }
 
     h2,
@@ -81,9 +100,14 @@
     }
   }
 
+  &__role {
+    color: #a6a6a6;
+    margin-top: 10px;
+  }
+
   &__name {
     @include font($family: $font-family-title, $size: $font-size-28);
-    margin: 0;
+    margin: 0 0 15px;
   }
 
   &__details {
@@ -113,15 +137,15 @@
   }
 
   .rs-link svg {
-    background: url(/src/assets/svg/rs.svg) center / contain no-repeat;
+    background: url(/src/assets/svg/rs-y.svg) center / contain no-repeat;
     width: 6rem;
     height: 2rem;
     transition: $transition;
 
     &:hover {
-      background: url(/src/assets/svg/rs-y.svg) center / contain no-repeat;
-      width: 6.5rem;
-      transform: scale(1.1);
+      background: url(/src/assets/svg/rs.svg) center / contain no-repeat;
+      // width: 6.5rem;
+      // transform: scale(1.1);
       fill: $button-second;
     }
   }
