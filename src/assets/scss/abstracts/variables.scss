@@ -1,0 +1,42 @@
+// Colors
+$links: #07c;
+$links-hover: darken($links, 10%);
+$top-links: #595959;
+$important: #bf4d4d;
+$error: #e74c3c;
+$background: #fff;
+$text-color: #000;
+$button-second: #fdde55;
+$button-second-hover: lighten($button-second, 5%);
+$button-hover: lighten($links, 5%);
+$border: 1px solid #eee;
+
+// Fonts
+$font-family: MuseoSans, Arial, Verdana, sans-serif;
+$font-family-title: MuseoSansBlack, Arial, Verdana, sans-serif;
+$font-size-12: 12px;
+$font-size-14: 14px;
+$font-size-16: 16px;
+$font-size-19: 19px;
+$font-size-22: 22px;
+$font-size-24: 24px;
+$font-size-28: 28px;
+$font-size-32: 32px;
+
+// Button
+$button-size-40: 40px;
+$border-radius-8: 8px;
+
+// Transition
+$transition: all 0.5s ease;
+
+// Media
+$sizes: (
+  'xxs': 380px,
+  'xs': 480px,
+  's': 639px,
+  'm': 767px,
+  'l': 991px,
+  'xl': 1120px,
+  'xxl': 1279px,
+);

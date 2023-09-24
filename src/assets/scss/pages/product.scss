@@ -1,0 +1,16 @@
+.main {
+  .row {
+    .product {
+      flex-direction: row;
+
+      @include media('m') {
+        @include flexColumn();
+      }
+    }
+  }
+}
+
+.no-product {
+  @include font($family: $font-family-title, $size: $font-size-19);
+  color: $links;
+}

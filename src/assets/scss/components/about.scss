@@ -1,0 +1,320 @@
+/* about */
+
+.about {
+  width: 100%;
+  box-sizing: border-box;
+  float: left;
+
+  h2 {
+    margin: 20px 0;
+    font-size: 25px;
+    text-transform: uppercase;
+    color: #07c;
+
+    @include media('m') {
+      text-align: center;
+    }
+  }
+
+  &__as {
+    @include flex();
+
+    @include media('m') {
+      @include flexColumn();
+    }
+
+    p {
+      @include font($size: $font-size-22);
+
+      @include media('xs') {
+        font-size: 14px;
+      }
+    }
+  }
+
+  &__rs-img {
+    @include flexColumn();
+
+    @include media('m') {
+      @include flex($align: stretch);
+      flex-direction: row;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        max-height: 200px;
+      }
+    }
+
+    @include media('xs') {
+      img {
+        max-height: 120px;
+      }
+    }
+  }
+
+  &__team {
+    @include flexColumn();
+    gap: 50px;
+  }
+
+  &__member {
+    @include flex($align: flex-start, $justify: flex-start);
+    @include font($family: $font-family-title, $size: $font-size-28);
+    flex: 1;
+    width: 100%;
+    gap: 50px;
+    text-align: left;
+
+    &:nth-of-type(2) {
+      flex-direction: row-reverse;
+    }
+
+    @include media('m') {
+      flex-direction: column;
+      align-items: center;
+
+      &:nth-of-type(2) {
+        flex-direction: column;
+      }
+    }
+
+    h2,
+    p {
+      text-align: left;
+    }
+  }
+
+  &__photo {
+    margin-bottom: 20px;
+    border: 10px solid $button-second;
+    box-shadow: 6px 7px 9px 5px #98969691;
+    overflow: hidden;
+    width: 420px;
+    flex-shrink: 0;
+
+    @include media('xs') {
+      width: 300px;
+    }
+  }
+
+  &__role {
+    color: #a6a6a6;
+    margin-top: 10px;
+    font-size: 22px;
+  }
+
+  &__name {
+    @include font($family: $font-family-title, $size: $font-size-28);
+    margin: 0 0 15px;
+  }
+
+  &__details {
+    @include font($family: $font-family, $size: $font-size-22);
+
+    p {
+      font-size: 22px;
+      padding: 15px 0 0;
+      line-height: 1.4;
+      text-align: justify;
+    }
+
+    span {
+      @include font($family: $font-family-title, $size: $font-size-22);
+    }
+
+    ul li {
+      font-size: 22px;
+
+      &::before {
+        content: '✔';
+        margin-right: 8px;
+        color: $links;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .rs-link svg {
+    background: url(/src/assets/svg/rs.svg) center / contain no-repeat;
+    width: 10rem;
+    height: 3rem;
+    transition: $transition;
+
+    &:hover {
+      background: url(/src/assets/svg/rs-y.svg) center / contain no-repeat;
+      fill: $button-second;
+    }
+  }
+
+  &__github {
+    @include font($family: $font-family, $size: $font-size-22);
+    color: $links;
+
+    span {
+      margin-right: 5px;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+      color: $links-hover;
+    }
+  }
+
+  .education {
+    width: inherit;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 10px;
+
+    &__item {
+      position: relative;
+      padding: 2em 0 0 0;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    &__item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: calc(13% - 1px);
+      height: 100%;
+      width: 2px;
+      background: #4d4d4d;
+
+      @include media('xs') {
+        left: calc(15% - 1px);
+      }
+    }
+
+    &__block:first-child {
+      margin-top: 0;
+    }
+
+    &__block {
+      position: relative;
+      transition: all 0.3s ease;
+      margin: 1em 0;
+      display: flex;
+    }
+
+    &__content {
+      left: 20%;
+      position: relative;
+      background: #4d4d4d;
+      border-radius: 3px;
+      margin-left: 0;
+      padding: 0.5em;
+      width: 74%;
+      opacity: 0.9;
+
+      @include media('xs') {
+        left: 24%;
+        width: 69%;
+      }
+    }
+
+    &__content:hover {
+      opacity: 1;
+    }
+
+    &__content:hover + .education__img {
+      background-color: #b86f02;
+    }
+
+    &__content:before {
+      content: '';
+      position: absolute;
+      top: 24px;
+      right: 100%;
+      height: 0;
+      width: 0;
+      border: 8px solid transparent;
+      border-color: transparent;
+      border-right-color: #4d4d4d;
+    }
+
+    &__title {
+      color: #fafafa;
+      margin: 0;
+      padding: 2px 0;
+      text-transform: uppercase;
+      font-family: 'Montserrat-Bold';
+      font-size: 0.9em;
+    }
+
+    &__speciality {
+      margin: 0;
+      padding: 4px 0;
+      font-size: 0.9em;
+      font-family: 'Montserrat-Bold';
+    }
+
+    &__p {
+      color: #fbb03c;
+      display: inline;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+    }
+
+    &__descr {
+      color: #fafafa;
+      font-size: 0.9em;
+      line-height: 1.2;
+      padding: 2px 0;
+    }
+
+    &__img {
+      position: absolute;
+      width: 35px;
+      height: 35px;
+      left: 9%;
+      border-radius: 50%;
+      background: #222;
+      margin-top: 13px;
+    }
+
+    &__wrapp-img {
+      display: block;
+      width: 24px;
+      height: 24px;
+      position: relative;
+      left: 50%;
+      top: 50%;
+      margin-left: -12px;
+      margin-top: -12px;
+      background-repeat: no-repeat;
+      background-size: 100%;
+    }
+
+    &__date {
+      display: inline-block;
+      color: #4d4d4d;
+      text-transform: uppercase;
+      position: absolute;
+      margin-left: 1%;
+      font-size: 0.8em;
+      left: auto;
+      margin-top: 20px;
+      display: block;
+      width: 50px;
+
+      @include media('xs') {
+        font-size: 0.6em;
+        width: 40px;
+      }
+    }
+
+    &__block:after {
+      display: table;
+      clear: both;
+      content: '';
+    }
+  }
+
+  &__gratitude p {
+    font-size: 22px;
+  }
+}

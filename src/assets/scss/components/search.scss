@@ -1,0 +1,47 @@
+.search-directory {
+  margin-top: 10px;
+  position: relative;
+
+  input {
+    min-width: 300px;
+    display: block;
+    width: 100%;
+    font-family: MuseoSans, Arial, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #000;
+    height: 44px;
+    background: #f6f6f6;
+    color: #595959;
+    border: 0;
+    padding: 0 44px 0 20px;
+    border-radius: 22px;
+    box-sizing: border-box;
+
+    @include media('xs') {
+      min-width: 280px;
+    }
+
+    &:focus,
+    &:hover {
+      box-shadow: 0 0 0 2px rgb(0 119 204 / 26%);
+    }
+  }
+
+  button {
+    position: absolute;
+    height: 35px;
+    width: 35px;
+    margin: 0;
+    top: 4px;
+    right: 10px;
+    background: url(/src/assets/svg/glass.svg) no-repeat center center/cover;
+    transition: $transition;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

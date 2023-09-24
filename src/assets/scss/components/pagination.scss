@@ -1,0 +1,69 @@
+.pagination {
+  @include flex();
+  margin: 0;
+  padding: 20px 0 0 0;
+  text-align: center;
+  clear: both;
+  width: 100%;
+
+  li {
+    background: none;
+    border: 1px solid #eee;
+    color: #000;
+    font-weight: bold;
+    padding: 0;
+    margin: 2px;
+    line-height: $button-size-40;
+    border-radius: 8px;
+    font-size: 14px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &.active {
+      box-shadow: inset 0 0 0 2px #07c, 0 5px 15px 0 rgba(0, 119, 204, 0.2);
+    }
+
+    a {
+      @include font();
+      @include flex();
+      min-width: $button-size-40;
+      height: $button-size-40;
+    }
+  }
+
+  .previous,
+  .next {
+    padding: 0 15px;
+    margin: 5px;
+    min-width: $button-size-40;
+    height: $button-size-40;
+    line-height: $button-size-40;
+    box-shadow: inset 0 0 0 1px #eee;
+    border-radius: 8px;
+    width: auto;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    background-color: #fff;
+
+    a {
+      color: $links;
+    }
+
+    &.disabled,
+    &.disabled:hover {
+      background-color: #bababa;
+      background-color: #ccc;
+      cursor: not-allowed;
+
+      a {
+        color: #999;
+      }
+    }
+  }
+}

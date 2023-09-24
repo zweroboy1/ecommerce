@@ -1,0 +1,33 @@
+// .carousel-root {
+//   @include flex($align: stretch);
+//   flex-direction: row-reverse;
+
+//   .thumbs {
+//     @include flexColumn();
+//   }
+// }
+
+.carousel {
+  @include flex();
+
+  .slide img {
+    max-height: 480px;
+    height: auto;
+    width: auto;
+
+    @include media('m') {
+      max-height: 380px;
+    }
+  }
+
+  .thumb {
+    text-align: center;
+    height: 90px;
+
+    img {
+      max-height: 80px;
+      height: auto;
+      width: auto;
+    }
+  }
+}

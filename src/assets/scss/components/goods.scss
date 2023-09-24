@@ -1,0 +1,313 @@
+.goods {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  &__card {
+    box-sizing: border-box;
+    position: relative;
+    height: 360px;
+    width: calc(25% - 20px);
+
+    @include media('xxl') {
+      width: calc(33% - 20px);
+      height: calc(35vw - 25px);
+    }
+
+    @include media('l') {
+      width: calc(50% - 20px);
+      height: calc(90px + 35vw);
+    }
+
+    @include media('s') {
+      width: calc(100% - 20px);
+      height: calc(46px + 66.66vw);
+    }
+
+    @include media('xs') {
+      height: calc(173px + 66.66vw);
+    }
+  }
+
+  &__wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 15px 15px 20px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #eaeaea;
+    overflow: hidden;
+    transition: $transition;
+
+    &:hover {
+      position: absolute;
+      box-shadow: 0 2px 60px #0000003d;
+      border: 1px solid #eaeaea;
+      overflow: auto;
+      z-index: 10;
+
+      .goods__description1 {
+        display: initial;
+        -webkit-box-orient: initial;
+        -webkit-line-clamp: initial;
+        max-height: 50vh;
+        overflow-y: visible;
+      }
+    }
+  }
+
+  &__description1 {
+    display: -webkit-box;
+    margin-top: 20px;
+    width: 100%;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-height: 1.3em;
+    text-align: left;
+    overflow: hidden;
+    transition: height;
+  }
+
+  &__image {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding-top: 66.66%;
+    transition: $transition;
+
+    &:hover {
+      & .goods__image_first {
+        opacity: 0;
+      }
+
+      & .goods__image_second {
+        opacity: 1;
+      }
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 240px;
+      height: 100%;
+      max-width: calc(50vw - 10px);
+      overflow: hidden;
+    }
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    &_first {
+      opacity: 1;
+    }
+
+    &_second {
+      opacity: 0;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 135px;
+    margin: 15px 0 0;
+    position: relative;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    margin: 15px 0 0;
+    flex: 0 0 auto;
+    min-width: 135px;
+  }
+
+  &__name {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    white-space: normal;
+    margin-bottom: 5px;
+    min-width: 100%;
+    text-align: left;
+    margin-bottom: 0 !important;
+  }
+
+  &__title {
+    display: flex;
+    height: 40px;
+    color: #000;
+    font-size: 14px;
+    line-height: 1.2;
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    max-height: 2.4em;
+    word-wrap: break-word;
+    hyphens: auto;
+
+    &:hover {
+      color: $links;
+    }
+  }
+
+  &__features {
+    display: inline-flex;
+
+    span {
+      margin-right: 10px;
+    }
+  }
+
+  &__amount {
+    display: inline-flex;
+    flex: 0 0 auto;
+    white-space: normal;
+    margin-bottom: 5px;
+    margin: 0 0 12px 0;
+    vertical-align: middle;
+    padding: 0;
+    height: 12px;
+    align-items: center;
+    height: 20px;
+    margin-bottom: 0;
+    font-weight: normal;
+    color: #008000;
+  }
+
+  &__prices {
+    position: relative;
+    display: flex;
+    flex: 1 0 auto;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 0;
+    min-height: 36px;
+  }
+
+  &__price-block {
+    height: 46px;
+    @include flexColumn(center);
+  }
+
+  &__discounted-price,
+  &__price {
+    @include font($family: $font-family-title, $size: 18px, $spacing: -0.025em);
+    display: inline-block;
+    padding-right: 7px;
+    max-width: 100%;
+    line-height: normal;
+    color: #dd4b39cc;
+    white-space: nowrap;
+
+    @include media('xl') {
+      font-size: 16px;
+    }
+  }
+
+  &__price {
+    color: #000;
+  }
+
+  &__old-price {
+    position: relative;
+    padding-bottom: 3px;
+    color: #595959;
+    border-color: #595959;
+    font-size: max(12px, calc(18px - 4px));
+    padding-right: 7px;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 33%;
+      left: 0;
+      border-top: 1px solid #595959;
+      width: 90%;
+      box-sizing: content-box;
+    }
+  }
+
+  &__control {
+    &:focus-visible {
+      outline: 2px solid black;
+    }
+  }
+
+  &__control.disabled,
+  &__control.disabled:hover {
+    background-color: transparent;
+
+    .minicart__icon::after {
+      content: '\2713';
+      font-family: system-ui, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      white-space: normal;
+      position: absolute;
+      top: -6px;
+      right: -10px;
+      padding: 3px;
+      color: #fff;
+      background: #008000;
+      font-size: 14px;
+      line-height: 12px;
+      border-radius: 100%;
+      box-shadow: 0 0 0 1px #fff, 0 1px 4px rgba(0, 0, 0, 0.5), 0 1px 0 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &__control-icon {
+    top: 0;
+    background: url(/src/assets/svg/cart-large.svg) no-repeat center center / cover;
+
+    &.loader {
+      background: url(/src/assets/svg/loader.svg) no-repeat center center / cover;
+    }
+    &--loader {
+      position: absolute;
+      opacity: 0;
+      background: url(/src/assets/svg/loader.svg) no-repeat center center / cover;
+
+      &.mini {
+        top: calc(50% - 15px);
+        left: calc(50% - 15px);
+        width: 30px;
+        height: 30px;
+      }
+      &.showing {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__control.disabled .goods__control-icon {
+    cursor: not-allowed;
+  }
+}

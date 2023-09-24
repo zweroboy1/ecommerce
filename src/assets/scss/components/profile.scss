@@ -1,0 +1,295 @@
+.my-profile {
+  padding: 0 20px;
+
+  @include media('xxs') {
+    padding: 0 10px;
+  }
+
+  .button-wrapper {
+    @include flex($justify: space-evenly, $wrap: wrap);
+    padding: 20px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    gap: 10px;
+
+    @include media('xs') {
+      flex-direction: column;
+    }
+  }
+
+  .user-info {
+    text-align: left;
+
+    .button:not(.edit-icon, .save-icon, .cancel-icon) {
+      margin: 20px 20px 20px 0;
+    }
+  }
+
+  h2 {
+    @include font($family: $font-family-title, $size: $font-size-19);
+    padding: 30px 0;
+    text-align: left;
+  }
+
+  .field {
+    @include flex($justify: flex-start);
+    text-align: left;
+    margin: 35px 0;
+
+    &-wrapper {
+      position: relative;
+    }
+
+    > span:first-child {
+      width: 120px;
+
+      @include media('xxs') {
+        width: 75px;
+      }
+    }
+
+    .text-wrapper,
+    .input-wrapper {
+      @include flex();
+      gap: 15px;
+
+      @include media('s') {
+        gap: 7px;
+      }
+    }
+
+    .text {
+      @include flex($justify: flex-start);
+      min-width: 250px;
+      width: 250px;
+      padding: 12px 8px;
+      border-color: #d5d5d5;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid #eee;
+      font-style: normal;
+      font-weight: normal;
+      box-sizing: border-box;
+      margin: 0;
+      overflow-x: hidden;
+
+      @include media('xs') {
+        min-width: 150px;
+        width: 150px;
+      }
+
+      @include media('xxs') {
+        min-width: 120px;
+        width: 120px;
+      }
+    }
+  }
+
+  input[type='text'],
+  select {
+    width: 250px;
+    font-size: 14px;
+    background: #fff0ac45;
+    box-shadow: inset 0px 2px 2px rgba(0, 8, 29, 5%), inset 0px 0px 2px rgba(0, 8, 29, 6%),
+      inset 0px 1px 3px rgba(0, 8, 29, 8%);
+
+    @include media('xs') {
+      min-width: 150px;
+      width: 150px;
+    }
+
+    @include media('xxs') {
+      width: 120px;
+    }
+  }
+
+  .edit-icon,
+  .save-icon,
+  .cancel-icon {
+    display: block;
+    position: relative;
+    height: 35px;
+    width: 35px;
+    min-width: 35px;
+    margin: 0;
+    left: 0;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    filter: hue-rotate(0deg);
+    transition: filter 0.3s ease;
+
+    span {
+      display: none;
+    }
+  }
+
+  .edit-icon {
+    background: url(/src/assets/svg/edit.svg) no-repeat center center/cover;
+  }
+
+  .save-icon {
+    background: url(/src/assets/svg/save.svg) no-repeat center center/cover;
+  }
+
+  .cancel-icon {
+    background: url(/src/assets/svg/cancel.svg) no-repeat center center/cover;
+    filter: invert(100%) hue-rotate(8deg) brightness(162%);
+  }
+
+  .edit-icon:hover,
+  .save-icon:hover {
+    filter: invert(100%) hue-rotate(8deg) brightness(162%);
+  }
+
+  .field.error .save-icon {
+    filter: hue-rotate(162deg);
+  }
+
+  .cancel-icon:hover {
+    filter: none;
+  }
+
+  .error-message {
+    margin-top: 3px;
+    max-width: 250px;
+
+    @include media('xs') {
+      max-width: 150px;
+    }
+
+    @include media('xxs') {
+      max-width: 120px;
+    }
+  }
+
+  .address {
+    padding: 0 20px 20px 20px;
+
+    &.default {
+      background: #f6f6f6;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .button-wrapper {
+      justify-content: flex-start;
+      flex-direction: row;
+    }
+
+    &-row {
+      text-align: left;
+      @include flexColumn($align: flex-start);
+      gap: 15px;
+
+      h2 {
+        padding: 20px 0 0;
+      }
+
+      .address > span {
+        margin-top: 15px;
+        @include font($family: $font-family-title);
+      }
+
+      .field,
+      .label {
+        margin: 10px 0;
+      }
+
+      .label {
+        @include flex($justify: flex-start);
+        text-align: left;
+        position: relative;
+
+        span {
+          width: 120px;
+
+          @include media('xxs') {
+            width: 75px;
+          }
+        }
+      }
+
+      .label-check {
+        margin-top: 20px;
+      }
+
+      .label-check + .label-check {
+        margin-top: 0;
+      }
+
+      .error-message {
+        top: 40px;
+        left: 120px;
+
+        @include media('xxs') {
+          left: 80px;
+        }
+
+        @include media('xxs') {
+          max-width: 150px;
+        }
+      }
+
+      .button-wrapper {
+        justify-content: flex-start;
+        width: 100%;
+      }
+    }
+  }
+
+  .personal-data {
+    margin-bottom: 25px;
+
+    .field > span {
+      min-width: 120px;
+    }
+
+    .field:first-of-type > span {
+      width: 50px;
+      min-width: 50px;
+    }
+
+    .field input,
+    .field .text {
+      @include media('xs') {
+        width: auto;
+        min-width: 120px;
+      }
+    }
+
+    .field .text {
+      padding-right: 27px;
+    }
+
+    h3 {
+      @include font($family: $font-family-title, $size: $font-size-16);
+    }
+
+    .button-wrapper {
+      justify-content: flex-start;
+      flex-direction: row;
+    }
+  }
+
+  @include media('s') {
+    button span {
+      font-size: 13px;
+    }
+  }
+
+  .button-wrapp {
+    margin-bottom: 15px;
+
+    button {
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+  }
+
+  form {
+    text-align: left;
+  }
+}

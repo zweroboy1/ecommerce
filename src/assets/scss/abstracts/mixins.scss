@@ -1,0 +1,52 @@
+@mixin arrow() {
+  position: relative;
+  top: 60%;
+  right: 20px;
+  transform: translateY(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: $text-color transparent transparent transparent;
+}
+
+@mixin flex($justify: center, $align: center, $wrap: nowrap) {
+  display: flex;
+  flex-wrap: $wrap;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin flexColumn($justify: flex-start, $align: center, $wrap: nowrap) {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: $wrap;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin font($family: $font-family, $size: $font-size-14, $height: 1, $spacing: normal) {
+  font-family: $family;
+  font-size: $size;
+  font-weight: normal;
+  line-height: $height;
+  letter-spacing: $spacing;
+  color: $text-color;
+}
+
+@mixin buttonHover() {
+  @media (hover: hover) {
+    cursor: pointer;
+    background: $color-primary-light;
+    color: $color-dark-3xl;
+    border-color: $color-primary-light;
+  }
+}
+
+@mixin media($media) {
+  @each $size, $resolution in $sizes {
+    @if $media ==$size {
+      @media (max-width: $resolution) {
+        @content;
+      }
+    }
+  }
+}

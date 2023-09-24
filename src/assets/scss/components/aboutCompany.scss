@@ -1,0 +1,36 @@
+/* aboutCompany */
+
+.about-company {
+  width: 100%;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  float: left;
+
+  &__container {
+    display: block;
+  }
+
+  &__title {
+    @include flex($justify: flex-start, $align: flex-start, $wrap: nowrap);
+    @include font($family: $font-family-title, $size: $font-size-24);
+    border-radius: 12px 12px 0 0;
+    margin-bottom: 10px;
+  }
+
+  &__body {
+    position: relative;
+    border-radius: 0 0 12px 12px;
+  }
+
+  &__content {
+    @include font();
+    max-width: 100%;
+    word-wrap: break-word;
+
+    p {
+      padding: 0 0 15px;
+      line-height: 1.4;
+      text-align: justify;
+    }
+  }
+}

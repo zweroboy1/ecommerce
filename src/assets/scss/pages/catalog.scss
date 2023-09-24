@@ -1,0 +1,61 @@
+.main {
+  .row {
+    align-items: flex-start;
+    padding: 0 20px;
+    max-width: 1400px;
+    min-width: 280px;
+    margin: 0 auto;
+
+    @include media('xs') {
+      padding: 0 5px;
+    }
+  }
+
+  .catalog {
+    @include flex($justify: stretch, $align: flex-start);
+    flex-direction: row;
+
+    .menu {
+      text-align: left;
+
+      &__item {
+        display: inline-block;
+        width: 100%;
+        padding: 15px 20px 0 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: $font-size-14;
+
+        a {
+          font-weight: normal;
+          color: rgba(0, 0, 0, 0.85);
+        }
+      }
+    }
+
+    .left {
+      width: 18%;
+      min-width: 250px;
+      margin: 0 30px 20px 0;
+
+      @include media('l') {
+        min-width: 200px;
+        margin-right: 20px;
+      }
+
+      @include media('s') {
+        min-width: 150px;
+        margin-right: 10px;
+      }
+
+      @include media('xs') {
+        display: none;
+      }
+    }
+
+    .right {
+      @include flexColumn($align: start);
+      flex: 1;
+    }
+  }
+}

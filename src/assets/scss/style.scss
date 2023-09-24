@@ -1,0 +1,51 @@
+// abstract
+//Шаблоны - глобальные переменные, функции, микшины и заполнители (код не выводит CSS, но предоставляет функциональность)
+@import 'abstracts/variables.scss';
+@import 'abstracts/mixins';
+
+/* Base */
+//Основные стили сайта (сброс стилей, типография, сеточная система и утилиты)
+@import 'base/reset';
+@import 'base/basic';
+
+/* Components */
+//Повторно используемые компоненты пользовательского интерфейса
+@import 'components/about';
+@import 'components/aboutCompany';
+@import 'components/authorization';
+@import 'components/banners';
+@import 'components/bestCategories';
+@import 'components/breadcrumbs';
+@import 'components/buttons';
+@import 'components/carousel';
+@import 'components/cart';
+@import 'components/cartDropdown';
+@import 'components/catalogMenu';
+@import 'components/contacts';
+@import 'components/filters';
+@import 'components/goods';
+@import 'components/loader';
+@import 'components/modal';
+@import 'components/navigation';
+@import 'components/notification';
+@import 'components/notFound';
+@import 'components/pagination';
+@import 'components/product';
+@import 'components/profile';
+@import 'components/promotions';
+@import 'components/search';
+@import 'components/slider';
+@import 'components/socialLinks';
+@import 'components/sorting';
+
+/* Layout */
+//Макет сайта (стили для шапки сайта, футера и боковой панели)
+@import 'layout/top';
+@import 'layout/header';
+@import 'layout/footer';
+
+/* Pages */
+//Стили, специфичные для каждой страницы
+@import 'pages/main';
+@import 'pages/catalog';
+@import 'pages/product';
