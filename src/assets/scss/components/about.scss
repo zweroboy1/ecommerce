@@ -55,7 +55,6 @@
   }
 
   &__team {
-    // @include flex($wrap: wrap);
     @include flexColumn();
     gap: 50px;
   }
@@ -137,15 +136,13 @@
   }
 
   .rs-link svg {
-    background: url(/src/assets/svg/rs-y.svg) center / contain no-repeat;
-    width: 6rem;
-    height: 2rem;
+    background: url(/src/assets/svg/rs.svg) center / contain no-repeat;
+    width: 10rem;
+    height: 3rem;
     transition: $transition;
 
     &:hover {
-      background: url(/src/assets/svg/rs.svg) center / contain no-repeat;
-      // width: 6.5rem;
-      // transform: scale(1.1);
+      background: url(/src/assets/svg/rs-y.svg) center / contain no-repeat;
       fill: $button-second;
     }
   }
