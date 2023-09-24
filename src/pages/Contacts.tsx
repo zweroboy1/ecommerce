@@ -9,7 +9,7 @@ const Contacts = () => {
     <div className="tygh">
       <Top />
       <Header />
-      <main className="main page">
+      <main className="main page container">
         <BreadcrumbsPage links={breadcrumbs} />
         <h1>Обратная связь</h1>
         <p>

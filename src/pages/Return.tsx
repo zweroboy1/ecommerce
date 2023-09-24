@@ -9,7 +9,7 @@ const Return = () => {
     <div className="tygh">
       <Top />
       <Header />
-      <main className="main page">
+      <main className="main page container">
         <BreadcrumbsPage links={breadcrumbs} />
         <h1>Возврат товара</h1>
         <p>
