@@ -38,7 +38,7 @@ const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 const apiRegion = import.meta.env.VITE_CTP_REGION;
 // const API_SERVER = 'http://localhost/rss/ecommerce-tmp/backend';
-const API_SERVER = 'https://helpseo.net/oopterators';
+const API_SERVER = import.meta.env.VITE_API_SERVER;
 
 let BEARER_TOKEN: string | null = null;
 
