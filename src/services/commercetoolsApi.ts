@@ -37,8 +37,9 @@ const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 const apiRegion = import.meta.env.VITE_CTP_REGION;
-// const API_SERVER = 'http://localhost/rss/ecommerce-tmp/backend';
 const API_SERVER = import.meta.env.VITE_API_SERVER;
+// const API_SERVER = 'http://localhost/rss/ecommerce-tmp/backend';
+// const API_SERVER = 'https://helpseo.net/oopterators;
 
 let BEARER_TOKEN: string | null = null;
 
@@ -644,13 +645,7 @@ export async function getProducts(
       },
     });
 
-    if (!response.ok) {
-      throw new Error('Oooops!!! We have a problem!!!');
-    }
-
     const responseData = await response.json();
-    // console.log(responseData.total);
-    // console.log(responseData.results);
     return responseData.results[0] === undefined
       ? { total: 0, results: [] }
       : { total: responseData.total, results: responseData.results };
@@ -661,9 +656,11 @@ export async function getProducts(
 
 export async function getProduct(productId: string): Promise<ProductAllData | null> {
   const queryString = createQueryString({
-    filter: `slug.ru:"${productId}"`,
+    // filter: `slug.ru:"${productId}"`,
+    product: productId,
   });
-  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/product-projections/search?${queryString}`;
+  // const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/product-projections/search?${queryString}`;
+  const endpoint = `${API_SERVER}/products.php?${queryString}`;
 
   const bearerToken = await fetchBearerToken();
   if (bearerToken === null) {
@@ -679,10 +676,6 @@ export async function getProduct(productId: string): Promise<ProductAllData | nu
       },
     });
     const responseData = await response.json();
-
-    if (!response.ok) {
-      throw new Error('Oooops!!! We have a problem!!!');
-    }
     return responseData.results[0] === undefined ? null : responseData.results[0];
   } catch (error) {
     throw new Error(CT_NETWORK_PROBLEM);
