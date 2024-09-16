@@ -37,6 +37,10 @@ const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 const apiRegion = import.meta.env.VITE_CTP_REGION;
+const API_SERVER = import.meta.env.VITE_API_SERVER;
+// const API_SERVER = 'http://localhost/rss/ecommerce-tmp/backend';
+// const API_SERVER = 'https://helpseo.net/oopterators;
+
 let BEARER_TOKEN: string | null = null;
 
 function createQueryString(params: Record<string, string | number>): string {
@@ -53,7 +57,7 @@ async function fetchBearerToken(): Promise<string | null> {
     return BEARER_TOKEN;
   }
   try {
-    const response = await fetch(`https://auth.${apiRegion}.commercetools.com/oauth/token`, {
+    const response = await fetch(`${API_SERVER}/token.php`, {
       method: 'POST',
       headers: {
         Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
@@ -192,7 +196,8 @@ async function createCustomer(
 }
 
 export async function getAnonymousToken() {
-  const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/${projectKey}/anonymous/token?grant_type=client_credentials`;
+  // const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/${projectKey}/anonymous/token?grant_type=client_credentials`;
+  const endpoint = `${API_SERVER}/token.php`;
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -591,35 +596,40 @@ export async function getProducts(
   const ctIds = getCategoryCtIds(category);
   const categoriesFilter = ctIds.map((cat) => `"${cat}"`).join(',');
   let queryString = createQueryString({
-    filter: categoriesFilter ? `categories.id:${categoriesFilter}` : '',
+    // filter: categoriesFilter ? `categories.id:${categoriesFilter}` : '',
+    categories: categoriesFilter ? `${categoriesFilter}` : '',
     limit: PRODUCTS_ON_PAGE,
     offset: page * PRODUCTS_ON_PAGE,
     sort,
   });
 
   if (brands.length) {
-    queryString += `&filter=variants.attributes.brand.key%3A${brands
+    queryString += `&brands=${brands
+      // queryString += `&filter=variants.attributes.brand.key%3A${brands
       .map((brand) => `%22${brand}%22`)
       .join('%2C')}`;
   }
 
   if (colors.length) {
-    queryString += `&filter=variants.attributes.color.key%3A${colors
+    queryString += `&colors=${colors
+      // queryString += `&filter=variants.attributes.color.key%3A${colors
       .map((color) => `%22${color}%22`)
       .join('%2C')}`;
   }
 
   if (minPrice !== 0 || maxPrice !== MAX_PRICE_FILTER) {
-    queryString += `&filter=variants.price.centAmount%3Arange%20(${minPrice * 100}%20to%20${
-      maxPrice * 100
-    })`;
+    queryString += `&minprice=${minPrice * 100}&maxprice=${maxPrice * 100}`;
+    // queryString += `&filter=variants.price.centAmount%3Arange%20(${minPrice * 100}%20to%20${maxPrice * 100
+    //   })`;
   }
 
   if (text) {
-    queryString += `&text.ru=${encodeURIComponent(text)}`;
+    queryString += `&text=${encodeURIComponent(text)}`;
+    // queryString += `&text.ru=${encodeURIComponent(text)}`;
   }
 
-  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/product-projections/search?${queryString}`;
+  // const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/product-projections/search?${queryString}`;
+  const endpoint = `${API_SERVER}/products.php?${queryString}`;
 
   const bearerToken = await fetchBearerToken();
   if (bearerToken === null) {
@@ -635,13 +645,7 @@ export async function getProducts(
       },
     });
 
-    if (!response.ok) {
-      throw new Error('Oooops!!! We have a problem!!!');
-    }
-
     const responseData = await response.json();
-    // console.log(responseData.total);
-    // console.log(responseData.results);
     return responseData.results[0] === undefined
       ? { total: 0, results: [] }
       : { total: responseData.total, results: responseData.results };
@@ -652,9 +656,11 @@ export async function getProducts(
 
 export async function getProduct(productId: string): Promise<ProductAllData | null> {
   const queryString = createQueryString({
-    filter: `slug.ru:"${productId}"`,
+    // filter: `slug.ru:"${productId}"`,
+    product: productId,
   });
-  const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/product-projections/search?${queryString}`;
+  // const endpoint = `https://api.${apiRegion}.commercetools.com/${projectKey}/product-projections/search?${queryString}`;
+  const endpoint = `${API_SERVER}/products.php?${queryString}`;
 
   const bearerToken = await fetchBearerToken();
   if (bearerToken === null) {
@@ -670,10 +676,6 @@ export async function getProduct(productId: string): Promise<ProductAllData | nu
       },
     });
     const responseData = await response.json();
-
-    if (!response.ok) {
-      throw new Error('Oooops!!! We have a problem!!!');
-    }
     return responseData.results[0] === undefined ? null : responseData.results[0];
   } catch (error) {
     throw new Error(CT_NETWORK_PROBLEM);
@@ -909,9 +911,13 @@ export async function getRefreshedToken(refreshToken: string): Promise<TokenResp
   if (bearerToken === null) {
     throw new Error(CT_ERROR);
   }
+
+  const endpoint = `${API_SERVER}/refresh.php?token=${encodeURIComponent(refreshToken)}`;
+  /*
   const endpoint = `https://auth.${apiRegion}.commercetools.com/oauth/token?grant_type=refresh_token&refresh_token=${encodeURIComponent(
     refreshToken
   )}`;
+  */
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
